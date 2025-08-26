@@ -110,71 +110,76 @@ export const Header = ({
     );
   };
 
-  useEffect(() => {
-    let channel: RealtimeChannel;
+useEffect(() => {
+  let channel: RealtimeChannel | null = null;
 
-    const setupSubscription = async () => {
-      try {
-        channel = supabaseClientBrowser
-          .channel("vueChannel")
-          .on(
-            "postgres_changes",
-            {
-              event: "INSERT",
-              schema: "public",
-              table: "MessageView",
-            },
-            async (payload) => {
-              const type = payload.eventType as string;
+  const setupSubscription = async () => {
+    try {
+      channel = supabaseClientBrowser
+        .channel("vueChannel")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "MessageView",
+          },
+          async (payload) => {
+            console.log({ payload });
 
-              const newMessage = payload.new as MessageView;
+            const type = payload.eventType as string;
+            const newMessage = payload.new as MessageView;
 
-              if (type === "INSERT") {
-                if (user.id != newMessage.userId) {
-                  const { data } = await supabaseClientBrowser.rpc(
-                    "get_unread_messages",
-                    {
-                      message_view_id_input: newMessage.id,
-                      user_id_input: userId,
-                    }
-                  );
+            if (type === "INSERT") {
+              if (user.id !== newMessage.userId) {
+                const { data } = await supabaseClientBrowser.rpc(
+                  "get_unread_messages",
+                  {
+                    message_view_id_input: newMessage.id,
+                    user_id_input: userId,
+                  }
+                );
 
-                  if (data?.[0]) {
-                    const { message_view_id, message, sender, chat } = data[0];
+                if (data?.[0]) {
+                  const { message_view_id, message, sender, chat } = data[0];
 
-                    if (chat.id !== id) {
-                      const newNotif = {
-                        id: message_view_id,
-                        view: false,
-                        messageId: message.id,
-                        senderId: sender.id,
-                        message: {
-                          ...message,
-                          sentAt: new Date(),
-                          sender,
-                        },
+                  if (chat.id !== id) {
+                    const newNotif = {
+                      id: message_view_id,
+                      view: false,
+                      messageId: message.id,
+                      senderId: sender.id,
+                      message: {
+                        ...message,
+                        sentAt: new Date(),
                         sender,
-                      };
+                      },
+                      sender,
+                    };
 
-                      handleNewNotification(newNotif, userId);
-                    }
+                    handleNewNotification(newNotif, userId);
                   }
                 }
               }
             }
-          )
-          .subscribe();
-      } catch (error) {}
-    };
+          }
+        )
+        .subscribe();
+    } catch (error) {
+      console.error("Erreur setupSubscription:", error);
+    }
+  };
 
-    setupSubscription();
+  setupSubscription();
 
-    return () => {
-      if (channel) {
-        supabaseClientBrowser.removeChannel(channel);
-      }
-    };
-  }, [id]);
+  // cleanup pour éviter les doublons
+  return () => {
+    if (channel) {
+      supabaseClientBrowser.removeChannel(channel);
+      channel = null;
+    }
+  };
+}, [id, user.id, userId, handleNewNotification]);
 
   return (
     <header className="sticky top-0 z-30 w-full border-b border-border/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
