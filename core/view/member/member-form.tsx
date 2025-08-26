@@ -49,7 +49,7 @@ import { useGetClasses } from "@/core/hooks/use-classe";
 import { useMemo, useState } from "react";
 
 export const MemberForm = ({ details }: FormProps<Member>) => {
-  let akis = "akis";
+ 
   const [projectId, setProject] = useState<string>("");
   const { mutate: create, isPending: cloading } = useCreateMember();
   const { mutate: update, isPending: uloading } = useUpdateMember();
