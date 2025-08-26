@@ -49,6 +49,7 @@ import { useGetClasses } from "@/core/hooks/use-classe";
 import { useMemo, useState } from "react";
 
 export const MemberForm = ({ details }: FormProps<Member>) => {
+  let akis = "akis";
   const [projectId, setProject] = useState<string>("");
   const { mutate: create, isPending: cloading } = useCreateMember();
   const { mutate: update, isPending: uloading } = useUpdateMember();
@@ -59,7 +60,6 @@ export const MemberForm = ({ details }: FormProps<Member>) => {
     () => classes?.filter((c) => c.projectId === projectId) || [],
     [projectId, classes]
   );
- 
 
   const form = useForm<MemberSchemaInput>({
     resolver: zodResolver(MemberSchema),
@@ -93,7 +93,6 @@ export const MemberForm = ({ details }: FormProps<Member>) => {
       create({ json: data });
     }
   };
- 
 
   return (
     <div className="p-6 bg-white rounded-lg    ">
