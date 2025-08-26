@@ -1,0 +1,205 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import Image from "next/image";
+import { CloudUpload, Trash, Camera, Loader2 } from "lucide-react";
+import { Button } from "@/core/components/ui/button";
+import { cn } from "@/core/lib/utils";
+import { UrlPath } from "@/core/lib/constants";
+
+import { uploadImage } from "@/core/lib/storage";
+import { toast } from "./custom-toast";
+
+type Props = {
+  disabled?: boolean;
+  onChange: (value: string) => void;
+  value: string;
+  folder: string;
+  view?: boolean;
+  buttonPosition?: "top" | "center" | "top-left" | "top-right";
+};
+
+const ImageUpload = ({
+  disabled = false,
+  onChange,
+  value,
+  folder,
+  view = false,
+  buttonPosition = "center",
+}: Props) => {
+  const [file, setFile] = useState<File>();
+  const [preview, setPreview] = useState<string>(value);
+  const [isPending, startTransition] = useTransition();
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleFileChange = (file: File) => {
+    setFile(file);
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+  };
+
+  const handleUpload = () => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+ 
+
+    startTransition(async () => {
+      const data = await uploadImage(formData, folder);
+    
+
+      if (data?.success) {
+        toast.success({ message: "Image téléchargée avec succès." });
+        const finalUrl = `${UrlPath}/${folder}/${data.success.path}`;
+        onChange(finalUrl);
+        setPreview(finalUrl);
+      } else {
+        toast.error({
+          message: `Échec du téléchargement: ${data?.error?.message || ""}`,
+        });
+      }
+    });
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (droppedFile) handleFileChange(droppedFile);
+  };
+
+  const renderUploadButton = () => (
+    <Button
+      onClick={handleUpload}
+      disabled={isPending}
+      size="sm"
+      type="button"
+      className="bg-emerald-600 hover:bg-emerald-700 text-white"
+    >
+      {isPending ? (
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      ) : (
+        <CloudUpload className="mr-2 h-4 w-4" />
+      )}
+      Télécharger
+    </Button>
+  );
+
+  const renderImagePreview = () => (
+    <div className="relative group">
+      <div className="relative overflow-hidden rounded-lg border-4 transition-all h-[250px] w-[300px] border-slate-100">
+        <Image
+          fill
+          alt="Aperçu de l'image"
+          src={preview || "/placeholder.svg?height=250&width=300"}
+          className="object-cover"
+        />
+        {!isPending && !view && (
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100">
+            <Button
+              variant="destructive"
+              size="icon"
+              className="h-10 w-10 rounded-full"
+              onClick={() => {
+                setFile(undefined);
+                setPreview("");
+                onChange("");
+              }}
+              disabled={isPending}
+            >
+              <Trash className="h-5 w-5" />
+            </Button>
+          </div>
+        )}
+        {/* Bouton en haut à gauche de l'image */}
+        {!view && value.length <= 1 && buttonPosition === "top-left" && (
+          <div className="absolute top-2 left-2 z-10">
+            {renderUploadButton()}
+          </div>
+        )}
+        {/* Bouton en haut à droite de l'image */}
+        {!view && value.length <= 1 && buttonPosition === "top-right" && (
+          <div className="absolute top-2 right-2 z-10">
+            {renderUploadButton()}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="w-full">
+      {preview ? (
+        <div className="flex flex-col items-center gap-4">
+          {/* Bouton en haut */}
+          {!view &&
+            value.length <= 1 &&
+            buttonPosition === "top" &&
+            renderUploadButton()}
+
+          {renderImagePreview()}
+
+          {/* Bouton au centre (position par défaut) */}
+          {!view &&
+            value.length <= 1 &&
+            buttonPosition === "center" &&
+            renderUploadButton()}
+        </div>
+      ) : (
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={(e) => {
+            e.preventDefault();
+            setIsDragging(false);
+          }}
+          onDrop={handleDrop}
+          className={cn(
+            "flex flex-col relative items-center justify-center h-[250px] w-[300px] rounded-xl border-2 border-dashed p-4 transition-all",
+            isDragging
+              ? "border-emerald-500 bg-emerald-50"
+              : "border-slate-200 bg-slate-50",
+            disabled && "opacity-50 cursor-not-allowed"
+          )}
+        >
+          {disabled ? (
+            <Loader2 className="h-10 w-10 text-emerald-500 animate-spin" />
+          ) : (
+            <>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files?.[0]) handleFileChange(e.target.files[0]);
+                }}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div className="flex flex-col items-center space-y-4 pointer-events-none">
+                <div className="p-4 rounded-full bg-emerald-100">
+                  <Camera className="h-8 w-8 text-emerald-600" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-medium text-emerald-600">
+                    Cliquez pour télécharger
+                  </p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    ou glissez et déposez une image
+                  </p>
+                  <p className="text-xs text-slate-400 mt-2">
+                    PNG, JPG ou JPEG
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ImageUpload;

@@ -1,0 +1,443 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  enabled
+  disabled
+}
+
+enum Type {
+  admin
+  employe
+  accompanist
+  trainer
+}
+
+model Personnes {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  role String
+
+  signature Boolean @default(false)
+
+  conflitId String?  @db.Uuid
+  Conflit   Conflit? @relation(fields: [conflitId], references: [id])
+
+  VisiteTerrain   VisiteTerrain? @relation(fields: [visiteTerrainId], references: [id])
+  visiteTerrainId String?        @db.Uuid
+}
+
+model Signature {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date    DateTime
+  present Boolean  @default(false)
+
+  memberId String @db.Uuid
+  member   Member @relation(fields: [memberId], references: [id])
+
+  rencontreId String?    @db.Uuid
+  Rencontre   Rencontre? @relation(fields: [rencontreId], references: [id])
+}
+
+model Files {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  type String
+  url  String
+  size Int    @default(2)
+
+  visiteTerrainId String?        @db.Uuid
+  visiteTerrain   VisiteTerrain? @relation(fields: [visiteTerrainId], references: [id])
+
+  conflitId String?  @db.Uuid
+  conflit   Conflit? @relation(fields: [conflitId], references: [id])
+
+  rencontreId String?    @db.Uuid
+  rencontre   Rencontre? @relation(fields: [rencontreId], references: [id])
+
+  Upload         Upload[]
+  Users          Users[]
+  accompaniments Accompaniment[] @relation("AccompanimentFile")
+  media          Accompaniment[] @relation("AccompanimentMedia")
+}
+
+model Users {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authId  String   @unique
+  profile String   @db.Text
+  name    String
+  email   String   @unique
+  phone   String
+  address String
+  gender  String
+  dob     DateTime
+
+  filesId String? @db.Uuid
+  cv      Files?  @relation(fields: [filesId], references: [id])
+
+  status Status @default(disabled)
+  type   Type   @default(employe)
+
+  accompaniments  Accompaniment[]
+  plannings       Planning[]
+  emargements     Emargement[]
+  visiteTerrains  VisiteTerrain[]
+  rencontres      Rencontre[]
+  conflit         Conflit[]
+  chatParticipant ChatParticipant[]
+  message         Message[]
+  uploads         Upload[]
+  messageView     MessageView[]
+  Classe          Classe[]
+
+  routes String[]
+  access String[]
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  name   String
+  status Boolean @default(false)
+  local  String
+
+  accompaniments Accompaniment[]
+  leave          Leave[]
+  members        Member[]
+  classes        Classe[]
+
+  chat Chat?
+
+  startDate DateTime
+  endDate   DateTime
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+ 
+model Leave {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  date DateTime
+
+  reason String @db.Text
+
+  projectId String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id])
+
+  memberId String @unique @db.Uuid
+  member   Member @relation(fields: [memberId], references: [id])
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model Accompaniment {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  name    String
+  adresse String
+  phones  Int[]
+  budget  Int
+
+  status Boolean @default(false)
+
+  usersid String @db.Uuid
+  users   Users  @relation(fields: [usersid], references: [id])
+
+  map Maps?
+
+  members Member[]
+
+  fileId String @db.Uuid
+  file   Files  @relation("AccompanimentFile", fields: [fileId], references: [id])
+
+  media Files[] @relation("AccompanimentMedia")
+
+  purchases Purchase[]
+  conflits  Conflit[]
+  rencontre Rencontre[]
+
+  projectId String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id])
+
+  planningId String?   @db.Uuid
+  planning   Planning? @relation(fields: [planningId], references: [id])
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model Classe {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+
+  usersId String @db.Uuid
+  user    Users  @relation(fields: [usersId], references: [id])
+
+  members Member[]
+
+  projectId String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id])
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model Member {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  projectId String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id])
+
+  profile     String   @db.Text
+  name        String
+  phone       String
+  gender      String
+  dob         DateTime
+  commune     String
+  residential String
+  disability  String
+  language    String
+  attestation String
+
+  signatures  Signature[]
+  emargements Emargement[]
+  leave       Leave?
+
+  accompanimentId String?        @db.Uuid
+  accompaniment   Accompaniment? @relation(fields: [accompanimentId], references: [id])
+
+  classeId String @db.Uuid
+  classe   Classe @relation(fields: [classeId], references: [id])
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model Chat {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  projectId String  @unique @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id])
+
+  participants ChatParticipant[]
+  messages     Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatParticipant {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String @db.Uuid
+  chatId String @db.Uuid
+
+  user Users @relation(fields: [userId], references: [id])
+  chat Chat  @relation(fields: [chatId], references: [id])
+
+  joinedAt DateTime @default(now())
+
+  @@unique([userId, chatId])
+}
+
+model Message {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content String   @db.Text
+  sentAt  DateTime @default(now())
+
+  senderId    String        @db.Uuid
+  chatId      String        @db.Uuid
+  messageView MessageView[]
+
+  sender Users @relation(fields: [senderId], references: [id])
+  chat   Chat  @relation(fields: [chatId], references: [id])
+}
+
+model MessageView {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  view Boolean @default(false)
+
+  messageId String @db.Uuid
+  userId    String @db.Uuid
+
+  message Message @relation(fields: [messageId], references: [id])
+  user    Users   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+
+  @@unique([messageId, userId])
+}
+
+model Visits {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  date      DateTime
+  startTime String
+  endTime   String
+  status    Boolean  @default(false)
+  location  String
+  objetif   String
+
+  planningId String   @db.Uuid
+  Planning   Planning @relation(fields: [planningId], references: [id])
+
+  VisiteTerrain VisiteTerrain?
+}
+
+model Planning {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  accompaniments Accompaniment[]
+  visit          Visits[]
+
+  usersId String @db.Uuid
+  users   Users  @relation(fields: [usersId], references: [id])
+}
+
+model Maps {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  accompanimentId String        @unique @db.Uuid
+  accompaniment   Accompaniment @relation(fields: [accompanimentId], references: [id])
+
+  latitude  String
+  longitude String
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model PurchaseItems {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  name     String
+  price    String
+  image    String
+  quantity Int
+
+  date DateTime
+
+  purchaseId String   @db.Uuid
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Purchase {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  total Int
+
+  purchaseItems PurchaseItems[]
+
+  accompanimentId String        @db.Uuid
+  accompaniment   Accompaniment @relation(fields: [accompanimentId], references: [id])
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model Emargement {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  date         DateTime
+  signature    Boolean
+  cni          String
+  PhotoCni     String
+  montant      Int
+  observations String
+
+  usersId String @db.Uuid
+  users   Users  @relation(fields: [usersId], references: [id])
+
+  memberId String @db.Uuid
+  member   Member @relation(fields: [memberId], references: [id])
+}
+
+model VisiteTerrain {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  visitId String @unique @db.Uuid
+  visit   Visits @relation(fields: [visitId], references: [id])
+
+  personnes Personnes[]
+
+  observations String @db.Text
+
+  files Files[]
+
+  users   Users  @relation(fields: [usersId], references: [id])
+  usersId String @db.Uuid
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model Conflit {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  nature String
+
+  partieImpliques Personnes[]
+  files           Files[]
+
+  resolution String @db.Text
+
+  users   Users  @relation(fields: [usersId], references: [id])
+  usersId String @db.Uuid
+
+  status Boolean @default(false)
+
+  accompanimentId String        @db.Uuid
+  accompaniment   Accompaniment @relation(fields: [accompanimentId], references: [id])
+
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model Rencontre {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  date DateTime
+  lieu String
+
+  order     String[]
+  decisions String[]
+
+  actions String[]
+
+  signatures Signature[]
+
+  files Files[]
+
+  accompanimentId String        @db.Uuid
+  accompaniment   Accompaniment @relation(fields: [accompanimentId], references: [id])
+
+  usersId String @db.Uuid
+  users   Users  @relation(fields: [usersId], references: [id])
+}
+
+model Upload {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  titre String
+  date  DateTime
+
+  fileId String @db.Uuid
+  file   Files  @relation(fields: [fileId], references: [id])
+
+  userId String @db.Uuid
+  user   Users  @relation(fields: [userId], references: [id])
+}
