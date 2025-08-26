@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../prisma/generated/prisma"
 }
 
 datasource db {
@@ -125,7 +124,6 @@ model Project {
   updatedAt DateTime @updatedAt
 }
 
- 
 model Leave {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
