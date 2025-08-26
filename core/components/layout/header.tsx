@@ -120,7 +120,7 @@ export const Header = ({
           .on(
             "postgres_changes",
             {
-              event: "*",
+              event: "INSERT",
               schema: "public",
               table: "MessageView",
             },

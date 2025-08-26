@@ -131,7 +131,7 @@ export default function ChateBody({ chats, userId, color }: Props) {
           .on(
             "postgres_changes",
             {
-              event: "*",
+              event: "INSERT",
               schema: "public",
               table: "Message",
             },
