@@ -1,4 +1,5 @@
-import { GetFileIcon } from "@/core/components/global/multi-upload";
+ 
+import { GetFileIcon } from "@/core/components/global/multi-uploads";
 import {
   Avatar,
   AvatarFallback,
@@ -230,7 +231,7 @@ export const RencontreShow = ({ data }: { data: RencontreDetail }) => {
                     key={file.id}
                     className="hover:shadow-md transition-shadow"
                   >
-                    <CardContent className="p-4">
+                  <CardContent className="p-4">
                       <div className="flex items-start gap-3">
                         <div className="p-2 bg-muted rounded-lg">
                           {GetFileIcon(file.type)}

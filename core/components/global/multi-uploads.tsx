@@ -46,7 +46,7 @@ const formatFileSize = (bytes: number) => {
 };
 
 // Fonction pour obtenir l'icône appropriée selon le type de fichier
-const GetFileIcon = (type: string) => {
+export const GetFileIcon = (type: string) => {
   if (type.includes("image"))
     return <FaRegFileImage className="w-10 h-10 text-blue-500" />;
   if (type.includes("video"))
