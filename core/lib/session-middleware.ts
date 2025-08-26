@@ -14,12 +14,12 @@ type AdditionalContext = {
 
 export const sessionMiddleware = createMiddleware<AdditionalContext>(
   async (c, next) => {
-      await db.$connect(); // 👈 important
-    // const user = await useCurrentUser();
+    await db.$connect(); 
+    const user = await useCurrentUser();
 
-    // if (!user) {
-    //   return c.json({ error: "Unauthorized" }, 401);
-    // }
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
 
     // c.set("user", user!);
 
