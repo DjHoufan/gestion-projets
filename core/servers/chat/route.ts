@@ -139,6 +139,8 @@ const app = new Hono()
     async (c) => {
       const { userId } = c.req.param();
 
+      
+
       const data = await db.messageView.updateMany({
         where: {
           userId: userId,

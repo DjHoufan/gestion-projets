@@ -180,6 +180,16 @@ export const upsertMember = async (data: Partial<Member>) => {
 
       createdAt: new Date(),
     },
+    include: {
+      leave: true,
+      project: {
+        select: {
+          id: true,
+          name: true,
+          status: true,
+        },
+      },
+    },
   });
 
   return res;

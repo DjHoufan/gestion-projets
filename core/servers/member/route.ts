@@ -120,8 +120,19 @@ const app = new Hono()
     zValidator("json", MemberSchema),
     sessionMiddleware,
     async (c) => {
-      const response = handleDatatUpsert(c, c.req.param("emId"));
-      return c.json({ data: response });
+      const { emId } = c.req.param();
+
+      const m = await db.member.findFirst({
+        where: {
+          id: emId,
+        },
+      });
+
+      if (!m)
+        return c.json({ error: "Aucun bénéficiaire n'a été trouvé" }, 404);
+
+      const response = await handleDatatUpsert(c, c.req.param("emId"));
+      return c.json({ data: response, projectId: m.projectId });
     }
   )
   .delete("/:emId", sessionMiddleware, async (c) => {

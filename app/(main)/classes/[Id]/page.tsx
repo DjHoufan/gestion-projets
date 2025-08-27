@@ -11,7 +11,7 @@ const Classe = async ({ params }: IdProps) => {
 
   if (!canDetails) return "/";
 
-  return <ClasseDetail Id={Id} />;
+  return <ClasseDetail permission={permission} Id={Id} />;
 };
 
 export default Classe;

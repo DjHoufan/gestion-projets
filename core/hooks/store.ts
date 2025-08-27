@@ -1,4 +1,4 @@
-import { MapDetail, Plannings, PurchaseDetail } from "@/core/lib/types";
+import { MapDetail, MemberDetail, Plannings, PurchaseDetail } from "@/core/lib/types";
 import { Files, Visits } from "@prisma/client";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -49,6 +49,7 @@ const createUseItemHook = <T extends { id: string }>() =>
   }));
 
 export const usePurchases = createUseItemsHook<PurchaseDetail>();
+export const useClasseMembers = createUseItemsHook<MemberDetail>();
 export const useMedia = createUseItemsHook<Files>();
 export const useMaps = createUseItemHook<MapDetail>();
 

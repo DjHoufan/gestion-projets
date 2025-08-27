@@ -19,7 +19,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu";
+} from "@/core/components/ui/dropdown-menu";
 import {
   AccessibilityIcon,
   ChartNetwork,
@@ -51,7 +51,7 @@ import {
   TabsTrigger,
 } from "@/core/components/ui/tabs";
 import { DataAnalytics } from "@/core/view/member/member-show-stats";
-import { Table } from "@/core/components/ui/table";
+ 
 import { definePermissions } from "@/core/lib/utils";
 
 export const MemberBody = ({ permission }: PermissionProps) => {
@@ -406,7 +406,7 @@ export const MemberBody = ({ permission }: PermissionProps) => {
             canAdd={canAdd}
             onAddButtonClick={AddMember}
             pageSize={10}
-            addButtonText="Enregistre un nouveau bénéficiaires"
+            addButtonText="Enregistre un nouveau bénéficiaire"
             isPending={isPending}
             exportFunction={exportMembers}
             filters={[

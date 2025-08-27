@@ -311,7 +311,7 @@ export const useGetMyMessageView = (userId: string) => {
 
 export const useGetMyMessageViewAll = (userId: string) => {
   return useQuery({
-    queryKey: [QueryKeyString.notification + userId],
+    queryKey: [userId],
     queryFn: async () => {
       const response = await client.api.chat.messageViewAll[":userId"].$get({
         param: { userId: userId },

@@ -48,24 +48,31 @@ import SearchSelect from "@/core/components/global/search_select";
 import { useGetClasses } from "@/core/hooks/use-classe";
 import { useMemo, useState } from "react";
 
-export const MemberForm = ({ details }: FormProps<Member>) => {
- 
+type Props = {
+  details?: Member;
+  pId?: string;
+  classeId?: string;
+};
+
+export const MemberForm = ({ details, pId, classeId }: Props) => {
   const [projectId, setProject] = useState<string>("");
   const { mutate: create, isPending: cloading } = useCreateMember();
   const { mutate: update, isPending: uloading } = useUpdateMember();
   const { data: projets, isPending: projetLoading } = useGetPojet();
   const { data: classes, isPending: classeLoading } = useGetClasses();
 
-  const classe = useMemo(
-    () => classes?.filter((c) => c.projectId === projectId) || [],
-    [projectId, classes]
-  );
+  const classe = useMemo(() => {
+    if (!classes) return [];
+
+    const id = projectId || pId || details?.projectId;
+    return classes.filter((c) => c.projectId === id);
+  }, [classes, projectId, details?.projectId]);
 
   const form = useForm<MemberSchemaInput>({
     resolver: zodResolver(MemberSchema),
     defaultValues: {
-      projectId: details?.projectId || "",
-      classeId: details?.classeId || "",
+      projectId: details?.projectId || pId || "",
+      classeId: details?.classeId || classeId || "",
       profile: details?.profile || "",
       name: details?.name || "",
       phone: details?.phone || "",
@@ -152,8 +159,8 @@ export const MemberForm = ({ details }: FormProps<Member>) => {
                             setProject(value);
                           }}
                           loading={projetLoading}
-                          selectedId={field.value}
-                          disabled={isSubmitting}
+                          selectedId={pId || field.value}
+                          disabled={pId ? true : isSubmitting}
                         />
                       </FormControl>
                       <FormMessage />
@@ -175,8 +182,8 @@ export const MemberForm = ({ details }: FormProps<Member>) => {
                           items={classe ? classe : []}
                           onChangeValue={field.onChange}
                           loading={classeLoading}
-                          selectedId={field.value}
-                          disabled={isSubmitting}
+                          selectedId={classeId || field.value}
+                          disabled={classeId ? true : isSubmitting}
                         />
                       </FormControl>
                       <FormMessage />
@@ -377,7 +384,7 @@ export const MemberForm = ({ details }: FormProps<Member>) => {
                       Type de Handicap *
                     </FormLabel>
                     <FormControl>
-                      <div className="relative">
+                      <div className="relative p-2">
                         <AccessibilityIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-emerald-500" />
                         <Input
                           disabled={isSubmitting}

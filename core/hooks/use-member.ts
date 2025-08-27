@@ -9,6 +9,7 @@ import { useModal } from "@/core/providers/modal-provider";
 import { toast } from "../components/global/custom-toast";
 import { Prisma } from "@prisma/client";
 import { handleMemberError } from "@/core/view/member/error";
+import { useClasseMembers } from "@/core/hooks/store";
 
 // === Type Inference ===
 type PostResponse = InferResponseType<(typeof client.api.member)["$post"]>;
@@ -210,6 +211,7 @@ export const useGetMembersWithoutGroup = (excludeIds: string[] = []) => {
 export const useCreateMember = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
+  const { addData } = useClasseMembers();
 
   return useMutation<PostResponse, Error, PostRequest>({
     mutationFn: async ({ json }: PostRequest) => {
@@ -223,7 +225,24 @@ export const useCreateMember = () => {
 
       return await response.json();
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
+      const updataData = {
+        ...data,
+        statut: data.leave ? "oui" : "non",
+        leave: data.leave
+          ? {
+              ...data.leave,
+              date: new Date(data.leave.date),
+              createdAt: new Date(data.leave.createdAt),
+              updatedAt: new Date(data.leave.updatedAt),
+            }
+          : null,
+        dob: new Date(data.dob),
+        createdAt: new Date(data.createdAt),
+        updatedAt: new Date(data.updatedAt),
+      };
+
+      addData(updataData);
       toast.success({ message: "L'utilisateur  a été enregistré avec succès" });
       queryClient.invalidateQueries({ queryKey: [QueryKeyString.members] });
       close();
@@ -238,23 +257,46 @@ export const useCreateMember = () => {
 export const useUpdateMember = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
+  const { replace, removeData } = useClasseMembers();
 
   return useMutation<PatchResponse, Error, PatchRequest>({
     mutationFn: async ({ json, param }) => {
-      const res = await client.api.member[":emId"]["$patch"]({
+      const response = await client.api.member[":emId"]["$patch"]({
         json,
         param,
       });
 
-      if (!res.ok) {
-        const errorBody = await res.text();
+      if (!response.ok) {
+        const errorBody = await response.text();
 
-        throw new Error(`Erreur API: ${res.status} - ${errorBody}`);
+        throw new Error(errorBody);
       }
 
-      return await res.json();
+      return await response.json();
     },
-    onSuccess: () => {
+    onSuccess: ({ data, projectId }) => {
+      const updataData = {
+        ...data,
+        statut: data.leave ? "oui" : "non",
+        leave: data.leave
+          ? {
+              ...data.leave,
+              date: new Date(data.leave.date),
+              createdAt: new Date(data.leave.createdAt),
+              updatedAt: new Date(data.leave.updatedAt),
+            }
+          : null,
+        dob: new Date(data.dob),
+        createdAt: new Date(data.createdAt),
+        updatedAt: new Date(data.updatedAt),
+      };
+
+      if (projectId === updataData.projectId) {
+        replace(updataData);
+      } else {
+        removeData(updataData.id);
+      }
+
       toast.success({ message: "L'utilisateur a été modifié avec succès" });
       queryClient.invalidateQueries({ queryKey: [QueryKeyString.members] });
       close();
@@ -291,6 +333,7 @@ export const useUpdateMember = () => {
 // === Mutation: Delete member ===
 export const useDeletMember = () => {
   const queryClient = useQueryClient();
+  const { removeData } = useClasseMembers();
 
   return useMutation<DeleteResponse, Error, DeleteRequest>({
     mutationFn: async ({ param }) => {
@@ -301,8 +344,11 @@ export const useDeletMember = () => {
       return await res.json();
     },
 
-    onSuccess: () => {
-      toast.success({ message: "L'utilisateur a été supprimé avec succès" });
+    onSuccess: ({ data }) => {
+      removeData(data.id);
+      toast.success({
+        message: `L'utilisateur ${data.name} a été supprimé avec succès`,
+      });
       queryClient.invalidateQueries({ queryKey: [QueryKeyString.members] });
     },
     onError: (err) => {

@@ -8,6 +8,7 @@ import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "../components/global/custom-toast";
 import { Prisma } from "@prisma/client";
+import { useClasseMembers } from "@/core/hooks/store";
 
 // === Type Inference ===
 type PostResponse = InferResponseType<(typeof client.api.classe)["$post"]>;
@@ -67,6 +68,7 @@ export const useGetClasses = () => {
 };
 
 export const useGetOneClasse = (id: string) => {
+  const { setData } = useClasseMembers();
   return useQuery({
     queryKey: [QueryKeyString.classes + id],
     queryFn: async () => {
@@ -118,6 +120,8 @@ export const useGetOneClasse = (id: string) => {
         createdAt: new Date(data.createdAt),
         updatedAt: new Date(data.updatedAt),
       };
+
+      setData(updatedData.members);
 
       return updatedData;
     },
