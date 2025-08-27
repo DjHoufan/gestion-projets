@@ -116,54 +116,35 @@ export default function ChateBody({ chats, userId, color }: Props) {
     });
   };
 
+
   useEffect(() => {
-    let channel: RealtimeChannel;
+  const fetchProfile = async (senderId: string) => {
+    const res = await fetch(`/api/team/profile/${senderId}`);
+    const { data } = await res.json();
+    return data;
+  };
 
-    const setupSubscription = async () => {
-      try {
-        const { data, error } = await supabaseClientBrowser
-          .from("MessageView")
-          .select("*")
-          .limit(1);
+  const channel = supabaseClientBrowser
+    .channel("messages")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "Message" },
+      async (payload) => {
+        const newMessage = payload.new as Message;
 
-        channel = supabaseClientBrowser
-          .channel("messages")
-          .on(
-            "postgres_changes",
-            {
-              event: "INSERT",
-              schema: "public",
-              table: "Message",
-            },
-            async (payload) => {
-      
-
-              const newMessage = payload.new as Message;
-
-              if (userId != newMessage.senderId) {
-                const res = await fetch(
-                  `/api/team/profile/${newMessage.senderId}`
-                );
-                const { data } = await res.json();
-                if (data) {
-                  handleNewMessage(newMessage, data);
-                }
-              }
-            }
-          )
-          .subscribe();
-      } catch (error) {
+        if (newMessage.senderId !== userId) {
+          const profile = await fetchProfile(newMessage.senderId);
+          if (profile) handleNewMessage(newMessage, profile);
+        }
       }
-    };
+    )
+    .subscribe();
 
-    setupSubscription();
+  return () => {
+    supabaseClientBrowser.removeChannel(channel);
+  };
+}, [userId, handleNewMessage]);
 
-    return () => {
-      if (channel) {
-        supabaseClientBrowser.removeChannel(channel);
-      }
-    };
-  }, []);
 
   return (
     <>
