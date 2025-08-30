@@ -41,7 +41,6 @@ import { supabaseClientBrowser } from "@/core/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MessageViewDetail, notifType } from "@/core/lib/types";
-import { QueryKeyString } from "@/core/lib/constants";
 import { MessageView } from "@prisma/client";
 import { formatTimeMessage } from "@/core/lib/utils";
 import { useChat } from "@/core/hooks/store";

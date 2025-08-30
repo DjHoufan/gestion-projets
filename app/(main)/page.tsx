@@ -10,16 +10,39 @@ import { useGetakis } from "@/core/hooks/use-stats";
 
 const Home = () => {
   const { data, isPending } = useGetakis();
- 
-  
+
   return (
     <div className="p-6 space-y-6 max-w-full">
       <Welcome />
-      <MetricsGrid data={data?.primaryMetrics!} isPending={isPending} />
+      <MetricsGrid data={data?.primaryMetrics ?? []} isPending={isPending} />
 
-      <MainDashboard statsData={data?.statsDatas!} isPending={isPending} />
-      <ProjectUsers data={data?.projectUsers!} isPending={isPending} />
-      <ActivityStats data={data?.globalActivities!} isLoading={isPending} />
+      <MetricsGrid data={data?.primaryMetrics ?? []} isPending={isPending} />
+      <MainDashboard statsData={data?.statsDatas ?? []} isPending={isPending} />
+      <ProjectUsers
+        data={
+          data?.projectUsers ?? {
+            projects: [],
+            recentProjects: [],
+            userTypes: [],
+            userStatus: { enabled: 0, disabled: 0 },
+          }
+        }
+        isPending={isPending}
+      />
+      <ActivityStats
+        data={
+          data?.globalActivities ?? {
+            activities: {
+              visits: 0,
+              meetings: 0,
+              conflicts: 0,
+              signatures: 0,
+            },
+            recentActivities: [],
+          }
+        }
+        isLoading={isPending}
+      />
     </div>
   );
 };
