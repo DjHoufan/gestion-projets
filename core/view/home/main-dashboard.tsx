@@ -14,9 +14,6 @@ import {
 } from "@/core/components/ui/card";
 import { Spinner } from "@/core/components/ui/spinner";
 
-// Hooks
-import { useGetStatsData } from "@/core/hooks/use-stats";
-
 // Dynamic imports
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -70,11 +67,13 @@ const CHART_COLORS = {
 
 const CHART_HEIGHT = 300;
 
-export const MainDashboard = () => {
-  const { data: statsData, isPending } = useGetStatsData() as {
-    data: StatsData | undefined;
-    isPending: boolean;
-  };
+type Props = {
+  statsData: any;
+  isPending: boolean;
+};
+
+export const MainDashboard = ({ statsData, isPending }: Props) => {
+ 
 
   // Base options pour donut
   const baseDonutOptions = useMemo(
@@ -84,7 +83,7 @@ export const MainDashboard = () => {
         height: CHART_HEIGHT,
         fontFamily: "inherit",
       },
-      colors: [CHART_COLORS.secondary, CHART_COLORS.primary],
+      colors: [CHART_COLORS.primary, CHART_COLORS.secondary],
       legend: {
         position: "bottom" as const,
       },

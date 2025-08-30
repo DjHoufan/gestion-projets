@@ -31,6 +31,7 @@ export const QueryKeyString = {
   Activities: "Activities",
   classes: "classes",
   employes: "employes",
+  akis:"akis"
 };
 
 export const Days = [

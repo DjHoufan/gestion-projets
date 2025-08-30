@@ -85,3 +85,28 @@ export const useGetActivities = () => {
     refetchOnReconnect: false,
   });
 };
+
+
+
+
+
+ export const useGetakis = () => {
+  return useQuery({
+    queryKey: [QueryKeyString.akis],
+    queryFn: async () => {
+      const response = await client.api.stats.akis.$get();
+
+      if (!response.ok) {
+        throw new Error("Échec de la récupération des stats Activities");
+      }
+      const { data } = await response.json();
+
+      return data;
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+};
+

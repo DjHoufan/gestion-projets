@@ -11,8 +11,8 @@ import {
   Target,
   CalendarClock,
 } from "lucide-react";
-import { useGetDashboardStats } from "@/core/hooks/use-stats";
-
+import { PrimaryMetric } from "@/core/lib/queries_stats";
+ 
 const primaryMetrics = [
   {
     title: "Projets Actifs",
@@ -47,8 +47,14 @@ const colorClasses = {
   orange: { icon: "bg-orange-500", text: "text-orange-700" },
 };
 
-export function MetricsGrid() {
-  const { data, isPending } = useGetDashboardStats();
+type Props = {
+  data: PrimaryMetric[];
+  isPending: boolean;
+};
+
+export function MetricsGrid({ data, isPending }: Props) {
+
+ 
 
   const mergedMetrics = primaryMetrics.map((metric) => {
     const apiMetric = data?.find((item) => item.title === metric.match);

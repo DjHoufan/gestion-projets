@@ -8,7 +8,6 @@ const getCachedPrimaryMetrics = unstable_cache(
   { revalidate: 300 } // 5 min
 );
 
-
 const getCachedStats = unstable_cache(
   async () => getStatsDatas(),
   ["stats-data"],
@@ -27,12 +26,19 @@ const getCachedGlobalActivities = unstable_cache(
   { revalidate: 300 } // 5 min
 );
 
+const getDashboardStats = unstable_cache(
+  async () => getAllStatsData(),
+  ["stats-dashboard"],
+  { revalidate: 300 } // 5 min
+);
+
 import {
   getPrimaryMetrics,
   getSatsProjectUsers,
   getStatsDatas,
   getGlobalActivities,
 } from "@/core/lib/stats";
+import { getAllStatsData } from "@/core/lib/queries_stats";
 
 const app = new Hono()
   .get("/DashboardStats", sessionMiddleware, async (c) => {
@@ -49,6 +55,10 @@ const app = new Hono()
   })
   .get("/Activities", sessionMiddleware, async (c) => {
     const data = await getCachedGlobalActivities();
+    return c.json({ data });
+  })
+  .get("/akis", sessionMiddleware, async (c) => {
+    const data = await getDashboardStats();
     return c.json({ data });
   });
 
