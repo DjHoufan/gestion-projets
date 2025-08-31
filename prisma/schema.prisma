@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 enum Status {
@@ -217,8 +218,8 @@ model Member {
   accompanimentId String?        @db.Uuid
   accompaniment   Accompaniment? @relation(fields: [accompanimentId], references: [id])
 
-  classeId String @db.Uuid
-  classe   Classe @relation(fields: [classeId], references: [id])
+  classeId String? @db.Uuid
+  classe   Classe? @relation(fields: [classeId], references: [id])
 
   createdAt DateTime
   updatedAt DateTime @updatedAt
