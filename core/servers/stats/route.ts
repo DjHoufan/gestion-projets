@@ -58,7 +58,7 @@ const app = new Hono()
     return c.json({ data });
   })
   .get("/akis", sessionMiddleware, async (c) => {
-    const data = await getAllStatsData();
+    const data = await getDashboardStats();
     return c.json({ data });
   });
 

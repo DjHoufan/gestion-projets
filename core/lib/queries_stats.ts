@@ -176,28 +176,37 @@ function parseDates<T extends Record<string, any>, K extends keyof T>(
   });
 }
 
-const countThisYear = <T extends { createdAt?: Date; date?: Date }>(
+/* ---------------- FONCTIONS UTILES ---------------- */
+const totalCount = <T extends { createdAt?: Date; date?: Date }>(
   data: T[],
-  field: "createdAt" | "date",
-  startCurrentYear: Date
-) =>
-  data.filter((item) => (item[field] ?? new Date()) >= startCurrentYear).length;
+  field: "createdAt" | "date"
+) => data.filter((item) => item[field] instanceof Date).length;
 
-const countLastYear = <T extends { createdAt?: Date; date?: Date }>(
+const countThisMonth = <T extends { createdAt?: Date; date?: Date }>(
   data: T[],
   field: "createdAt" | "date",
-  startLastYear: Date,
-  startCurrentYear: Date
+  startCurrentMonth: Date
 ) =>
   data.filter((item) => {
-    const d = item[field] ?? new Date();
-    return d >= startLastYear && d < startCurrentYear;
+    const d = item[field];
+    return d instanceof Date && d >= startCurrentMonth;
+  }).length;
+
+const countLastMonth = <T extends { createdAt?: Date; date?: Date }>(
+  data: T[],
+  field: "createdAt" | "date",
+  startLastMonth: Date,
+  startCurrentMonth: Date
+) =>
+  data.filter((item) => {
+    const d = item[field];
+    return d instanceof Date && d >= startLastMonth && d < startCurrentMonth;
   }).length;
 
 /* ---------------- MAIN FUNCTION ---------------- */
 export async function getAllStatsData(year: number = new Date().getFullYear()) {
   const now = new Date();
- 
+
   const startCurrentMonth = startOfMonth(now);
   const startLastMonth = startOfMonth(subMonths(now, 1));
   // ✅ SQL typé et sécurisé
@@ -237,62 +246,38 @@ export async function getAllStatsData(year: number = new Date().getFullYear()) {
   const primaryMetrics: PrimaryMetric[] = [
     {
       title: "Project",
-      value: countThisYear(
+      value: totalCount(allProjects, "createdAt").toString(), // total cumulé
+      change: `${countThisMonth(
         allProjects,
         "createdAt",
         startCurrentMonth
-      ).toString(),
-      change: `${
-        countThisYear(allProjects, "createdAt", startCurrentMonth) -
-        countLastYear(
-          allProjects,
-          "createdAt",
-          startLastMonth,
-          startCurrentMonth
-        )
-      } vs le mois dernier`,
+      )} ajoutés ce mois`,
     },
     {
       title: "Member",
-      value: countThisYear(
-        allMembers,
-        "createdAt",
-        startCurrentMonth
-      ).toString(),
+      value: totalCount(allMembers, "createdAt").toString(),
       change: `${
-        countThisYear(allMembers, "createdAt", startCurrentMonth) -
-        countLastYear(
-          allMembers,
-          "createdAt",
-          startLastMonth,
-          startCurrentMonth
-        )
-      } vs le mois dernier`,
+        countThisMonth(allMembers, "createdAt", startCurrentMonth) 
+        
+      } ajoutés ce mois`,
     },
     {
       title: "Accompaniment",
-      value: countThisYear(
+      value: totalCount(allAccompaniments, "createdAt").toString(),
+      change: `${countThisMonth(
         allAccompaniments,
         "createdAt",
         startCurrentMonth
-      ).toString(),
-      change: `${
-        countThisYear(allAccompaniments, "createdAt", startCurrentMonth) -
-        countLastYear(
-          allAccompaniments,
-          "createdAt",
-          startLastMonth,
-          startCurrentMonth
-        )
-      } vs le mois dernier`,
+      )} ajoutés ce mois`,
     },
     {
       title: "Visits",
-      value: countThisYear(allVisits, "date", startCurrentMonth).toString(),
-      change: `${
-        countThisYear(allVisits, "date", startCurrentMonth) -
-        countLastYear(allVisits, "date", startLastMonth, startCurrentMonth)
-      } vs le mois dernier`,
+      value: totalCount(allVisits, "date").toString(),
+      change: `${countThisMonth(
+        allVisits,
+        "date",
+        startCurrentMonth
+      )} ajoutées ce mois`,
     },
   ];
   const months = Array.from({ length: 12 }).map((_, i) => ({
