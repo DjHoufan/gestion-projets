@@ -192,17 +192,6 @@ const countThisMonth = <T extends { createdAt?: Date; date?: Date }>(
     return d instanceof Date && d >= startCurrentMonth;
   }).length;
 
-const countLastMonth = <T extends { createdAt?: Date; date?: Date }>(
-  data: T[],
-  field: "createdAt" | "date",
-  startLastMonth: Date,
-  startCurrentMonth: Date
-) =>
-  data.filter((item) => {
-    const d = item[field];
-    return d instanceof Date && d >= startLastMonth && d < startCurrentMonth;
-  }).length;
-
 /* ---------------- MAIN FUNCTION ---------------- */
 export async function getAllStatsData(year: number = new Date().getFullYear()) {
   const now = new Date();
@@ -256,10 +245,11 @@ export async function getAllStatsData(year: number = new Date().getFullYear()) {
     {
       title: "Member",
       value: totalCount(allMembers, "createdAt").toString(),
-      change: `${
-        countThisMonth(allMembers, "createdAt", startCurrentMonth) 
-        
-      } ajoutés ce mois`,
+      change: `${countThisMonth(
+        allMembers,
+        "createdAt",
+        startCurrentMonth
+      )} ajoutés ce mois`,
     },
     {
       title: "Accompaniment",

@@ -395,6 +395,7 @@ export const MemberBody = ({ permission }: PermissionProps) => {
             searchPlaceholder="Rechercher par nom ou date..."
             searchField="name"
             additionalSearchFields={[
+              "name",
               "phone",
               "email",
               "status",

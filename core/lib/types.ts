@@ -86,9 +86,8 @@ export type OneAccompaniment = Accompaniment & {
 };
 
 export type AccompanimentDetail = Accompaniments & {
-  maps: Maps[];
-  purchases: PurchaseDetail | null;
-  plannings: Plannings | null;
+  members: Member[];
+  project: Project;
 };
 
 export type UserDetail = Users & {
@@ -165,7 +164,6 @@ export type ViewProps = {
 };
 
 export type DashboardContentProps = {
- 
   user: UpdatedData;
 };
 
