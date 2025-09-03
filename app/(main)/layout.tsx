@@ -18,6 +18,8 @@ export default async function RootLayout({
   return (
     <MainLayout userId={userCurrent.id} user={user}>
       {children}
+
+     
     </MainLayout>
   );
 }
