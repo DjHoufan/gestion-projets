@@ -96,7 +96,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/dashboard-main.png"
+                    src="/guide/dashboard-main.png"
                     alt="Tableau de bord principal HOUFAN"
                     width={800}
                     height={400}
@@ -152,7 +152,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/projects-grid.png"
+                    src="/guide/projects-grid.png"
                     alt="Vue grille des projets avec statistiques"
                     width={800}
                     height={400}
@@ -197,7 +197,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/new-project-modal.png"
+                    src="/guide/new-project-modal.png"
                     alt="Formulaire de création de nouveau projet"
                     width={800}
                     height={400}
@@ -230,7 +230,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/edit-project-modal.png"
+                    src="/guide/edit-project-modal.png"
                     alt="Formulaire de modification de projet"
                     width={800}
                     height={400}
@@ -267,7 +267,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/project-details.png"
+                    src="/guide/project-details.png"
                     alt="Vue détaillée du projet Cohorte 2"
                     width={800}
                     height={400}
@@ -312,7 +312,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/dashboard-recent.png"
+                    src="/guide/dashboard-recent.png"
                     alt="Tableau de bord avec projets récents et statistiques utilisateurs"
                     width={800}
                     height={400}
@@ -369,7 +369,7 @@ const Guide = () => {
                 </h3>
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/dashboard-activities.png"
+                    src="/guide/dashboard-activities.png"
                     alt="Graphique des activités hebdomadaires"
                     width={800}
                     height={300}
@@ -423,7 +423,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/beneficiaries-list.png"
+                    src="/guide/beneficiaries-list.png"
                     alt="Liste complète des bénéficiaires avec détails"
                     width={800}
                     height={400}
@@ -467,7 +467,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/beneficiaries-with-metrics.png"
+                    src="/guide/beneficiaries-with-metrics.png"
                     alt="Bénéficiaires avec métriques colorées du projet"
                     width={800}
                     height={400}
@@ -512,7 +512,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/beneficiaries-data-view.png"
+                    src="/guide/beneficiaries-data-view.png"
                     alt="Vue données des bénéficiaires avec filtres avancés"
                     width={800}
                     height={400}
@@ -555,7 +555,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/member-details-form.png"
+                    src="/guide/member-details-form.png"
                     alt="Formulaire d&apos;ajout de nouveau bénéficiaire"
                     width={800}
                     height={400}
@@ -598,7 +598,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/member-edit-form.png"
+                    src="/guide/member-edit-form.png"
                     alt="Formulaire de modification d&apos;un bénéficiaire existant"
                     width={800}
                     height={400}
@@ -641,7 +641,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/beneficiary-profile.png"
+                    src="/guide/beneficiary-profile.png"
                     alt="Profil détaillé de Mahdia Kadir Houssein"
                     width={800}
                     height={400}
@@ -687,7 +687,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/beneficiary-detailed-modal.png"
+                    src="/guide/beneficiary-detailed-modal.png"
                     alt="Fiche détaillée complète de Mahdia Kadir Houssein"
                     width={800}
                     height={400}
@@ -751,7 +751,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/classes-list.png"
+                    src="/guide/classes-list.png"
                     alt="Liste des classes avec formateurs et projets"
                     width={800}
                     height={400}
@@ -794,7 +794,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/class-details-form.png"
+                    src="/guide/class-details-form.png"
                     alt="Formulaire de création de nouvelle classe"
                     width={800}
                     height={400}
@@ -834,7 +834,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/class-edit-form.png"
+                    src="/guide/class-edit-form.png"
                     alt="Formulaire de modification de classe existante"
                     width={800}
                     height={400}
@@ -869,7 +869,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/class-detailed-view.png"
+                    src="/guide/class-detailed-view.png"
                     alt="Vue détaillée de la classe test1 avec suivi des bénéficiaires"
                     width={800}
                     height={400}
@@ -934,7 +934,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/accompaniment-management.png"
+                    src="/guide/accompaniment-management.png"
                     alt="Page de gestion des accompagnements avec statistiques"
                     width={800}
                     height={400}
@@ -988,7 +988,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/new-accompaniment-form.png"
+                    src="/guide/new-accompaniment-form.png"
                     alt="Formulaire de création d&apos;un nouvel accompagnement"
                     width={800}
                     height={400}
@@ -1041,7 +1041,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/abandonment-form.png"
+                    src="/guide/abandonment-form.png"
                     alt="Formulaire de modification d&apos;abandon"
                     width={800}
                     height={400}
@@ -1093,7 +1093,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/team-management.png"
+                    src="/guide/team-management.png"
                     alt="Page de gestion des équipes avec onglets et liste des employés"
                     width={800}
                     height={400}
@@ -1155,7 +1155,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/project-gps-details.png"
+                    src="/guide/project-gps-details.png"
                     alt="Vue détaillée du projet test 1 avec carte GPS interactive"
                     width={800}
                     height={400}
@@ -1224,7 +1224,7 @@ const Guide = () => {
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
-                    src="/images/report-management.png"
+                    src="/guide/report-management.png"
                     alt="Page de gestion des rapports avec types de rapports disponibles"
                     width={800}
                     height={400}
@@ -1300,7 +1300,7 @@ const Guide = () => {
               <h4 className="font-semibold mb-3">Suppression de données</h4>
               <div className="bg-white/10 rounded-lg p-4 mb-4">
                 <Image
-                  src="/images/delete-confirmation.png"
+                  src="/guide/delete-confirmation.png"
                   alt="Confirmation de suppression de projet"
                   width={600}
                   height={300}
@@ -1309,7 +1309,7 @@ const Guide = () => {
               </div>
               <div className="bg-white/10 rounded-lg p-4 mb-4">
                 <Image
-                  src="/images/delete-confirmation-class.png"
+                  src="/guide/delete-confirmation-class.png"
                   alt="Confirmation de suppression de classe"
                   width={600}
                   height={300}
@@ -1318,7 +1318,7 @@ const Guide = () => {
               </div>
               <div className="bg-white/10 rounded-lg p-4 mb-4">
                 <Image
-                  src="/images/beneficiary-delete-confirmation.png"
+                  src="/guide/beneficiary-delete-confirmation.png"
                   alt="Confirmation de suppression de bénéficiaire Mahdia Kadir Houssein"
                   width={600}
                   height={300}
