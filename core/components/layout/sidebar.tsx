@@ -90,6 +90,12 @@ const TOOLS_ITEMS: NavigationItem[] = [
     icon: Waypoints,
     description: "les acces des utilisateurs",
   },
+    {
+    title: "Guide",
+    url: "/guide",
+    icon: Folders,
+    description: "Guide d'utilisation",
+  },
 ];
 
 const SECTION_HEADER_CLASSES = "flex items-center gap-2 px-3 mb-4";
