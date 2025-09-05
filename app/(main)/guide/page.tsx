@@ -91,7 +91,7 @@ const Guide = () => {
                   Tableau de bord principal
                 </h3>
                 <Badge variant="outline" className="mb-4">
-                  Navigation : Page d'accueil après connexion
+                  Navigation : Page d&apos;accueil après connexion
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -112,17 +112,17 @@ const Guide = () => {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-sm">
-                      <li>• Profil utilisateur avec statut "Inactif"</li>
+                      <li>• Profil utilisateur avec statut &ldquo;Inactif&rdquo;</li>
                       <li>
                         • Métriques : Total Visites (0), Terminées (0), DJF
                         Dépensés (0), Progression (0%)
                       </li>
                       <li>
-                        • Message "Aucun accompagnement" si aucun accompagnement
+                        • Message &ldquo;Aucun accompagnement&rdquo; si aucun accompagnement
                         assigné
                       </li>
                       <li>
-                        • Menu latéral : Vue d'ensemble, Projets & Formations,
+                        • Menu latéral : Vue d&apos;ensemble, Projets & Formations,
                         Classes, Bénéficiaires, Accompagnements, Équipes, Outils
                       </li>
                     </ul>
@@ -144,7 +144,7 @@ const Guide = () => {
             <CardContent className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Vue d'ensemble des projets
+                  Vue d&apos;ensemble des projets
                 </h3>
                 <Badge variant="outline" className="mb-4">
                   Navigation : Projets & Formations &gt; Gestion des formations
@@ -192,7 +192,7 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Création d'un nouveau projet
+                  Création d&apos;un nouveau projet
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -215,7 +215,7 @@ const Guide = () => {
                       <li>• Lieu du projet (1-25 caractères)</li>
                       <li>• Date de début et date de fin</li>
                       <li>• Validation en temps réel des champs</li>
-                      <li>• Boutons d'action : Annuler / Créer le projet</li>
+                      <li>• Boutons d&apos;action : Annuler / Créer le projet</li>
                     </ul>
                   </CardContent>
                 </Card>
@@ -225,7 +225,7 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Modification d'un projet
+                  Modification d&apos;un projet
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -241,7 +241,7 @@ const Guide = () => {
                 <Card className="bg-white">
                   <CardHeader>
                     <CardTitle className="text-lg">
-                      Fonctionnalités d'édition :
+                      Fonctionnalités d&apos;édition :
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -252,7 +252,7 @@ const Guide = () => {
                       <li>• Champs pré-remplis avec les données actuelles</li>
                       <li>• Validation des contraintes de caractères</li>
                       <li>• Mise à jour des dates de début et fin</li>
-                      <li>• Boutons d'action : Annuler / Modifier</li>
+                      <li>• Boutons d&apos;action : Annuler / Modifier</li>
                     </ul>
                   </CardContent>
                 </Card>
@@ -262,7 +262,7 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Détails d'un projet
+                  Détails d&apos;un projet
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -292,11 +292,11 @@ const Guide = () => {
                         • Progression du projet : 100% pour les projets terminés
                       </li>
                       <li>
-                        • Section de recherche pour les groupes d'accompagnement
+                        • Section de recherche pour les groupes d&apos;accompagnement
                       </li>
                       <li>
-                        • Boutons d'action : "En cours" et "Enregistre un
-                        abandon"
+                        • Boutons d&apos;action : &ldquo;En cours&rdquo; et &ldquo;Enregistre un
+                        abandon&rdquo;
                       </li>
                     </ul>
                   </CardContent>
@@ -489,11 +489,11 @@ const Guide = () => {
                         Progression (orange)
                       </li>
                       <li>
-                        • 0 Groupes d'accompagnement, 0 Accompagnateurs, 220
+                        • 0 Groupes d&apos;accompagnement, 0 Accompagnateurs, 220
                         Membres
                       </li>
                       <li>
-                        • Section "Groupes d'accompagnement" avec recherche
+                        • Section &ldquo;Groupes d&apos;accompagnement&rdquo; avec recherche
                       </li>
                       <li>
                         • Liste des bénéficiaires avec informations détaillées
@@ -528,7 +528,7 @@ const Guide = () => {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-sm">
-                      <li>• Onglets "Statistique" et "Données" (actif)</li>
+                      <li>• Onglets &ldquo;Statistique&rdquo; et &ldquo;Données&rdquo; (actif)</li>
                       <li>• Filtres multiples : handicap, projet, statut</li>
                       <li>• Recherche par nom ou date</li>
                       <li>
@@ -536,7 +536,7 @@ const Guide = () => {
                         Date de naissance, Langue, Attestation, Projet,
                         Handicap, Statut, Actions
                       </li>
-                      <li>• Bouton "Enregistre un nouveau bénéficiaire"</li>
+                      <li>• Bouton &ldquo;Enregistre un nouveau bénéficiaire&rdquo;</li>
                       <li>
                         • Informations détaillées par bénéficiaire (Cohorte 2,
                         CASAF, statuts actifs)
@@ -550,13 +550,13 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Ajout d'un bénéficiaire
+                  Ajout d&apos;un bénéficiaire
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
                     src="/images/member-details-form.png"
-                    alt="Formulaire d'ajout de nouveau bénéficiaire"
+                    alt="Formulaire d&apos;ajout de nouveau bénéficiaire"
                     width={800}
                     height={400}
                     className="w-full rounded-lg"
@@ -593,13 +593,13 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Modification d'un bénéficiaire
+                  Modification d&apos;un bénéficiaire
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
                     src="/images/member-edit-form.png"
-                    alt="Formulaire de modification d'un bénéficiaire existant"
+                    alt="Formulaire de modification d&apos;un bénéficiaire existant"
                     width={800}
                     height={400}
                     className="w-full rounded-lg"
@@ -625,7 +625,7 @@ const Guide = () => {
                       <li>• Type de handicap (Pas de Handicap) et langue</li>
                       <li>• Section attestation avec zone de texte</li>
                       <li>
-                        • Bouton "Modifier" pour sauvegarder les changements
+                        • Bouton &ldquo;Modifier&rdquo; pour sauvegarder les changements
                       </li>
                     </ul>
                   </CardContent>
@@ -636,7 +636,7 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Profil détaillé d'un bénéficiaire
+                  Profil détaillé d&apos;un bénéficiaire
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -663,7 +663,7 @@ const Guide = () => {
                         0 DJF Dépensés, 0% Progression
                       </li>
                       <li>
-                        • Message "Aucun accompagnement" si aucun accompagnement
+                        • Message &ldquo;Aucun accompagnement&rdquo; si aucun accompagnement
                         assigné
                       </li>
                       <li>
@@ -761,7 +761,7 @@ const Guide = () => {
 
                 <Card className="bg-white">
                   <CardHeader>
-                    <CardTitle className="text-lg">Vue d'ensemble :</CardTitle>
+                    <CardTitle className="text-lg">Vue d&apos;ensemble :</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-sm">
@@ -770,7 +770,7 @@ const Guide = () => {
                         Projet, Actions
                       </li>
                       <li>
-                        • Classe "TEST1" avec formatrice Kadra Abdi Ismail
+                        • Classe &ldquo;TEST1&rdquo; avec formatrice Kadra Abdi Ismail
                       </li>
                       <li>
                         • Projet associé : Cohorte 1 (CASAF, 01/07/2025 -
@@ -778,7 +778,7 @@ const Guide = () => {
                       </li>
                       <li>• Filtres par projet et formateur/formatrice</li>
                       <li>• Recherche par nom ou date</li>
-                      <li>• Bouton "Enregistre une nouvelle classe"</li>
+                      <li>• Bouton &ldquo;Enregistre une nouvelle classe&rdquo;</li>
                       <li>• Pagination : 1 résultat, 10 par page</li>
                     </ul>
                   </CardContent>
@@ -789,7 +789,7 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Création d'une classe
+                  Création d&apos;une classe
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -818,7 +818,7 @@ const Guide = () => {
                         • Assignation du formateur/formatrice (dropdown avec
                         icône utilisateur)
                       </li>
-                      <li>• Bouton "Enregistrer" pour valider la création</li>
+                      <li>• Bouton &ldquo;Enregistrer&rdquo; pour valider la création</li>
                       <li>• Interface moderne avec design cohérent HOUFAN</li>
                     </ul>
                   </CardContent>
@@ -829,7 +829,7 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Modification d'une classe
+                  Modification d&apos;une classe
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -849,11 +849,11 @@ const Guide = () => {
                   <CardContent>
                     <ul className="space-y-2 text-sm">
                       <li>• Champs pré-remplis avec les données existantes</li>
-                      <li>• Nom de classe "test1" modifiable</li>
-                      <li>• Projet "Cohorte 1" pré-sélectionné</li>
-                      <li>• Formatrice "Kadra Abdi Ismail" pré-sélectionnée</li>
+                      <li>• Nom de classe &ldquo;test1&rdquo; modifiable</li>
+                      <li>• Projet &ldquo;Cohorte 1&rdquo; pré-sélectionné</li>
+                      <li>• Formatrice &ldquo;Kadra Abdi Ismail&rdquo; pré-sélectionnée</li>
                       <li>
-                        • Bouton "Modifier" pour sauvegarder les changements
+                        • Bouton &ldquo;Modifier&rdquo; pour sauvegarder les changements
                       </li>
                     </ul>
                   </CardContent>
@@ -864,7 +864,7 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Détails d'une classe
+                  Détails d&apos;une classe
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -886,8 +886,8 @@ const Guide = () => {
                   <CardContent>
                     <ul className="space-y-2 text-sm">
                       <li>
-                        • Titre de la classe "test1" avec sous-titre "Suivi de
-                        la classe"
+                        • Titre de la classe &ldquo;test1&rdquo; avec sous-titre &ldquo;Suivi de
+                        la classe&rdquo;
                       </li>
                       <li>• Projet associé : Cohorte 1</li>
                       <li>• Lieu de formation : CASAF, 1 participante</li>
@@ -906,7 +906,7 @@ const Guide = () => {
                       <li>
                         • Tableau des bénéficiaires avec informations complètes
                       </li>
-                      <li>• Bouton "Enregistre un nouveau bénéficiaire"</li>
+                      <li>• Bouton &ldquo;Enregistre un nouveau bénéficiaire&rdquo;</li>
                     </ul>
                   </CardContent>
                 </Card>
@@ -926,7 +926,7 @@ const Guide = () => {
             <CardContent className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Vue d'ensemble des accompagnements
+                  Vue d&apos;ensemble des accompagnements
                 </h3>
                 <Badge variant="outline" className="mb-4">
                   Navigation : Accompagnements &gt; Gestion des Accompagnements
@@ -961,17 +961,17 @@ const Guide = () => {
                         • <strong>Terminés :</strong> 0 accompagnement finalisé
                       </li>
                       <li>
-                        • Section "Accompagnements Récents" avec détails
+                        • Section &ldquo;Accompagnements Récents&rdquo; avec détails
                         complets
                       </li>
                       <li>
-                        • Accompagnement "test 1" - Statut "En cours" - Projet
-                        "Cohorte 1"
+                        • Accompagnement &ldquo;test 1&rdquo; - Statut &ldquo;En cours&rdquo; - Projet
+                        &ldquo;Cohorte 1&rdquo;
                       </li>
                       <li>• Informations de contact : test test, 77000203</li>
                       <li>• Budget alloué : 80 000 Fdj</li>
                       <li>
-                        • Bouton "Nouvel Accompagnement" pour créer de nouveaux
+                        • Bouton &ldquo;Nouvel Accompagnement&rdquo; pour créer de nouveaux
                         accompagnements
                       </li>
                     </ul>
@@ -983,13 +983,13 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Création d'un nouvel accompagnement
+                  Création d&apos;un nouvel accompagnement
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
                     src="/images/new-accompaniment-form.png"
-                    alt="Formulaire de création d'un nouvel accompagnement"
+                    alt="Formulaire de création d&apos;un nouvel accompagnement"
                     width={800}
                     height={400}
                     className="w-full rounded-lg"
@@ -1010,11 +1010,11 @@ const Guide = () => {
                       </li>
                       <li>
                         • <strong>Localisation :</strong> Adresse complète
-                        précise (ex: 123 Rue de l'Innovation, 75001 Paris)
+                        précise (ex: 123 Rue de l&apos;Innovation, 75001 Paris)
                       </li>
                       <li>
                         • <strong>Les bénéficiaires :</strong> Section pour
-                        ajouter les membres à l'accompagnement
+                        ajouter les membres à l&apos;accompagnement
                       </li>
                       <li>
                         • Champs avec icônes distinctives pour chaque section
@@ -1024,8 +1024,8 @@ const Guide = () => {
                         obligatoires
                       </li>
                       <li>
-                        • Exemple de nom de business : "Formation Digital
-                        Marketing"
+                        • Exemple de nom de business : &ldquo;Formation Digital
+                        Marketing&rdquo;
                       </li>
                     </ul>
                   </CardContent>
@@ -1036,13 +1036,13 @@ const Guide = () => {
 
               <div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                  Enregistrement d'abandon
+                  Enregistrement d&apos;abandon
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
                   <Image
                     src="/images/abandonment-form.png"
-                    alt="Formulaire de modification d'abandon"
+                    alt="Formulaire de modification d&apos;abandon"
                     width={800}
                     height={400}
                     className="w-full rounded-lg"
@@ -1062,9 +1062,9 @@ const Guide = () => {
                       </li>
                       <li>• Sélection de la cohorte (Cohorte 2)</li>
                       <li>
-                        • Raison de l'abandon (zone de texte 0/1000 caractères)
+                        • Raison de l&apos;abandon (zone de texte 0/1000 caractères)
                       </li>
-                      <li>• Boutons d'action : Annuler / Enregistrer</li>
+                      <li>• Boutons d&apos;action : Annuler / Enregistrer</li>
                       <li>• Formulaire modal avec validation des champs</li>
                     </ul>
                   </CardContent>
@@ -1088,7 +1088,7 @@ const Guide = () => {
                   Employés, Accompagnateurs & Formateurs
                 </h3>
                 <Badge variant="outline" className="mb-4">
-                  Navigation : Équipes &gt; Gestion de l'équipe
+                  Navigation : Équipes &gt; Gestion de l&apos;équipe
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
@@ -1110,16 +1110,16 @@ const Guide = () => {
                   <CardContent>
                     <ul className="space-y-2 text-sm">
                       <li>
-                        • <strong>Titre coloré :</strong> "Employé(e)s,
-                        Accompagnateurs & Formateurs" avec dégradé de couleurs
+                        • <strong>Titre coloré :</strong> &ldquo;Employé(e)s,
+                        Accompagnateurs & Formateurs&rdquo; avec dégradé de couleurs
                       </li>
                       <li>
                         • <strong>Onglets :</strong> Employé(e)s (actif),
                         Accompagnateurs, Formateurs
                       </li>
                       <li>
-                        • <strong>Section active :</strong> "Liste des
-                        employé(e)s" avec description
+                        • <strong>Section active :</strong> &ldquo;Liste des
+                        employé(e)s&rdquo; avec description
                       </li>
                       <li>
                         • <strong>Tableau détaillé :</strong> Utilisateur,
@@ -1138,8 +1138,8 @@ const Guide = () => {
                         ou date, pagination (1 résultat, 10 par page)
                       </li>
                       <li>
-                        • <strong>Bouton d'action :</strong> "Enregistre un
-                        nouveau Utilisateurs"
+                        • <strong>Bouton d&apos;action :</strong> &ldquo;Enregistre un
+                        nouveau Utilisateurs&rdquo;
                       </li>
                     </ul>
                   </CardContent>
@@ -1178,11 +1178,11 @@ const Guide = () => {
                       </li>
                       <li>
                         • <strong>Navigation par onglets :</strong> Vue
-                        d'ensemble, Bénéficiaires, Planning, Achats,
+                        d&apos;ensemble, Bénéficiaires, Planning, Achats,
                         Localisations (actif), Média
                       </li>
                       <li>
-                        • <strong>Section GPS :</strong> "Localisations GPS"
+                        • <strong>Section GPS :</strong> &ldquo;Localisations GPS&rdquo;
                         avec points de géolocalisation
                       </li>
                       <li>
@@ -1190,8 +1190,8 @@ const Guide = () => {
                         avec contrôles de zoom
                       </li>
                       <li>
-                        • <strong>Fonctionnalités :</strong> Bouton "Ajouter une
-                        localisation" et "Consulter le plan d'affaires"
+                        • <strong>Fonctionnalités :</strong> Bouton &ldquo;Ajouter une
+                        localisation&rdquo; et &ldquo;Consulter le plan d&apos;affaires&rdquo;
                       </li>
                       <li>
                         • <strong>Interface moderne :</strong> Cartes métriques
@@ -1241,12 +1241,12 @@ const Guide = () => {
                   <CardContent>
                     <ul className="space-y-2 text-sm">
                       <li>
-                        • <strong>Titre :</strong> "Gestion des rapports" avec
-                        sous-titre "Formulaires et documents"
+                        • <strong>Titre :</strong> &ldquo;Gestion des rapports&rdquo; avec
+                        sous-titre &ldquo;Formulaires et documents&rdquo;
                       </li>
                       <li>
-                        • <strong>Section gauche :</strong> "LES DIFFÉRENTS
-                        RAPPORTS" avec liste des types
+                        • <strong>Section gauche :</strong> &ldquo;LES DIFFÉRENTS
+                        RAPPORTS&rdquo; avec liste des types
                       </li>
                       <li>
                         • <strong>Types disponibles :</strong>
@@ -1272,7 +1272,7 @@ const Guide = () => {
                         Signature, Actions)
                       </li>
                       <li>
-                        • <strong>État :</strong> "Aucun résultat trouvé" - 0
+                        • <strong>État :</strong> &ldquo;Aucun résultat trouvé&rdquo; - 0
                         résultat, pagination Page 1 sur 1
                       </li>
                       <li>
@@ -1327,8 +1327,8 @@ const Guide = () => {
               </div>
               <p className="text-sm mb-2">
                 <strong>Attention :</strong> La suppression de projets comme
-                "Cohorte 2", de classes comme "test1", ou de bénéficiaires comme
-                "Mahdia Kadir Houssein" est une action irréversible signalée par
+                &ldquo;Cohorte 2&rdquo;, de classes comme &ldquo;test1&rdquo;, ou de bénéficiaires comme
+                &ldquo;Mahdia Kadir Houssein&rdquo; est une action irréversible signalée par
                 un avertissement.
               </p>
             </div>
@@ -1361,8 +1361,8 @@ const Guide = () => {
           </CardHeader>
           <CardContent>
             <p className="mb-4">
-              Pour toute assistance technique ou question sur l'utilisation de
-              la plateforme HOUFAN, contactez l'équipe support.
+              Pour toute assistance technique ou question sur l&apos;utilisation de
+              la plateforme HOUFAN, contactez l&apos;équipe support.
             </p>
             <div className="space-y-2 text-sm">
               <p>

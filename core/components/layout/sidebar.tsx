@@ -12,6 +12,7 @@ import {
   FolderKanban,
   Shapes,
   Waypoints,
+  Folders
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
