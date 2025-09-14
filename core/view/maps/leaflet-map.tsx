@@ -828,13 +828,7 @@ export default function LeafletMap({
       // Ajouter les nouveaux marqueurs
       safeCoordinates.forEach((coord, index) => {
         try {
-          if (!coord || !coord.accompaniment) {
-            toast.warning({
-              message: `Coordonnée invalide à l'index ${index}:`,
-              coord,
-            });
-            return;
-          }
+          
 
           const style = getMarkerStyle(coord, index);
           const { accompaniment } = coord;
@@ -997,7 +991,7 @@ export default function LeafletMap({
             }
           }
         } catch (e) {
-          toast.warning({ message: "Erreur ajustement vue:", e });
+          
         }
       }
     } catch (error) {
