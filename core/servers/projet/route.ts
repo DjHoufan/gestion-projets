@@ -25,7 +25,7 @@ const app = new Hono()
         accompaniments: true,
       },
       orderBy: {
-        startDate: "asc",
+        name: "asc",
       },
     });
     return c.json({ data });

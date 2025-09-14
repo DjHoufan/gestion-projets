@@ -66,7 +66,7 @@ import LeaveForm from "@/core/view/leave/leave-form";
 import { DataTable } from "@/core/components/global/data-table";
 import { format } from "date-fns";
 
-type oneUserDetail = Omit<UserDetail,'cv'> & {
+type oneUserDetail = Omit<UserDetail, "cv"> & {
   groupName: string;
 };
 
@@ -350,6 +350,15 @@ export const ProjectDetail = ({ Id }: IdType) => {
     },
   ];
 
+  const [singleMember, multipleMembers] = useMemo(() => {
+    const accompaniments = projectData?.accompaniments ?? [];
+
+    const single = accompaniments.filter((a) => a.members?.length === 1);
+    const multiple = accompaniments.filter((a) => (a.members?.length ?? 0) > 1);
+
+    return [single, multiple];
+  }, [projectData?.accompaniments]);
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -414,13 +423,19 @@ export const ProjectDetail = ({ Id }: IdType) => {
             <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-6 text-white">
               <div className="flex items-center justify-between mb-3">
                 <Building className="h-8 w-8 text-emerald-100" />
-                <span className="text-2xl font-bold">
-                  {projectData ? (
-                    projectData.accompaniments.length
-                  ) : (
-                    <Spinner variant="ellipsis" />
-                  )}
-                </span>
+                <div className="text-center">
+                  <span className="block text-2xl font-bold">
+                    {projectData ? (
+                      projectData.accompaniments.length
+                    ) : (
+                      <Spinner variant="ellipsis" />
+                    )}
+                  </span>
+                  <div className="text-sm flex gap-5">
+                    <span>{singleMember.length} groupe</span>
+                    <span>{multipleMembers.length} individuel</span>
+                  </div>
+                </div>
               </div>
               <p className="text-emerald-100 font-medium text-sm">Groupes</p>
               <p className="text-xs text-emerald-200 mt-1">
@@ -567,7 +582,7 @@ export const ProjectDetail = ({ Id }: IdType) => {
                           <div className="flex items-center gap-3">
                             <Avatar className="h-12 w-12">
                               <AvatarImage
-                                src={group.users.profile || "/placeholder.svg"}
+                                src={group.users?.profile || "/placeholder.svg"}
                               />
                               <AvatarFallback
                                 className={`${
@@ -582,7 +597,7 @@ export const ProjectDetail = ({ Id }: IdType) => {
                                 {group.name}
                               </h3>
                               <p className="text-sm text-gray-500">
-                                {group.users.name}
+                                {group.users?.name}
                               </p>
                             </div>
                           </div>

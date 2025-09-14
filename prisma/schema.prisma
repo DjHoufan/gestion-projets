@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider          = "postgresql"
   url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+ 
 }
 
 enum Status {
@@ -152,8 +152,8 @@ model Accompaniment {
 
   status Boolean @default(false)
 
-  usersid String @db.Uuid
-  users   Users  @relation(fields: [usersid], references: [id])
+  usersid String? @db.Uuid
+  users   Users?  @relation(fields: [usersid], references: [id], onDelete: SetNull)
 
   map Maps?
 

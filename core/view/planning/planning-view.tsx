@@ -343,26 +343,26 @@ export default function PlanningCalendar({
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <div
-                        key={planning?.users.id}
+                        key={planning?.users?.id}
                         className="flex items-center gap-2"
                       >
                         <Avatar className="w-8 h-8 border-2 border-white">
                           <AvatarImage
                             src={
-                              planning?.users.profile ||
+                              planning?.users?.profile ||
                               "/placeholder.svg?height=32&width=32&query=user profile"
                             }
-                            alt={planning?.users.name}
+                            alt={planning?.users?.name}
                           />
                           <AvatarFallback className="text-xs bg-gray-200">
-                            {planning?.users.name
+                            {planning?.users?.name
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
                         <span className="text-sm text-gray-700">
-                          {planning?.users.name}
+                          {planning?.users?.name}
                         </span>
                       </div>
                     </div>

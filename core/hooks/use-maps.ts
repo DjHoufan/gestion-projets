@@ -52,12 +52,12 @@ export const useGetMaps = () => {
           ...item.accompaniment,
           createdAt: new Date(item.accompaniment.createdAt),
           updatedAt: new Date(item.accompaniment.updatedAt),
-          users: {
+          users: item.accompaniment.users ? {
             ...item.accompaniment.users,
             createdAt: new Date(item.accompaniment.users.createdAt),
             updatedAt: new Date(item.accompaniment.users.updatedAt),
             dob: new Date(item.accompaniment.users.dob),
-          },
+          } : null,
           members:
             item.accompaniment.members?.map((member) => ({
               ...member,
@@ -99,12 +99,12 @@ export const useGetOneMaps = (id: string) => {
           ...data.accompaniment,
           createdAt: new Date(data.accompaniment.createdAt),
           updatedAt: new Date(data.accompaniment.updatedAt),
-          users: {
+          users: data.accompaniment.users ? {
             ...data.accompaniment.users,
             createdAt: new Date(data.accompaniment.users.createdAt),
             updatedAt: new Date(data.accompaniment.users.updatedAt),
             dob: new Date(data.accompaniment.users.dob),
-          },
+          } : null,
           members:
             data.accompaniment.members?.map((member) => ({
               ...member,
@@ -142,23 +142,22 @@ export const useCreateMaps = () => {
         ...data,
         createdAt: new Date(data.createdAt),
         updatedAt: new Date(data.updatedAt),
-
         accompaniment: {
           ...data.accompaniment,
           createdAt: new Date(data.accompaniment.createdAt),
           updatedAt: new Date(data.accompaniment.updatedAt),
-          users: {
+          users: data.accompaniment.users ? {
             ...data.accompaniment.users,
             createdAt: new Date(data.accompaniment.users.createdAt),
             updatedAt: new Date(data.accompaniment.users.updatedAt),
             dob: new Date(data.accompaniment.users.dob),
-          },
-          members: data.accompaniment.members.map((member) => ({
+          } : null,
+          members: data.accompaniment.members?.map((member) => ({
             ...member,
             createdAt: new Date(member.createdAt),
             updatedAt: new Date(member.updatedAt),
             dob: new Date(member.dob),
-          })),
+          })) ?? [],
         },
       };
 
@@ -206,23 +205,22 @@ export const useUpdateMaps = () => {
         ...data,
         createdAt: new Date(data.createdAt),
         updatedAt: new Date(data.updatedAt),
-
         accompaniment: {
           ...data.accompaniment,
           createdAt: new Date(data.accompaniment.createdAt),
           updatedAt: new Date(data.accompaniment.updatedAt),
-          users: {
+          users: data.accompaniment.users ? {
             ...data.accompaniment.users,
             createdAt: new Date(data.accompaniment.users.createdAt),
             updatedAt: new Date(data.accompaniment.users.updatedAt),
             dob: new Date(data.accompaniment.users.dob),
-          },
-          members: data.accompaniment.members.map((member) => ({
+          } : null,
+          members: data.accompaniment.members?.map((member) => ({
             ...member,
             createdAt: new Date(member.createdAt),
             updatedAt: new Date(member.updatedAt),
             dob: new Date(member.dob),
-          })),
+          })) ?? [],
         },
       };
 

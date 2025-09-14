@@ -108,12 +108,14 @@ export const useGetOneProjet = (id: string) => {
             createdAt: new Date(m.createdAt),
             updatedAt: new Date(m.updatedAt),
           })),
-          users: {
-            ...ac.users,
-            dob: new Date(ac.users.dob),
-            createdAt: new Date(ac.users.createdAt),
-            updatedAt: new Date(ac.users.updatedAt),
-          },
+          users: ac.users
+            ? {
+                ...ac.users,
+                dob: new Date(ac.users.dob),
+                createdAt: new Date(ac.users.createdAt),
+                updatedAt: new Date(ac.users.updatedAt),
+              }
+            : null,
           createdAt: new Date(ac.createdAt),
           updatedAt: new Date(ac.updatedAt),
         })),

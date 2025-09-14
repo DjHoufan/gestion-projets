@@ -39,7 +39,7 @@ export const useLogin = () => {
       router.push(`${data.url || "/"}`);
     },
     onError: () => {
-      toast.error({ message: "Veuillez s vérifier vos identifiants !" });
+      toast.error({ message: "Veuillez vérifier vos identifiants !" });
     },
   });
 

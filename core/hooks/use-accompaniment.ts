@@ -64,28 +64,28 @@ export const useGetAccompaniments = () => {
 
       const updatedData = data.map((item) => ({
         ...item,
+        st: item.status ? "Terminer" : "En cours",
         project: {
           ...item.project,
           startDate: new Date(item.project.startDate),
           endDate: new Date(item.project.endDate),
-
-             createdAt: new Date(item.project.createdAt),
+          createdAt: new Date(item.project.createdAt),
           updatedAt: new Date(item.project.updatedAt),
         },
-        users: {
-          ...item.users,
-          dob: new Date(item.users.dob),
-          createdAt: new Date(item.users.createdAt),
-          updatedAt: new Date(item.users.updatedAt),
-        },
-
+        users: item.users
+          ? {
+              ...item.users,
+              dob: new Date(item.users.dob),
+              createdAt: new Date(item.users.createdAt),
+              updatedAt: new Date(item.users.updatedAt),
+            }
+          : null,
         members: item.members?.map((m) => ({
           ...m,
           dob: new Date(m.dob),
           createdAt: new Date(m.createdAt),
           updatedAt: new Date(m.updatedAt),
         })),
-
         createdAt: new Date(item.createdAt),
         updatedAt: new Date(item.updatedAt),
       }));
@@ -117,32 +117,33 @@ export const useGetOneAccompaniment = (id: string) => {
         ...data,
         createdAt: new Date(data.createdAt),
         updatedAt: new Date(data.updatedAt),
-
-        users: {
-          ...data.users,
-          createdAt: new Date(data.users.createdAt),
-          updatedAt: new Date(data.users.updatedAt),
-          dob: new Date(data.users.dob),
-        },
+        users: data.users
+          ? {
+              ...data.users,
+              createdAt: new Date(data.users.createdAt),
+              updatedAt: new Date(data.users.updatedAt),
+              dob: new Date(data.users.dob),
+            }
+          : null,
         planning: data.planning
           ? {
               ...data.planning,
               visit: data.planning.visit.map((v) => ({
                 ...v,
-
                 date: new Date(v.date),
               })),
-              users: {
-                ...data.planning.users,
-                createdAt: new Date(data.planning.users.createdAt),
-                updatedAt: new Date(data.planning.users.updatedAt),
-                dob: new Date(data.planning.users.dob),
-              },
+              users: data.planning.users
+                ? {
+                    ...data.planning.users,
+                    createdAt: new Date(data.planning.users.createdAt),
+                    updatedAt: new Date(data.planning.users.updatedAt),
+                    dob: new Date(data.planning.users.dob),
+                  }
+                : null,
             }
           : null,
         project: {
           ...data.project,
-
           startDate: new Date(data.project.startDate),
           endDate: new Date(data.project.endDate),
         },
@@ -162,12 +163,18 @@ export const useGetOneAccompaniment = (id: string) => {
                 ...data.map.accompaniment,
                 createdAt: new Date(data.map.accompaniment.createdAt),
                 updatedAt: new Date(data.map.accompaniment.updatedAt),
-                users: {
-                  ...data.map.accompaniment.users,
-                  createdAt: new Date(data.map.accompaniment.users.createdAt),
-                  updatedAt: new Date(data.map.accompaniment.users.updatedAt),
-                  dob: new Date(data.map.accompaniment.users.dob),
-                },
+                users: data.map.accompaniment.users
+                  ? {
+                      ...data.map.accompaniment.users,
+                      createdAt: new Date(
+                        data.map.accompaniment.users.createdAt
+                      ),
+                      updatedAt: new Date(
+                        data.map.accompaniment.users.updatedAt
+                      ),
+                      dob: new Date(data.map.accompaniment.users.dob),
+                    }
+                  : null,
                 members:
                   data.map.accompaniment.members?.map((member) => ({
                     ...member,
@@ -178,7 +185,6 @@ export const useGetOneAccompaniment = (id: string) => {
               },
             }
           : null,
-
         purchases: data.purchases.map((p) => ({
           ...p,
           purchaseItems: p.purchaseItems.map((item) => ({
@@ -216,9 +222,11 @@ export const useCreateAccompaniment = () => {
         message: "L'accompagnements  a été enregistré avec succès",
       });
       queryClient.invalidateQueries({
-        queryKey: [[QueryKeyString.accompaniments], [QueryKeyString.Wmembers]],
+        queryKey: [QueryKeyString.accompaniments],
       });
-
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.Wmembers],
+      });
       close();
     },
     onError: (err) => {
@@ -254,7 +262,10 @@ export const useUpdateAccompaniment = () => {
     onSuccess: () => {
       toast.success({ message: "L'accompagnements a été modifié avec succès" });
       queryClient.invalidateQueries({
-        queryKey: [[QueryKeyString.accompaniments], [QueryKeyString.Wmembers]],
+        queryKey: [QueryKeyString.accompaniments],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.Wmembers],
       });
       close();
     },
@@ -294,7 +305,10 @@ export const useAddMedia = () => {
       setData(data.media);
       toast.success({ message: "l'enregistrement effectué avec succès" });
       queryClient.invalidateQueries({
-        queryKey: [[QueryKeyString.accompaniments], [QueryKeyString.Wmembers]],
+        queryKey: [QueryKeyString.accompaniments],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.Wmembers],
       });
       close();
     },
@@ -313,7 +327,7 @@ export const useAddMedia = () => {
 // === Mutation: remove Media to accompaniment ===
 export const useRemoveMedia = () => {
   const queryClient = useQueryClient();
-  const {removeData}=useMedia();
+  const { removeData } = useMedia();
 
   return useMutation<DeleteRes, Error, DeleteReq>({
     mutationFn: async ({ param }) => {
@@ -326,13 +340,16 @@ export const useRemoveMedia = () => {
       return await res.json();
     },
 
-    onSuccess: ({data}) => {
-      removeData(data)
+    onSuccess: ({ data }) => {
+      removeData(data);
       toast.success({
         message: "L'accompagnements a été supprimé avec succès",
       });
       queryClient.invalidateQueries({
-        queryKey: [[QueryKeyString.accompaniments], [QueryKeyString.Wmembers]],
+        queryKey: [QueryKeyString.accompaniments],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.Wmembers],
       });
     },
     onError: (err) => {
@@ -362,7 +379,10 @@ export const useDeletAccompaniment = () => {
         message: "L'accompagnements a été supprimé avec succès",
       });
       queryClient.invalidateQueries({
-        queryKey: [[QueryKeyString.accompaniments], [QueryKeyString.Wmembers]],
+        queryKey: [QueryKeyString.accompaniments],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.Wmembers],
       });
     },
     onError: (err) => {

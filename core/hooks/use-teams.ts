@@ -272,12 +272,12 @@ export const useGetOnTeam = (id: string) => {
                   ...a.map.accompaniment,
                   createdAt: new Date(a.map.accompaniment.createdAt),
                   updatedAt: new Date(a.map.accompaniment.updatedAt),
-                  users: {
+                  users:a.map.accompaniment.users ? {
                     ...a.map.accompaniment.users,
                     createdAt: new Date(a.map.accompaniment.users.createdAt),
                     updatedAt: new Date(a.map.accompaniment.users.updatedAt),
                     dob: new Date(a.map.accompaniment.users.dob),
-                  },
+                  } : null,
                   members:
                     a.map.accompaniment.members?.map((member) => ({
                       ...member,

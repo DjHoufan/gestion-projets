@@ -43,9 +43,10 @@ const app = new Hono()
   })
   .get("/withoutgroup", async (c) => {
     const excludeIds = c.req.queries("excludeIds") || [];
-
+    const projectId = c.req.query("projectId");
     const data = await db.member.findMany({
       where: {
+        projectId,
         OR: [
           {
             accompaniment: {

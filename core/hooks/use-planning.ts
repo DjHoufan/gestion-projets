@@ -83,18 +83,21 @@ export const useGetPlanning = () => {
             createdAt: new Date(accomp.project.createdAt),
             updatedAt: new Date(accomp.project.updatedAt),
           },
-          users: {
-            ...accomp.users,
-            dob: new Date(accomp.users.dob),
-            createdAt: new Date(accomp.users.createdAt),
-            updatedAt: new Date(accomp.users.updatedAt),
-          },
-          members: accomp.members.map((m) => ({
-            ...m,
-            dob: new Date(m.dob),
-            createdAt: new Date(m.createdAt),
-            updatedAt: new Date(m.updatedAt),
-          })),
+          users: accomp.users
+            ? {
+                ...accomp.users,
+                dob: new Date(accomp.users.dob),
+                createdAt: new Date(accomp.users.createdAt),
+                updatedAt: new Date(accomp.users.updatedAt),
+              }
+            : null,
+          members:
+            accomp.members?.map((m) => ({
+              ...m,
+              dob: new Date(m.dob),
+              createdAt: new Date(m.createdAt),
+              updatedAt: new Date(m.updatedAt),
+            })) ?? [],
         })),
       }));
 
@@ -128,18 +131,21 @@ export const useGetOnePlanning = (id: string) => {
           date: new Date(visit.date),
         })),
         accompaniments: data.accompaniments.map((accomp) => ({
-          users: {
-            ...accomp.users,
-            dob: new Date(accomp.users.dob),
-            createdAt: new Date(accomp.users.createdAt),
-            updatedAt: new Date(accomp.users.updatedAt),
-          },
-          members: accomp.members.map((m) => ({
-            ...m,
-            dob: new Date(m.dob),
-            createdAt: new Date(m.createdAt),
-            updatedAt: new Date(m.updatedAt),
-          })),
+          users: accomp.users
+            ? {
+                ...accomp.users,
+                dob: new Date(accomp.users.dob),
+                createdAt: new Date(accomp.users.createdAt),
+                updatedAt: new Date(accomp.users.updatedAt),
+              }
+            : null,
+          members:
+            accomp.members?.map((m) => ({
+              ...m,
+              dob: new Date(m.dob),
+              createdAt: new Date(m.createdAt),
+              updatedAt: new Date(m.updatedAt),
+            })) ?? [],
         })),
       };
       return updatedData;
@@ -173,13 +179,14 @@ export const useCreatePlanning = () => {
           ...v,
           date: new Date(v.date),
         })),
-
-        users: {
-          ...data.users,
-          dob: new Date(data.users.dob),
-          createdAt: new Date(data.users.createdAt),
-          updatedAt: new Date(data.users.updatedAt),
-        },
+        users: data.users
+          ? {
+              ...data.users,
+              dob: new Date(data.users.dob),
+              createdAt: new Date(data.users.createdAt),
+              updatedAt: new Date(data.users.updatedAt),
+            }
+          : null,
       };
       setPlanning(newdata);
 
@@ -228,12 +235,14 @@ export const useCreatevisit = () => {
             ...visit,
             date: new Date(visit.date),
           })),
-          users: {
-            ...data.users,
-            dob: new Date(data.users.dob),
-            createdAt: new Date(data.users.createdAt),
-            updatedAt: new Date(data.users.updatedAt),
-          },
+          users: data.users
+            ? {
+                ...data.users,
+                dob: new Date(data.users.dob),
+                createdAt: new Date(data.users.createdAt),
+                updatedAt: new Date(data.users.updatedAt),
+              }
+            : null,
         };
         setPlanning(transformedData);
       }

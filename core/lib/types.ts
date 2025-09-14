@@ -77,7 +77,8 @@ export type ProjectDetail = Project & {
 };
 
 export type Accompaniments = Accompaniment & {
-  users: Omit<UserDetail, "cv">;
+  st: string;
+  users: Omit<UserDetail, "cv"> | null;
   members: Member[];
 };
 
@@ -173,7 +174,7 @@ export type PurchaseDetail = Purchase & {
 
 export type Plannings = Planning & {
   visit: Visits[];
-  users: Users;
+  users: Users | null;
 };
 
 export type EmargementDetail = Emargement & {
@@ -235,7 +236,7 @@ export type RecentPurchase = Purchase & {
 };
 
 export type accEm = Accompaniment & {
-  users: Users;
+  users: Users | null;
   members: Member[];
 };
 

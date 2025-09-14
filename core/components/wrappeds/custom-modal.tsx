@@ -36,7 +36,7 @@ const CustomModal = ({
           <div className="text-base text-muted-foreground">{subheading}</div>
         )}
 
-        <ScrollArea className={`md:max-h-[700px] ${size} p-5`}>
+        <ScrollArea className={`md:max-h-[800px] ${size} p-5`}>
           {children}
         </ScrollArea>
       </div>

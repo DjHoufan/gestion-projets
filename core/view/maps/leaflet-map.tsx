@@ -456,7 +456,6 @@ export default function LeafletMap({
 
             routingControlRef.current.on("routingerror", (e: any) => {
               setRouteLoading(false);
-         
 
               const errorToast = document.createElement("div");
               errorToast.innerHTML = `
@@ -487,7 +486,7 @@ export default function LeafletMap({
           },
           (error) => {
             setRouteLoading(false);
-            toast.error({message:"Erreur de géolocalisation:", error});
+            toast.error({ message: "Erreur de géolocalisation:", error });
 
             let errorMessage = "Erreur de géolocalisation";
             switch (error.code) {
@@ -765,12 +764,7 @@ export default function LeafletMap({
       if (mapInstanceRef.current) {
         try {
           mapInstanceRef.current.remove();
-        } catch (e) {
-          toast.warning({
-            message: "Erreur lors du nettoyage de la carte:",
-            e,
-          });
-        }
+        } catch (e) {}
       }
     };
   }, [safeCoordinates]);

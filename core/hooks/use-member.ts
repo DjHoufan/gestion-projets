@@ -98,38 +98,41 @@ export const useGetOnEmember = (id: string) => {
                 createdAt: new Date(data.accompaniment.project.createdAt),
                 updatedAt: new Date(data.accompaniment.project.updatedAt),
               },
-              users: {
-                ...data.accompaniment.users,
-                createdAt: new Date(data.accompaniment.users.createdAt),
-                updatedAt: new Date(data.accompaniment.users.updatedAt),
-                dob: new Date(data.accompaniment.users.dob),
-              },
-
-              purchases: data.accompaniment.purchases.map((p) => ({
-                ...p,
-                purchaseItems: p.purchaseItems.map((ps) => ({
-                  ...ps,
-                  date: new Date(ps.date),
-                })),
-                createdAt: new Date(p.createdAt),
-                updatedAt: new Date(p.updatedAt),
-              })),
-
-              planning: {
-                ...data.accompaniment.planning,
-                visit: data.accompaniment.planning?.visit.map((v) => ({
-                  ...v,
-                  date: new Date(v.date),
-                })),
-              },
-
+              users: data.accompaniment.users
+                ? {
+                    ...data.accompaniment.users,
+                    createdAt: new Date(data.accompaniment.users.createdAt),
+                    updatedAt: new Date(data.accompaniment.users.updatedAt),
+                    dob: new Date(data.accompaniment.users.dob),
+                  }
+                : undefined,
+              purchases:
+                data.accompaniment.purchases?.map((p) => ({
+                  ...p,
+                  purchaseItems:
+                    p.purchaseItems?.map((ps) => ({
+                      ...ps,
+                      date: new Date(ps.date),
+                    })) ?? [],
+                  createdAt: new Date(p.createdAt),
+                  updatedAt: new Date(p.updatedAt),
+                })) ?? [],
+              planning: data.accompaniment.planning
+                ? {
+                    ...data.accompaniment.planning,
+                    visit:
+                      data.accompaniment.planning.visit?.map((v) => ({
+                        ...v,
+                        date: new Date(v.date),
+                      })) ?? [],
+                  }
+                : null,
               map:
                 data.accompaniment.map && data.accompaniment.map.accompaniment
                   ? {
                       ...data.accompaniment.map,
                       createdAt: new Date(data.accompaniment.map.createdAt),
                       updatedAt: new Date(data.accompaniment.map.updatedAt),
-
                       accompaniment: {
                         ...data.accompaniment.map.accompaniment,
                         createdAt: new Date(
@@ -138,27 +141,29 @@ export const useGetOnEmember = (id: string) => {
                         updatedAt: new Date(
                           data.accompaniment.map.accompaniment.updatedAt
                         ),
-                        users: {
-                          ...data.accompaniment.map.accompaniment.users,
-                          createdAt: new Date(
-                            data.accompaniment.map.accompaniment.users.createdAt
-                          ),
-                          updatedAt: new Date(
-                            data.accompaniment.map.accompaniment.users.updatedAt
-                          ),
-                          dob: new Date(
-                            data.accompaniment.map.accompaniment.users.dob
-                          ),
-                        },
+                        users: data.accompaniment.map.accompaniment.users
+                          ? {
+                              ...data.accompaniment.map.accompaniment.users,
+                              createdAt: new Date(
+                                data.accompaniment.map.accompaniment.users.createdAt
+                              ),
+                              updatedAt: new Date(
+                                data.accompaniment.map.accompaniment.users.updatedAt
+                              ),
+                              dob: new Date(
+                                data.accompaniment.map.accompaniment.users.dob
+                              ),
+                            }
+                          : undefined,
                         members:
-                          data.accompaniment.map.accompaniment.members.map(
+                          data.accompaniment.map.accompaniment.members?.map(
                             (member) => ({
                               ...member,
                               createdAt: new Date(member.createdAt),
                               updatedAt: new Date(member.updatedAt),
                               dob: new Date(member.dob),
                             })
-                          ),
+                          ) ?? [],
                       },
                     }
                   : null,
@@ -173,14 +178,20 @@ export const useGetOnEmember = (id: string) => {
   });
 };
 
-export const useGetMembersWithoutGroup = (excludeIds: string[] = []) => {
+export const useGetMembersWithoutGroup = (
+  projectId: string,
+  excludeIds: string[] = []
+) => {
   return useQuery({
-    queryKey: [QueryKeyString.Wmembers],
+    queryKey: [QueryKeyString.Wmembers, projectId, excludeIds], // <-- clé dépendante
     queryFn: async () => {
-      const params = new URLSearchParams();
-      excludeIds.forEach((id) => params.append("excludeIds", id));
+      const queryParams: Record<string, string | string[]> = {
+        projectId, // <-- ajout du projectId
+      };
 
-      const queryParams = excludeIds.length > 0 ? { excludeIds } : {};
+      if (excludeIds.length > 0) {
+        queryParams.excludeIds = excludeIds;
+      }
 
       const response = await client.api.member.withoutgroup.$get({
         query: queryParams,
@@ -194,18 +205,17 @@ export const useGetMembersWithoutGroup = (excludeIds: string[] = []) => {
 
       const { data } = await response.json();
 
-      const updatedData = data.map((item) => ({
+      return data.map((item) => ({
         ...item,
-
         dob: new Date(item.dob),
         createdAt: new Date(item.createdAt),
         updatedAt: new Date(item.updatedAt),
       }));
-
-      return updatedData;
     },
+    enabled: projectId.length > 0, // pas de call si pas de projectId
   });
 };
+
 
 // === Mutation: Create member ===
 export const useCreateMember = () => {

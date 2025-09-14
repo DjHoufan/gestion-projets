@@ -332,11 +332,11 @@ export const AccompanimentDetails = ({
                   <div className="flex items-center gap-3 sm:gap-4">
                     <Avatar className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-emerald-100 flex-shrink-0">
                       <AvatarImage
-                        src={data.users.profile || "/placeholder.svg"}
-                        alt={data.users.name}
+                        src={data.users?.profile! || "/placeholder.svg"}
+                        alt={data.users?.name!}
                       />
                       <AvatarFallback className="bg-emerald-100 text-emerald-700 font-bold text-sm sm:text-lg">
-                        {data.users.name
+                        {data.users?.name!
                           .split(" ")
                           .map((n) => n[0])
                           .join("")}
@@ -344,14 +344,14 @@ export const AccompanimentDetails = ({
                     </Avatar>
                     <div className="min-w-0 flex-1">
                       <h3 className="font-semibold text-base sm:text-lg text-gray-900 truncate">
-                        {data.users.name}
+                        {data.users?.name}
                       </h3>
                       <Status
-                        status={data.users.status ? "online" : "offline"}
+                        status={data.users?.status ? "online" : "offline"}
                         className="bg-emerald-100 text-emerald-800 text-xs sm:text-sm"
                       >
                         <StatusIndicator />
-                        {data.users.status ? "Actif" : "Désactivé"}
+                        {data.users?.status ? "Actif" : "Désactivé"}
                       </Status>
                     </div>
                   </div>
@@ -360,19 +360,19 @@ export const AccompanimentDetails = ({
                     <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gray-50 rounded-lg">
                       <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
                       <span className="text-xs sm:text-sm text-gray-700 truncate">
-                        {data.users.email}
+                        {data.users?.email}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gray-50 rounded-lg">
                       <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
                       <span className="text-xs sm:text-sm text-gray-700">
-                        {data.users.phone}
+                        {data.users?.phone}
                       </span>
                     </div>
                     <div className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-gray-50 rounded-lg">
                       <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0 mt-0.5" />
                       <span className="text-xs sm:text-sm text-gray-700 break-words">
-                        {data.users.address}
+                        {data.users?.address}
                       </span>
                     </div>
                   </div>
@@ -569,7 +569,7 @@ export const AccompanimentDetails = ({
               permission={{ canModify, canAdd, canDelete }}
               members={data.members}
               accompanimentId={data.id}
-              userId={data.users.id}
+              userId={data.users?.id!}
             />
           </TabsContent>
 
