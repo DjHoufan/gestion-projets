@@ -828,8 +828,6 @@ export default function LeafletMap({
       // Ajouter les nouveaux marqueurs
       safeCoordinates.forEach((coord, index) => {
         try {
-          
-
           const style = getMarkerStyle(coord, index);
           const { accompaniment } = coord;
 
@@ -973,9 +971,7 @@ export default function LeafletMap({
           }
 
           markersRef.current.push(marker);
-        } catch (e) {
-          toast.warning({ message: "Erreur création marqueur:", e });
-        }
+        } catch (e) {}
       });
 
       // Ajuster la vue si on a des marqueurs
@@ -990,9 +986,7 @@ export default function LeafletMap({
               map.setView([lat, lng], 15);
             }
           }
-        } catch (e) {
-          
-        }
+        } catch (e) {}
       }
     } catch (error) {
       toast.error({ message: "Erreur mise à jour marqueurs:", error });
