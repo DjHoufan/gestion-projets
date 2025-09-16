@@ -350,7 +350,7 @@ export const ProjectDetail = ({ Id }: IdType) => {
     },
   ];
 
-  const [singleMember, multipleMembers] = useMemo(() => {
+  const [single, multiple] = useMemo(() => {
     const accompaniments = projectData?.accompaniments ?? [];
 
     const single = accompaniments.filter((a) => a.members?.length === 1);
@@ -432,8 +432,8 @@ export const ProjectDetail = ({ Id }: IdType) => {
                     )}
                   </span>
                   <div className="text-sm flex gap-5">
-                    <span>{singleMember.length} groupe</span>
-                    <span>{multipleMembers.length} individuel</span>
+                    <span>{multiple.length} groupe</span>
+                    <span>{single.length} individuel</span>
                   </div>
                 </div>
               </div>
