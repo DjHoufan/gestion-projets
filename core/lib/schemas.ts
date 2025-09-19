@@ -766,3 +766,49 @@ export type LeaveSchemaInput = z.input<typeof LeaveSchema>;
 export type MediaSchemaInput = z.input<typeof MediaSchema>;
 export type ClasseSchemaInput = z.input<typeof ClasseSchema>;
 export type ClasseMembersSchemaInput = z.input<typeof ClasseMembersSchema>;
+
+
+
+
+// Schema Zod pour la validation du changement de mot de passe
+export const updatePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Le mot de passe actuel est requis"),
+
+    newPassword: z
+      .string()
+      .min(8, "Le mot de passe doit contenir au moins 8 caractères")
+      .regex(/[a-z]/, "Le mot de passe doit contenir au moins une minuscule")
+      .regex(/[A-Z]/, "Le mot de passe doit contenir au moins une majuscule")
+      .regex(/\d/, "Le mot de passe doit contenir au moins un chiffre")
+      .refine(
+        (password) => !password.toLowerCase().includes("password"),
+        "Le mot de passe ne doit pas contenir le mot 'password'"
+      ),
+
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword !== data.currentPassword, {
+    message: "Le nouveau mot de passe doit être différent de l'actuel",
+    path: ["newPassword"],
+  })
+  .refine((data) => data.confirmPassword === data.newPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"],
+  });
+
+
+export const ProfileUserSchema = z.object({
+  name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
+  phone: z
+    .string({ required_error: "Le numéro de téléphone est requis." })
+    .min(8, "Le numéro doit contenir au moins 8 caractères."),
+  address: z.string().min(5, "L'adresse doit contenir au moins 5 caractères"),
+  dob: z.coerce.date({
+    required_error: "La date de naissance est requise.",
+    invalid_type_error: "La date de naissance doit être une date valide.",
+  }),
+});
+
+export type UserDataInput = z.input<typeof ProfileUserSchema>;
+export type UpdatePasswordFormData = z.infer<typeof updatePasswordSchema>;

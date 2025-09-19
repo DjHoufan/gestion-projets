@@ -11,6 +11,7 @@ import {
   User,
   FileText,
   MessageSquare,
+  X,
 } from "lucide-react";
 import { MdOutlineGroups2 } from "react-icons/md";
 import Image from "next/image";
@@ -103,13 +104,17 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-export function CustomSidebar() {
+type Props = {
+  toggleSidebarAction: () => void;
+};
+
+export function ACSidebar({ toggleSidebarAction }: Props) {
   const { set, value: url } = useCustomeTabs();
   return (
-    <div className="w-[300px] h-screen bg-slate-50/50 backdrop-blur-sm  flex flex-col border-r-2 border-r-teal-500/20">
+    <div className="md:w-[300px] h-screen bg-slate-50/50 backdrop-blur-sm  flex flex-col border-r-2 border-r-teal-500/20">
       <div className="relative border-b border-slate-700/50 bg-gradient-to-r from-teal-600/20 to-teal-600/20 backdrop-blur-sm">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 to-teal-500/10" />
-        <div className="relative p-6 flex items-center justify-center">
+        <div className="relative p-6 flex items-center justify-between">
           <div className="relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-teal-500/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
             <div className="relative p-3  bg-white  rounded-xl border border-slate-700/50 backdrop-blur-sm shadow-lg">
@@ -122,12 +127,16 @@ export function CustomSidebar() {
               />
             </div>
           </div>
+
+          <X
+            className=" md:hidden text-primary "
+            onClick={toggleSidebarAction}
+          />
         </div>
       </div>
 
       {/* Navigation */}
       <div className="flex-1 p-4 space-y-1 overflow-y-auto">
-       
         {menuItems.map((item: MenuItem) => {
           const isActive: boolean = url === item.url || url === item.url2;
           return (

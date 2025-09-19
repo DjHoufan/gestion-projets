@@ -4,8 +4,8 @@ import { GetUserCookies } from "@/core/hooks/use-get-user-cookies";
  
 const UserDashboard = async () => {
   const user = await GetUserCookies();
-  const currentUser = await getCurrentUser();
-  return <Dashboard Id={user.id} currentUser={currentUser!} permission={user}  />;
+ 
+  return <Dashboard Id={user.id}   permission={user}  />;
 };
 
 export default UserDashboard;

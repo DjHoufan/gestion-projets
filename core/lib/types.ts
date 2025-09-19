@@ -164,7 +164,7 @@ export type ViewProps = {
   user: UpdatedData;
 };
 
-export type DashboardContentProps = {
+export type MainContentProps = {
   user: UpdatedData;
 };
 

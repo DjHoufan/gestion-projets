@@ -28,8 +28,15 @@ import {
 import type { ViewProps, Statistics, RecentPurchase } from "@/core/lib/types";
 import { JSX } from "react";
 import { Visits } from "@prisma/client";
+import { useMyData } from "@/core/hooks/store";
 
-export function OverviewView({ user }: ViewProps): JSX.Element {
+export function OverviewView(): JSX.Element {
+  const { data: user } = useMyData();
+
+  if (!user) {
+    return <div>Chargement...</div>;
+  }
+
   // Calculate statistics
   const statistics: Statistics = {
     totalMembers: user.accompaniments.reduce(
@@ -59,13 +66,13 @@ export function OverviewView({ user }: ViewProps): JSX.Element {
   };
 
   // Get recent purchases
-  const recentPurchases: RecentPurchase[] = user.accompaniments.flatMap(
-  (acc) =>
-    acc.purchases.map((purchase) => ({
-      ...purchase,  // This should include all required RecentPurchase properties
-      accompanimentName: acc.name || "",  // Assuming accompaniment has a 'name' property
-    })) || []
-);
+  const recentPurchases: RecentPurchase[] = user?.accompaniments.flatMap(
+    (acc) =>
+      acc.purchases.map((purchase) => ({
+        ...purchase, // This should include all required RecentPurchase properties
+        accompanimentName: acc.name || "", // Assuming accompaniment has a 'name' property
+      })) || []
+  );
 
   return (
     <section className="space-y-8 p-6">
@@ -128,7 +135,7 @@ export function OverviewView({ user }: ViewProps): JSX.Element {
               <div className="text-2xl font-bold">
                 {statistics.totalMembers}
               </div>
-              <div className="text-emerald-100 text-sm">Membres</div>
+              <div className="text-emerald-100 text-sm">bénéficiaire(s)</div>
             </div>
             <div className="bg-white/15 backdrop-blur rounded-lg p-4 text-center">
               <div className="text-2xl font-bold">

@@ -3,11 +3,16 @@ import { zValidator } from "@hono/zod-validator";
 
 import { v4 } from "uuid";
 import { upadateAccessEmploye, upsertTeam } from "@/core/lib/queries";
-import { EmployeAccesSchema, UserSchema } from "@/core/lib/schemas";
+import {
+  EmployeAccesSchema,
+  ProfileUserSchema,
+  UserSchema,
+} from "@/core/lib/schemas";
 import { sessionMiddleware } from "@/core/lib/session-middleware";
 import { db } from "@/core/lib/db";
 import { User } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/core/supabase/client";
+import { profile } from "console";
 
 const getData = (id: string, body: User) => ({
   ...body,
@@ -95,7 +100,9 @@ const app = new Hono()
       where: {
         id: teamId,
       },
+
       include: {
+        cv: true,
         conflit: {
           include: {
             files: true,
@@ -175,7 +182,6 @@ const app = new Hono()
 
     return c.json({ data });
   })
-
   .post("/", zValidator("json", UserSchema), sessionMiddleware, async (c) => {
     const response = await handleDatatUpsert(c, v4());
 
@@ -189,7 +195,8 @@ const app = new Hono()
       const response = handleDatatUpsert(c, c.req.param("teamId"));
       return c.json({ data: response });
     }
-  )  .patch(
+  )
+  .patch(
     "/:employeId/rolepermission",
     zValidator("json", EmployeAccesSchema),
     sessionMiddleware,
@@ -206,6 +213,105 @@ const app = new Hono()
       };
       const response = await upadateAccessEmploye(data);
       return c.json({ data: response });
+    }
+  )
+  .patch(
+    "updateProfilev1/:id/:newpassword/:password/:email",
+    sessionMiddleware,
+    async (c) => {
+      const { id, newpassword, password, email } = c.req.param();
+
+      const { error } = await supabaseAdmin.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        return c.json({ error: "Mot de passe incorret" }, 404);
+      }
+
+      const user = await db.users.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        return c.json({ error: "Not Found" }, 404);
+      }
+
+      console.log({ userId: user.authId });
+
+      const { error: updateError, data } =
+        await supabaseAdmin.auth.admin.updateUserById(user.authId, {
+          password: newpassword,
+        });
+
+      console.log({ data });
+
+      console.log({ updateError });
+
+      if (updateError) {
+        return c.json({ error: "Not Found" }, 404);
+      }
+
+      return c.json({ data: true });
+    }
+  )
+  .patch(
+    "updateProfilev2/:id",
+    zValidator("json", ProfileUserSchema),
+
+    sessionMiddleware,
+    async (c) => {
+      const { id } = c.req.param();
+
+      const { name, address, dob, phone } = c.req.valid("json");
+
+      const user = await db.users.update({
+        where: { id },
+        data: {
+          name,
+          address,
+          dob,
+          phone,
+        },
+      });
+
+      await supabaseAdmin.auth.updateUser({
+        data: {
+          name,
+        },
+      });
+
+      return c.json({ data: user });
+    }
+  )
+  .patch(
+    "updateProfilev3/:userId/:value/:op",
+    sessionMiddleware,
+    async (c) => {
+      const { value, op, userId } = c.req.param();
+
+      console.log("je suis la", { value, op, userId });
+
+      const user = await db.users.update({
+        where: { id: userId },
+        data: op === "cv" ? { filesId: value } : { profile: value },
+        include: {
+          cv: true,
+        },
+      });
+
+      if (op === "profile") {
+        await supabaseAdmin.auth.updateUser({
+          data: {
+            profile: profile,
+          },
+        });
+      }
+
+      return c.json({ data: user });
     }
   )
   .delete("/:teamId", sessionMiddleware, async (c) => {

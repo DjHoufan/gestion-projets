@@ -43,9 +43,15 @@ interface Props {
   details?: EmargementDetail;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
+  userId?: string;
 }
 
-export function EmargementForm({ details, open, onOpenChangeAction }: Props) {
+export function EmargementForm({
+  details,
+  open,
+  onOpenChangeAction,
+  userId,
+}: Props) {
   const { close } = useModal();
   const { data: members, isPending: loadingMembers } = useGetMembers();
   const { data: users, isPending: loadingUsers } = useGetAccompanist();
@@ -64,7 +70,7 @@ export function EmargementForm({ details, open, onOpenChangeAction }: Props) {
       signature: details?.signature ?? false,
       montant: details?.montant || 0,
       observations: details?.observations || "",
-      usersId: details?.usersId || "",
+      usersId: details?.usersId || userId || "",
       memberId: details?.memberId || "",
     },
   });
@@ -94,7 +100,7 @@ export function EmargementForm({ details, open, onOpenChangeAction }: Props) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeAction} >
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="!max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -201,7 +207,7 @@ export function EmargementForm({ details, open, onOpenChangeAction }: Props) {
                         onChangeValue={field.onChange}
                         loading={loadingUsers}
                         selectedId={field.value ?? ""}
-                        disabled={loading}
+                        disabled={userId ? true : loading}
                       />
                     </FormControl>
                     <FormMessage />

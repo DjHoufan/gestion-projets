@@ -34,12 +34,19 @@ import {
   Download,
   Eye,
 } from "lucide-react";
-import { ConflitDetail, ViewProps } from "@/core/lib/types";
+import { ConflitDetail } from "@/core/lib/types";
 import { DataTable } from "@/core/components/global/data-table";
 import { useModal } from "@/core/providers/modal-provider";
 import { ConflitForm } from "@/core/view/rapports/form/conflit-form";
+import { useMyData } from "@/core/hooks/store";
 
-export function ConflictsView({ user }: ViewProps) {
+export function ConflictsView() {
+  const { data: user } = useMyData();
+
+  if (!user) {
+    return <div>Chargement...</div>;
+  }
+
   const resolvedConflicts = user.conflit.filter(
     (conflict: any) => conflict.resolution && conflict.resolution.trim() !== ""
   );
@@ -398,7 +405,13 @@ export function ConflictsView({ user }: ViewProps) {
         </h2>
         <Button
           onClick={() =>
-            open(<ConflitForm open={true} onOpenChangeAction={close} />)
+            open(
+              <ConflitForm
+                open={true}
+                onOpenChangeAction={close}
+                userId={user.id}
+              />
+            )
           }
           className="bg-emerald-600 hover:bg-emerald-700"
         >

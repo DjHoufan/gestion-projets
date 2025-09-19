@@ -8,6 +8,7 @@ import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "../components/global/custom-toast";
 import { Toaster } from "@/core/components/ui/sonner";
+import { useMyData } from "@/core/hooks/store";
 
 // === Type Inference ===
 type PostResponse = InferResponseType<(typeof client.api.team)["$post"]>;
@@ -19,6 +20,30 @@ type PatchResponse = InferResponseType<
 >;
 type PatchRequest = InferRequestType<
   (typeof client.api.team)[":teamId"]["$patch"]
+>;
+
+type PatchRes = InferResponseType<
+  (typeof client.api.team.updateProfilev1)[":id"][":newpassword"][":password"][":email"]["$patch"],
+  200
+>;
+type PatchReq = InferRequestType<
+  (typeof client.api.team.updateProfilev1)[":id"][":newpassword"][":password"][":email"]["$patch"]
+>;
+
+type PatchResProfile = InferResponseType<
+  (typeof client.api.team.updateProfilev2)[":id"]["$patch"],
+  200
+>;
+type PatchReqProfile = InferRequestType<
+  (typeof client.api.team.updateProfilev2)[":id"]["$patch"]
+>;
+
+type PatchResProfileOrCV = InferResponseType<
+  (typeof client.api.team.updateProfilev3)[":userId"][":value"][":op"]["$patch"],
+  200
+>;
+type PatchReqProfileOrCv = InferRequestType<
+  (typeof client.api.team.updateProfilev3)[":userId"][":value"][":op"]["$patch"]
 >;
 
 type DeleteResponse = InferResponseType<
@@ -184,6 +209,7 @@ export const useGetProfile = (id: string) => {
 };
 
 export const useGetOnTeam = (id: string) => {
+  const { setData } = useMyData();
   return useQuery({
     queryKey: [QueryKeyString.Oneaccompanist + id],
     queryFn: async () => {
@@ -272,12 +298,18 @@ export const useGetOnTeam = (id: string) => {
                   ...a.map.accompaniment,
                   createdAt: new Date(a.map.accompaniment.createdAt),
                   updatedAt: new Date(a.map.accompaniment.updatedAt),
-                  users:a.map.accompaniment.users ? {
-                    ...a.map.accompaniment.users,
-                    createdAt: new Date(a.map.accompaniment.users.createdAt),
-                    updatedAt: new Date(a.map.accompaniment.users.updatedAt),
-                    dob: new Date(a.map.accompaniment.users.dob),
-                  } : null,
+                  users: a.map.accompaniment.users
+                    ? {
+                        ...a.map.accompaniment.users,
+                        createdAt: new Date(
+                          a.map.accompaniment.users.createdAt
+                        ),
+                        updatedAt: new Date(
+                          a.map.accompaniment.users.updatedAt
+                        ),
+                        dob: new Date(a.map.accompaniment.users.dob),
+                      }
+                    : null,
                   members:
                     a.map.accompaniment.members?.map((member) => ({
                       ...member,
@@ -352,6 +384,8 @@ export const useGetOnTeam = (id: string) => {
           },
         })),
       };
+
+      setData(updatedData);
 
       return updatedData;
     },
@@ -455,6 +489,139 @@ export const useUpdateTeam = () => {
     onError: (err) => {
       toast.error({
         message: `Échec de la modification de l'utilisateur : ${err.message}`,
+      });
+    },
+  });
+};
+
+// === Mutation: Update team ===
+export const useUpdatePassword = () => {
+  return useMutation<PatchRes, Error, PatchReq>({
+    mutationFn: async ({ param }) => {
+      const res = await client.api.team.updateProfilev1[":id"][":newpassword"][
+        ":password"
+      ][":email"]["$patch"]({
+        param,
+      });
+
+      const result = await res.json();
+      if ("error" in result) {
+        throw new Error(result.error);
+      }
+      return result;
+    },
+    onSuccess: () => {
+      toast.success({ message: "Mot de passe modifié avec succès" });
+    },
+    onError: (err) => {
+      console.log({ err });
+
+      toast.error({
+        message: `Erreur lors du changement de mot de passe : ${err.message}`,
+      });
+    },
+  });
+};
+
+export const useUpdateProfile = () => {
+  const queryClient = useQueryClient();
+  const { updateFields } = useMyData();
+  return useMutation<PatchResProfile, Error, PatchReqProfile>({
+    mutationFn: async ({ param, json }) => {
+      const res = await client.api.team.updateProfilev2[":id"]["$patch"]({
+        param,
+        json,
+      });
+
+      const result = await res.json();
+
+      return result;
+    },
+    onSuccess: ({ data }) => {
+      console.log("response", { data });
+
+      queryClient.setQueryData<any>(
+        ["accompanist", data.id],
+        (oldData: any) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            name: data.name ?? oldData.name,
+            email: data.email ?? oldData.email,
+            address: data.address ?? oldData.address,
+            dob: data.dob ?? oldData.dob,
+            phone: data.phone ?? oldData.phone,
+          };
+        }
+      );
+
+      updateFields({
+        name: data.name,
+        phone: data.phone,
+        address: data.address,
+        dob: new Date(data.dob),
+      });
+
+      toast.success({ message: "le profil a été mis à jour" });
+    },
+    onError: (err) => {
+      console.log({ err });
+
+      toast.error({
+        message: `Erreur lors du changement de mot de passe : ${err.message}`,
+      });
+    },
+  });
+};
+
+export const useUpdateCvOrProfile = () => {
+  const queryClient = useQueryClient();
+  const { updateFields } = useMyData();
+  return useMutation<PatchResProfileOrCV, Error, PatchReqProfileOrCv>({
+    mutationFn: async ({ param }) => {
+      const res = await client.api.team.updateProfilev3[":userId"][":value"][
+        ":op"
+      ]["$patch"]({
+        param,
+      });
+
+      const result = await res.json();
+
+      return result;
+    },
+    onSuccess: ({ data }) => {
+      console.log("response", { data });
+
+      queryClient.setQueryData<any>(
+        ["accompanist", data.id],
+        (oldData: any) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            cv: data.cv ?? oldData.cv,
+            name: data.name ?? oldData.name,
+            email: data.email ?? oldData.email,
+            address: data.address ?? oldData.address,
+            dob: data.dob ?? oldData.dob,
+            phone: data.phone ?? oldData.phone,
+          };
+        }
+      );
+
+      updateFields({
+        profile: data.profile,
+        cv: data.cv,
+      });
+
+      toast.success({ message: "le profil a été mis à jour" });
+    },
+    onError: (err) => {
+      console.log({ err });
+
+      toast.error({
+        message: `Erreur lors du changement de mot de passe : ${err.message}`,
       });
     },
   });

@@ -1,27 +1,50 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/core/components/ui/card"
-import { Badge } from "@/core/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/core/components/ui/avatar"
-import { Button } from "@/core/components/ui/button"
-import { Input } from "@/core/components/ui/input"
-import { Mail, Phone, MapPin, Calendar, GraduationCap, Search } from "lucide-react"
-import { ViewProps } from "@/core/lib/types"
-
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/core/components/ui/card";
+import { Badge } from "@/core/components/ui/badge";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/core/components/ui/avatar";
+import { Button } from "@/core/components/ui/button";
+import { Input } from "@/core/components/ui/input";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  GraduationCap,
+  Search,
+} from "lucide-react";
  
+import { useMyData } from "@/core/hooks/store";
 
-export function MembersView({ user }: ViewProps) {
+export function MembersView() {
+  const { data: user } = useMyData();
+
+  if (!user) {
+    return <div>Chargement...</div>;
+  }
+
   // Collect all members from all accompaniments
   const allMembers = user.accompaniments.flatMap((acc: any) =>
     acc.members.map((member: any) => ({
       ...member,
       accompanimentName: acc.name,
-    })),
-  )
+    }))
+  );
 
   return (
     <section className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">Membres</h2>
-        <Button className="bg-emerald-600 hover:bg-emerald-700">Ajouter Membre</Button>
+        <Button className="bg-emerald-600 hover:bg-emerald-700">
+          Ajouter Membre
+        </Button>
       </div>
 
       {/* Search and Filters */}
@@ -44,7 +67,10 @@ export function MembersView({ user }: ViewProps) {
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src={member.profile || "/placeholder.svg"} alt={member.name} />
+                  <AvatarImage
+                    src={member.profile || "/placeholder.svg"}
+                    alt={member.name}
+                  />
                   <AvatarFallback className="bg-emerald-100 text-emerald-700">
                     {member.name
                       .split(" ")
@@ -53,8 +79,13 @@ export function MembersView({ user }: ViewProps) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <CardTitle className="text-lg truncate">{member.name}</CardTitle>
-                  <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 text-xs">
+                  <CardTitle className="text-lg truncate">
+                    {member.name}
+                  </CardTitle>
+                  <Badge
+                    variant="secondary"
+                    className="bg-emerald-100 text-emerald-700 text-xs"
+                  >
                     {member.accompanimentName}
                   </Badge>
                 </div>
@@ -76,7 +107,9 @@ export function MembersView({ user }: ViewProps) {
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4 text-gray-500" />
-                  <span>{new Date(member.dob).toLocaleDateString("fr-FR")}</span>
+                  <span>
+                    {new Date(member.dob).toLocaleDateString("fr-FR")}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <GraduationCap className="h-4 w-4 text-gray-500" />
@@ -85,17 +118,28 @@ export function MembersView({ user }: ViewProps) {
               </div>
 
               <div className="pt-3 border-t">
-                <div className="text-xs text-gray-500 mb-2">Centre: {member.center}</div>
+                <div className="text-xs text-gray-500 mb-2">
+                  Centre: {member.center}
+                </div>
                 <div className="text-xs text-gray-400">
-                  Membre depuis: {new Date(member.createdAt).toLocaleDateString("fr-FR")}
+                  Membre depuis:{" "}
+                  {new Date(member.createdAt).toLocaleDateString("fr-FR")}
                 </div>
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-transparent"
+                >
                   Voir Profil
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-transparent"
+                >
                   Contacter
                 </Button>
               </div>
@@ -112,7 +156,9 @@ export function MembersView({ user }: ViewProps) {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-emerald-600">{allMembers.length}</div>
+              <div className="text-2xl font-bold text-emerald-600">
+                {allMembers.length}
+              </div>
               <div className="text-sm text-gray-500">Total Membres</div>
             </div>
             <div className="text-center">
@@ -137,5 +183,5 @@ export function MembersView({ user }: ViewProps) {
         </CardContent>
       </Card>
     </section>
-  )
+  );
 }

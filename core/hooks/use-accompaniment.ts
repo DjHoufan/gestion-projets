@@ -200,6 +200,55 @@ export const useGetOneAccompaniment = (id: string) => {
   });
 };
 
+export const useGetMyAccompaniments = (id: string, admin: string) => {
+  return useQuery({
+    queryKey: [QueryKeyString.accompaniments],
+    queryFn: async () => {
+      const response = await client.api.accompaniment.my[":id"][":admin"].$get({
+        param: { id: id, admin: admin },
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          "Échec de la récupération de la liste des accompagnementss"
+        );
+      }
+
+      const { data } = await response.json();
+
+      const updatedData = data.map((item) => ({
+        ...item,
+        st: item.status ? "Terminer" : "En cours",
+        project: {
+          ...item.project,
+          startDate: new Date(item.project.startDate),
+          endDate: new Date(item.project.endDate),
+          createdAt: new Date(item.project.createdAt),
+          updatedAt: new Date(item.project.updatedAt),
+        },
+        users: item.users
+          ? {
+              ...item.users,
+              dob: new Date(item.users.dob),
+              createdAt: new Date(item.users.createdAt),
+              updatedAt: new Date(item.users.updatedAt),
+            }
+          : null,
+        members: item.members?.map((m) => ({
+          ...m,
+          dob: new Date(m.dob),
+          createdAt: new Date(m.createdAt),
+          updatedAt: new Date(m.updatedAt),
+        })),
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt),
+      }));
+
+      return updatedData;
+    },
+  });
+};
+
 // === Mutation: Create accompaniment ===
 export const useCreateAccompaniment = () => {
   const queryClient = useQueryClient();

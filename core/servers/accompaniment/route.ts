@@ -9,7 +9,7 @@ import { errorHandler, sessionMiddleware } from "@/core/lib/session-middleware";
 
 import { Accompaniment } from "@prisma/client";
 import { deleteFileDoc } from "@/core/lib/storage";
- 
+
 const getData = (id: string, body: Accompaniment) => ({
   ...body,
   id,
@@ -35,6 +35,21 @@ const app = new Hono()
         createdAt: "asc",
       },
     });
+    return c.json({ data });
+  })
+  .get("my/:id/:admin", async (c) => {
+    const { id, admin } = c.req.param();
+
+    const data = await db.accompaniment.findMany({
+      where: admin === "oui" ? {} : { usersid: id },
+      include: {
+        project: true,
+        users: true,
+        members: true,
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
     return c.json({ data });
   })
   .get("/:accId", async (c) => {
@@ -141,7 +156,7 @@ const app = new Hono()
   .delete("/media/:MId", sessionMiddleware, errorHandler, async (c) => {
     const { MId } = c.req.param();
 
-     await deleteFileDoc(MId);
+    await deleteFileDoc(MId);
 
     return c.json({ data: MId });
   });

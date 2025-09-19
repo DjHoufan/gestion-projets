@@ -19,6 +19,7 @@ import {
 } from "@prisma/client";
 
 export type UpdatedData = Users & {
+  cv: Files | null;
   conflit: (Conflit & {
     partieImpliques: Personnes[];
     files: Files[];

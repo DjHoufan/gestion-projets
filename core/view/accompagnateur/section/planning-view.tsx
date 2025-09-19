@@ -7,10 +7,16 @@ import {
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import { Calendar, Clock, MapPin, Target, CheckCircle } from "lucide-react";
-import { ViewProps } from "@/core/lib/types";
 
-export function PlanningView({ user }: ViewProps) {
-  // Get all visits from all plannings
+import { useMyData } from "@/core/hooks/store";
+
+export function PlanningView() {
+  const { data: user } = useMyData();
+
+  if (!user) {
+    return <div>Chargement...</div>;
+  }
+
   const allVisits = user.plannings.flatMap((planning: any) => planning.visit);
   const completedVisits = allVisits.filter((visit: any) => visit.status);
   const pendingVisits = allVisits.filter((visit: any) => !visit.status);

@@ -1,4 +1,10 @@
-import { MapDetail, MemberDetail, Plannings, PurchaseDetail } from "@/core/lib/types";
+import {
+  MapDetail,
+  MemberDetail,
+  Plannings,
+  PurchaseDetail,
+} from "@/core/lib/types";
+import { UpdatedData } from "@/core/lib/user";
 import { Files, Visits } from "@prisma/client";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -33,11 +39,24 @@ const createUseItemsHook = <T extends { id: string }>() =>
       })),
   }));
 
+// type OnedataProps<T extends { id: string }> = {
+//   data: T | null;
+//   setData: (value: T) => void;
+//   reset: () => void;
+// };
+
+// const createUseItemHook = <T extends { id: string }>() =>
+//   create<OnedataProps<T>>((set) => ({
+//     data: null,
+//     setData: (value: T) => set({ data: value }),
+//     reset: () => set({ data: null }),
+//   }));
 
 type OnedataProps<T extends { id: string }> = {
   data: T | null;
   setData: (value: T) => void;
-
+  updateField: <K extends keyof T>(key: K, value: T[K]) => void;
+  updateFields: (values: Partial<T>) => void;
   reset: () => void;
 };
 
@@ -45,6 +64,14 @@ const createUseItemHook = <T extends { id: string }>() =>
   create<OnedataProps<T>>((set) => ({
     data: null,
     setData: (value: T) => set({ data: value }),
+    updateField: (key, value) =>
+      set((state) =>
+        state.data ? { data: { ...state.data, [key]: value } } : state
+      ),
+    updateFields: (values) =>
+      set((state) =>
+        state.data ? { data: { ...state.data, ...values } } : state
+      ),
     reset: () => set({ data: null }),
   }));
 
@@ -52,6 +79,7 @@ export const usePurchases = createUseItemsHook<PurchaseDetail>();
 export const useClasseMembers = createUseItemsHook<MemberDetail>();
 export const useMedia = createUseItemsHook<Files>();
 export const useMaps = createUseItemHook<MapDetail>();
+export const useMyData = createUseItemHook<UpdatedData>();
 
 type useTabsProps = {
   value: string;
@@ -70,7 +98,6 @@ export const useTabs = create(
     }
   )
 );
-
 
 export const useSelectProject = create(
   persist<useTabsProps>(

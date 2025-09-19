@@ -38,8 +38,9 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { useMyData } from "@/core/hooks/store";
 
-export const RencontreView = ({ user }: ViewProps) => {
+export const RencontreView = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
 
   const [selectedRencontre, setselectedRencontre] = useState<
@@ -47,6 +48,12 @@ export const RencontreView = ({ user }: ViewProps) => {
   >(undefined);
 
   const { open, close } = useModal();
+
+  const { data: user } = useMyData();
+
+  if (!user) {
+    return <div>Chargement...</div>;
+  }
 
   const totalRencontres = user.rencontres.length;
   const totalSignatures = user.rencontres.reduce(
@@ -675,7 +682,7 @@ export const RencontreView = ({ user }: ViewProps) => {
                                   <h4 className="font-semibold text-slate-900 group-hover:text-purple-900 transition-colors">
                                     {signature.member.name}
                                   </h4>
-                                  
+
                                   <p className="text-sm text-slate-600">
                                     {signature.member.phone}
                                   </p>
@@ -720,7 +727,6 @@ export const RencontreView = ({ user }: ViewProps) => {
                       <Button
                         variant="outline"
                         className="flex items-center gap-2 bg-transparent"
-                       
                       >
                         <Edit className="h-4 w-4" />
                         Modifier

@@ -37,14 +37,21 @@ import {
   Phone,
   Banknote,
 } from "lucide-react";
-import { PurchaseDetail, ViewProps } from "@/core/lib/types";
+import { PurchaseDetail } from "@/core/lib/types";
 import { useModal } from "@/core/providers/modal-provider";
 import CustomModal from "@/core/components/wrappeds/custom-modal";
 import { PurchaseForm } from "@/core/view/purchase/purchase-form";
 import { DataTable } from "@/core/components/global/data-table";
+import { useMyData } from "@/core/hooks/store";
 
-export function PurchasesView({ user }: ViewProps) {
+export function PurchasesView() {
   const { open } = useModal();
+
+  const { data: user } = useMyData();
+
+  if (!user) {
+    return <div>Chargement...</div>;
+  }
 
   // Flatten all purchases with accompaniment info
   const allPurchases = user.accompaniments.flatMap(
@@ -381,7 +388,7 @@ export function PurchasesView({ user }: ViewProps) {
           onClick={() =>
             open(
               <CustomModal>
-                <PurchaseForm />
+                <PurchaseForm userId={user.id} admin="non" />
               </CustomModal>
             )
           }

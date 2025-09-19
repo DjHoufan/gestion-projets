@@ -60,7 +60,9 @@ import ImageUpload from "@/core/components/global/upload-image";
 import { DatePicker } from "@/core/components/global/data-picker";
 import { FormProps, PurchaseDetail } from "@/core/lib/types";
 import SearchSelect from "@/core/components/global/search_select";
-import { useGetAccompaniments } from "@/core/hooks/use-accompaniment";
+import {
+  useGetMyAccompaniments,
+} from "@/core/hooks/use-accompaniment";
 import {
   useCreatePurchase,
   useUpdatePurchase,
@@ -261,8 +263,14 @@ const ArticleForm = ({
 export const PurchaseForm = ({
   details,
   Id,
-}: FormProps<PurchaseDetail> & { Id?: string }) => {
-  const { data: projets, isPending } = useGetAccompaniments();
+  userId = "",
+  admin = "oui",
+}: FormProps<PurchaseDetail> & {
+  Id?: string;
+  userId?: string;
+  admin?: string;
+}) => {
+  const { data: projets, isPending } = useGetMyAccompaniments(userId, admin);
 
   const { mutate: create, isPending: cloading } = useCreatePurchase();
   const { mutate: updates, isPending: uloading } = useUpdatePurchase();

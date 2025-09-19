@@ -1,20 +1,20 @@
 "use client";
 
-import { JSX, useMemo, useState } from "react";
-import { CustomSidebar } from "@/core/view/accompagnateur/custom-sidebar";
-import { DashboardContent } from "@/core/view/accompagnateur/dashboard-content";
-import { IdType, RolePermission } from "@/core/lib/types";
+import { useEffect, useState } from "react";
+import { ACSidebar } from "@/core/view/accompagnateur/layout/AC-sidebar";
+import { MainContent } from "@/core/view/accompagnateur/layout/Main-content";
+import { RolePermission } from "@/core/lib/types";
 import { useGetOnTeam } from "@/core/hooks/use-teams";
 import { Spinner } from "@/core/components/ui/spinner";
-import { User } from "@supabase/supabase-js";
+import { useMyData } from "@/core/hooks/store";
 
 type Props = {
   Id: string;
-  currentUser: User;
+
   permission: RolePermission;
 };
 
-export const Dashboard = ({ Id, currentUser, permission }: Props) => {
+export const Dashboard = ({ Id, permission }: Props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   const { data: userData } = useGetOnTeam(Id);
@@ -27,7 +27,7 @@ export const Dashboard = ({ Id, currentUser, permission }: Props) => {
     <div className="flex min-h-screen w-full bg-gray-50">
       {/* Desktop Sidebar */}
       <div className="hidden md:block fixed inset-y-0 left-0 z-40">
-        <CustomSidebar />
+        <ACSidebar toggleSidebarAction={toggleSidebar} />
       </div>
 
       {/* Mobile Sidebar Overlay */}
@@ -38,20 +38,23 @@ export const Dashboard = ({ Id, currentUser, permission }: Props) => {
             onClick={toggleSidebar}
           />
           <div className="absolute left-0 top-0 h-full">
-            <CustomSidebar />
+            <ACSidebar toggleSidebarAction={toggleSidebar} />
           </div>
         </div>
       )}
 
       {/* Main Content */}
-      <main className="flex-1 ml-[300px]">
+      <main className="flex-1 md:ml-[300px]">
         {userData ? (
-          <DashboardContent
+          <MainContent
             user={userData!}
             toggleSidebarAction={toggleSidebar}
-            currentUser={currentUser}
+            currentUser={{
+              name: userData.name,
+              email: userData.email,
+              profile: userData.profile,
+            }}
             permission={permission}
-            
           />
         ) : (
           <div className="w-full h-full flex justify-center items-center">

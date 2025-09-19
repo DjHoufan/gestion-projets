@@ -31,13 +31,15 @@ import {
   Users,
   FileText,
   Target,
-  ChevronRight,
 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/core/components/ui/card";
 import { Badge } from "@/core/components/ui/badge";
 import { Separator } from "@/core/components/ui/separator";
 import { ConflitDetail } from "@/core/lib/types";
-import { useGetAccompaniments } from "@/core/hooks/use-accompaniment";
+import {
+  useGetAccompaniments,
+  useGetMyAccompaniments,
+} from "@/core/hooks/use-accompaniment";
 import { useGetAccompanist } from "@/core/hooks/use-teams";
 import { useCreateConflit, useUpdateConflit } from "@/core/hooks/use-conflit";
 import SearchSelect from "@/core/components/global/search_select";
@@ -48,10 +50,20 @@ interface Props {
   details?: ConflitDetail;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
+  userId?: string;
+  admin?: string;
 }
 
-export function ConflitForm({ details, open, onOpenChangeAction }: Props) {
-  const { data: projets, isPending: ploading } = useGetAccompaniments();
+export function ConflitForm({
+  details,
+  open,
+  onOpenChangeAction,
+  userId = "",
+
+  admin = "non",
+}: Props) {
+  const { data: projets, isPending } = useGetMyAccompaniments(userId, admin);
+
   const { data: users, isPending: loadingUsers } = useGetAccompanist();
   const { mutate: create, isPending: cloading } = useCreateConflit();
   const { mutate: update, isPending: uloading } = useUpdateConflit();
@@ -67,7 +79,7 @@ export function ConflitForm({ details, open, onOpenChangeAction }: Props) {
       partieImpliques: details?.partieImpliques || [{ name: "", role: "" }],
       files: details?.files || [],
       resolution: details?.resolution || "",
-      usersId: details?.usersId || "",
+      usersId: details?.usersId || userId || "",
     },
   });
 
@@ -208,7 +220,7 @@ export function ConflitForm({ details, open, onOpenChangeAction }: Props) {
                                   Icon={Boxes}
                                   items={projets ? projets : []}
                                   onChangeValue={field.onChange}
-                                  loading={ploading}
+                                  loading={isPending}
                                   selectedId={field.value ?? ""}
                                   disabled={loading}
                                 />
@@ -234,7 +246,7 @@ export function ConflitForm({ details, open, onOpenChangeAction }: Props) {
                                   onChangeValue={field.onChange}
                                   loading={loadingUsers}
                                   selectedId={field.value ?? ""}
-                                  disabled={loading}
+                                  disabled={userId ? true : loading}
                                 />
                               </FormControl>
                               <FormMessage />

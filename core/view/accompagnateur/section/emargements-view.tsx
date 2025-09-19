@@ -34,14 +34,21 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-import { EmargementDetail, ViewProps } from "@/core/lib/types";
+import { EmargementDetail } from "@/core/lib/types";
 import { DataTable } from "@/core/components/global/data-table";
 import { EmargementForm } from "@/core/view/rapports/form/emargement-form";
-import { useState } from "react";
-import { useModal } from "@/core/providers/modal-provider";
 
-export function EmargementsView({ user }: ViewProps) {
+import { useModal } from "@/core/providers/modal-provider";
+import { useMyData } from "@/core/hooks/store";
+
+export function EmargementsView() {
   const { open, close } = useModal();
+
+  const { data: user } = useMyData();
+
+  if (!user) {
+    return <div>Chargement...</div>;
+  }
 
   const signedEmargements = user.emargements.filter((em: any) => em.signature);
   const unsignedEmargements = user.emargements.filter(
@@ -180,6 +187,7 @@ export function EmargementsView({ user }: ViewProps) {
                     details={emargement}
                     open={true}
                     onOpenChangeAction={close}
+                    userId={user.id}
                   />
                 )
               }
@@ -435,7 +443,13 @@ export function EmargementsView({ user }: ViewProps) {
         <h2 className="text-2xl font-bold text-gray-900">Émargements</h2>
         <Button
           onClick={() =>
-            open(<EmargementForm open={true} onOpenChangeAction={close} />)
+            open(
+              <EmargementForm
+                open={true}
+                onOpenChangeAction={close}
+                userId={user.id}
+              />
+            )
           }
           className="bg-emerald-600 hover:bg-emerald-700"
         >
