@@ -63,7 +63,7 @@ import { UploadMultiFilesMinimal } from "@/core/components/global/multi-uploads"
 import { Spinner } from "@/core/components/ui/spinner";
 import { useQueryClient } from "@tanstack/react-query";
 import { QueryKeyString } from "@/core/lib/constants";
-import { SelectVisit } from "@/core/view/rapports/select-visit";
+import { SelectMyVisit } from "@/core/view/rapports/My-select-visit";
 
 type Props = {
   details?: RencontreDetail;
@@ -132,8 +132,7 @@ export function RencontreForm({
   const form = useForm<RencontreSchemaInput>({
     resolver: zodResolver(RencontreSchema),
     defaultValues: {
-      date: details?.date || new Date(),
-      lieu: details?.lieu || "",
+      visitId: details?.visitId || "",
       order: details?.order?.map((item) => ({ value: item })) || [
         { value: "" },
       ],
@@ -347,50 +346,44 @@ export function RencontreForm({
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                           
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-
-                            <FormField
-                              control={form.control}
-                              name="date"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center gap-2">
-                                    <Calendar className="w-4 h-4" />
-                                    Date de la rencontre *
-                                  </FormLabel>
-                                  <DatePicker
-                                    disabled={loading}
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                  />
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                            <FormField
-                              control={form.control}
-                              name="lieu"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center gap-2">
-                                    <MapPin className="w-4 h-4" />
-                                    Lieu *
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      placeholder="Lieu de la rencontre"
+                          <FormField
+                            control={form.control}
+                            name="visitId"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-base font-semibold text-gray-800 flex items-center gap-2">
+                                  <Calendar className="h-4 w-4" />
+                                  Visite planifiée *
+                                </FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <SelectMyVisit
+                                      userId={userId!}
                                       disabled={loading}
-                                      {...field}
+                                      onChangeValueAction={(value) => {
+                                        field.onChange(value.tourId);
+
+                                        form.setValue(
+                                          "accompanimentId",
+                                          value.accompanimentId,
+                                          {
+                                            shouldValidate: true,
+                                          }
+                                        );
+                                      }}
+                                      id={field.value}
                                     />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
+                                    {field.value && (
+                                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                        <CheckCircle className="h-5 w-5 text-green-500" />
+                                      </div>
+                                    )}
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                         </CardContent>
                       </Card>
 
@@ -419,7 +412,7 @@ export function RencontreForm({
                                     onChangeValue={field.onChange}
                                     loading={ploading}
                                     selectedId={field.value ?? ""}
-                                    disabled={loading}
+                                    disabled={true}
                                   />
                                   <FormMessage />
                                 </FormItem>
@@ -442,7 +435,7 @@ export function RencontreForm({
                                     onChangeValue={field.onChange}
                                     loading={loadingUsers}
                                     selectedId={field.value ?? ""}
-                                    disabled={loading}
+                                    disabled={userId ? true : loading}
                                   />
                                   <FormMessage />
                                 </FormItem>

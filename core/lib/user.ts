@@ -37,6 +37,7 @@ export type UpdatedData = Users & {
   })[];
 
   rencontres: (Rencontre & {
+    visit: Visits;
     signatures: (Signature & {
       member: Member;
     })[];

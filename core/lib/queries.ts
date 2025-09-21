@@ -640,6 +640,7 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
       },
     },
     include: {
+      visit: true,
       files: true,
       signatures: {
         include: {

@@ -42,7 +42,6 @@ import {
 import { useState } from "react";
 import { useMyData } from "@/core/hooks/store";
 import { ScrollArea } from "@/core/components/ui/scroll-area";
-import { Separator } from "@/core/components/ui/separator";
 
 export const RencontreView = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
@@ -84,10 +83,10 @@ export const RencontreView = () => {
         return (
           <div className="flex flex-col whitespace-nowrap">
             <span className="font-medium text-slate-900">
-              {format(new Date(rencontre.date), "dd/MM/yyyy")}
+              {format(new Date(rencontre.visit.date), "dd/MM/yyyy")}
             </span>
             <span className="text-sm text-slate-500">
-              {format(new Date(rencontre.date), "HH:mm")}
+              {format(new Date(rencontre.visit.date), "HH:mm")}
             </span>
           </div>
         );
@@ -357,7 +356,7 @@ export const RencontreView = () => {
                     <Calendar className="h-4 w-4" />
                     <span className="text-sm">
                       {format(
-                        new Date(selectedRencontre.date),
+                        new Date(selectedRencontre.visit.date),
                         "dd MMMM yyyy",
                         { locale: fr }
                       )}
@@ -366,12 +365,12 @@ export const RencontreView = () => {
                   <div className="flex items-center gap-3 text-indigo-100">
                     <Clock className="h-4 w-4" />
                     <span className="text-sm">
-                      {format(new Date(selectedRencontre.date), "HH:mm")}
+                      {format(new Date(selectedRencontre.visit.date), "HH:mm")}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-indigo-100">
                     <MapPin className="h-4 w-4" />
-                    <span className="text-sm">{selectedRencontre.lieu}</span>
+                    <span className="text-sm">{selectedRencontre.visit.location}</span>
                   </div>
                 </div>
               </div>
@@ -383,16 +382,16 @@ export const RencontreView = () => {
                   <div className="border-b pb-4">
                     <h1 className="text-2xl font-bold text-slate-900 mb-2">
                       Rencontre du{" "}
-                      {format(new Date(selectedRencontre.date), "dd/MM/yyyy")}
+                      {format(new Date(selectedRencontre.visit.date), "dd/MM/yyyy")}
                     </h1>
                     <div className="flex items-center gap-4 text-sm text-slate-600">
                       <div className="flex items-center gap-1">
                         <MapPin className="h-4 w-4" />
-                        {selectedRencontre.lieu}
+                        {selectedRencontre.visit.location}
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="h-4 w-4" />
-                        {format(new Date(selectedRencontre.date), "HH:mm")}
+                        {format(new Date(selectedRencontre.visit.date), "HH:mm")}
                       </div>
                     </div>
                   </div>

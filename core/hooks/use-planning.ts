@@ -106,6 +106,62 @@ export const useGetPlanning = () => {
   });
 };
 
+export const useGetMyPlanning = (id: string) => {
+ 
+
+  return useQuery({
+    queryKey: [QueryKeyString.planning + id],
+    queryFn: async () => {
+      const response = await client.api.planning.my[":plangId"].$get({
+        param: { plangId: id },
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          "Échec de la récupération de la liste deses données de la planning"
+        );
+      }
+
+      const { data } = await response.json();
+
+      const updatedData = data.map((item) => ({
+        ...item,
+        visit: item.visit.map((visit) => ({
+          ...visit,
+          date: new Date(visit.date),
+        })),
+        accompaniments: item.accompaniments.map((accomp) => ({
+          ...accomp,
+          project: {
+            ...accomp.project,
+            startDate: new Date(accomp.project.startDate),
+            endDate: new Date(accomp.project.endDate),
+            createdAt: new Date(accomp.project.createdAt),
+            updatedAt: new Date(accomp.project.updatedAt),
+          },
+          users: accomp.users
+            ? {
+                ...accomp.users,
+                dob: new Date(accomp.users.dob),
+                createdAt: new Date(accomp.users.createdAt),
+                updatedAt: new Date(accomp.users.updatedAt),
+              }
+            : null,
+          members:
+            accomp.members?.map((m) => ({
+              ...m,
+              dob: new Date(m.dob),
+              createdAt: new Date(m.createdAt),
+              updatedAt: new Date(m.updatedAt),
+            })) ?? [],
+        })),
+      }));
+
+      return updatedData;
+    },
+  });
+};
+
 export const useGetOnePlanning = (id: string) => {
   return useQuery({
     queryKey: [QueryKeyString.planning + id],

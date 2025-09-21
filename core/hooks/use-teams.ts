@@ -271,7 +271,11 @@ export const useGetOnTeam = (id: string) => {
 
         rencontres: data.rencontres.map((r) => ({
           ...r,
-          date: new Date(r.date),
+         
+          visit:{
+            ...r.visit,
+            date: new Date(r.visit.date),
+          },
 
           signatures: r.signatures.map((s) => ({
             ...s,
@@ -336,7 +340,7 @@ export const useGetOnTeam = (id: string) => {
           })),
           rencontre: a.rencontre.map((r) => ({
             ...r,
-            date: new Date(r.date),
+         
             signatures: r.signatures.map((s) => ({
               ...s,
               date: new Date(s.date),

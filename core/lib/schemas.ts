@@ -526,18 +526,10 @@ export const ConflitSchema = z.object({
 });
 
 export const RencontreSchema = z.object({
-  date: z.coerce.date({
-    required_error: "La date de la rencontre est obligatoire",
-    invalid_type_error: "La date doit être une valeur valide",
+  visitId: z.string({
+    required_error: "Veuillez sélectionner un créneau de la rencontre",
+    invalid_type_error: "le créneau doit être renseigné",
   }),
-
-  lieu: z
-    .string({
-      required_error: "Le lieu est obligatoire",
-      invalid_type_error: "Le lieu doit être une chaîne de caractères",
-    })
-    .min(2, "Le lieu doit contenir au moins 2 caractères")
-    .max(255, "Le lieu ne doit pas dépasser 255 caractères"),
 
   order: z
     .array(
@@ -736,12 +728,10 @@ export const ClasseMembersSchema = z.object({
     .min(1, { message: "Au moins un membre est requis" }),
 });
 
-
 export const EmployeAccesSchema = z.object({
   routes: z.array(z.string()).optional(),
   access: z.array(z.string()).optional(),
 });
-
 
 export type ProjetSchemaType = z.input<typeof projetSchema>;
 export type AuthSchemaInput = z.input<typeof AuthSchema>;
@@ -766,9 +756,6 @@ export type LeaveSchemaInput = z.input<typeof LeaveSchema>;
 export type MediaSchemaInput = z.input<typeof MediaSchema>;
 export type ClasseSchemaInput = z.input<typeof ClasseSchema>;
 export type ClasseMembersSchemaInput = z.input<typeof ClasseMembersSchema>;
-
-
-
 
 // Schema Zod pour la validation du changement de mot de passe
 export const updatePasswordSchema = z
@@ -796,7 +783,6 @@ export const updatePasswordSchema = z
     message: "Les mots de passe ne correspondent pas",
     path: ["confirmPassword"],
   });
-
 
 export const ProfileUserSchema = z.object({
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),

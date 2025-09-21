@@ -207,6 +207,7 @@ export type signatureDetail = Signature & {
 };
 
 export type RencontreDetail = Rencontre & {
+  visit: Visits;
   accompaniment: Accompaniment;
   signatures: signatureDetail[];
   files: Files[];

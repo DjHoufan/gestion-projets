@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
- 
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Status {
@@ -295,6 +294,7 @@ model Visits {
   Planning   Planning @relation(fields: [planningId], references: [id])
 
   VisiteTerrain VisiteTerrain?
+  Rencontre     Rencontre[]
 }
 
 model Planning {
@@ -303,8 +303,9 @@ model Planning {
   accompaniments Accompaniment[]
   visit          Visits[]
 
-  usersId String @db.Uuid
-  users   Users  @relation(fields: [usersId], references: [id])
+  usersId   String      @db.Uuid
+  users     Users       @relation(fields: [usersId], references: [id])
+ 
 }
 
 model Maps {
@@ -409,9 +410,6 @@ model Conflit {
 model Rencontre {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  date DateTime
-  lieu String
-
   order     String[]
   decisions String[]
 
@@ -424,8 +422,12 @@ model Rencontre {
   accompanimentId String        @db.Uuid
   accompaniment   Accompaniment @relation(fields: [accompanimentId], references: [id])
 
-  usersId String @db.Uuid
-  users   Users  @relation(fields: [usersId], references: [id])
+  visitId String @default("0edd8c57-40f4-4bea-b1dc-731363f1d56e") @db.Uuid
+  visit   Visits @relation(fields: [visitId], references: [id])
+
+  usersId    String    @db.Uuid
+  users      Users     @relation(fields: [usersId], references: [id])
+ 
 }
 
 model Upload {

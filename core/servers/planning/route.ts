@@ -52,9 +52,29 @@ const app = new Hono()
     });
     return c.json({ data });
   })
+  .get("my/:plangId", async (c) => {
+    const { plangId } = c.req.param();
+
+    const data = await db.planning.findMany({
+      where: {
+        usersId: plangId,
+      },
+      include: {
+        visit: true,
+        accompaniments: {
+          include: {
+            users: true,
+            members: true,
+            project: true,
+          },
+        },
+      },
+    });
+    return c.json({ data });
+  })
   .get("/:plangId", async (c) => {
     const { plangId } = c.req.param();
-    const data = await db.planning.findFirst({
+    const data = await db.planning.findUnique({
       where: {
         id: plangId,
       },

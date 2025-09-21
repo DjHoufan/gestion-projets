@@ -57,6 +57,7 @@ const getDashboardStats = unstable_cache(
         },
         rencontres: {
           include: {
+            visit: true,
             files: true,
             signatures: {
               include: {
@@ -114,7 +115,7 @@ const getDashboardStats = unstable_cache(
     return data;
   },
   ["stats-dashboard"],
-  { revalidate: 600  } // 10 min
+  { revalidate: 600 } // 10 min
 );
 
 const app = new Hono()
