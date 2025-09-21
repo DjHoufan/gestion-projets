@@ -17,10 +17,8 @@ import {
 } from "@/core/components/ui/dialog";
 import { RencontreForm } from "@/core/view/rapports/form/rencontre-form";
 import {
-  FileItem,
   RencontreDetail,
   signatureDetail,
-  ViewProps,
 } from "@/core/lib/types";
 import { useModal } from "@/core/providers/modal-provider";
 import { format } from "date-fns";

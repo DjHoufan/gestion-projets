@@ -45,11 +45,11 @@ export const RencontreShow = ({ data }: { data: RencontreDetail }) => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calendar className="h-5 w-5" />
-          Rencontre du {formatDate(data.date.toDateString())}
+          Rencontre du {formatDate(data.visit.date.toDateString())}
         </CardTitle>
         <CardDescription className="flex items-center gap-2">
           <MapPin className="h-4 w-4" />
-          {data.lieu}
+          {data.visit.location}
         </CardDescription>
       </CardHeader>
 

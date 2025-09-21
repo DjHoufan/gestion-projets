@@ -48,7 +48,11 @@ export const useGetRencontre = () => {
 
       const updatedData = data.map((item) => ({
         ...item,
-        date: new Date(item.date),
+        visit: {
+          ...item.visit,
+
+          date: new Date(item.visit.date),
+        },
 
         users: {
           ...item.users,
@@ -100,6 +104,11 @@ export const useGetOneRencontre = (id: string) => {
 
       const updatedData = {
         ...data,
+        visit: {
+          ...data.visit,
+
+          date: new Date(data.visit.date),
+        },
         users: {
           ...data.users,
           dob: new Date(data.users.dob),

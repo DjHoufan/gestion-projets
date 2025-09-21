@@ -257,6 +257,8 @@ const app = new Hono()
   .get("/rencontre", async (c) => {
     const data = await db.rencontre.findMany({
       include: {
+        visit: true,
+
         accompaniment: true,
         users: true,
         files: true,
@@ -277,6 +279,7 @@ const app = new Hono()
         id: rId,
       },
       include: {
+        visit: true,
         accompaniment: true,
         users: true,
         files: true,

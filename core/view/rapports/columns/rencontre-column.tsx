@@ -23,10 +23,10 @@ export const RencontreColumns = (
       <div className="space-y-1">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Calendar className="h-4 w-4" />
-          {formatDateShort(row.original.date)}
+          {formatDateShort(row.original.visit.date)}
         </div>
         <div className="text-xs text-muted-foreground">
-          {new Date(row.original.date).toLocaleTimeString("fr-FR", {
+          {new Date(row.original.visit.date).toLocaleTimeString("fr-FR", {
             hour: "2-digit",
             minute: "2-digit",
           })}
@@ -40,7 +40,7 @@ export const RencontreColumns = (
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
         <MapPin className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm">{row.original.lieu}</span>
+        <span className="text-sm">{row.original.visit.location}</span>
       </div>
     ),
     size: 150,
