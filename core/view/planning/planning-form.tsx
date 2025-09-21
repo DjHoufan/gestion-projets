@@ -51,6 +51,10 @@ type Props = {
 };
 
 export const PlanningForm = ({ details, accompanimentId, userId }: Props) => {
+  console.log({
+    details,
+  });
+
   const { mutate: create, isPending: ploading } = useCreatePlanning();
   const { mutate: visite, isPending: vloading } = useCreatevisit();
 
@@ -64,7 +68,7 @@ export const PlanningForm = ({ details, accompanimentId, userId }: Props) => {
     defaultValues: {
       usersId: details?.usersId || userId || "",
       accompanimentId: accompanimentId || "",
-      visit: [],
+      visit: details?.visit || [],
     },
   });
 

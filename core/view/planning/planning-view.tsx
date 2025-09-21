@@ -20,7 +20,6 @@ import {
   CheckCircle,
   Timer,
   Edit,
-  MoreVertical,
   Users,
   Calendar,
   X,
@@ -38,7 +37,10 @@ import { useModal } from "@/core//providers/modal-provider";
 import CustomModal from "@/core//components/wrappeds/custom-modal";
 import { PlanningForm } from "@/core/view/planning/planning-form";
 import { usePlanningStore } from "@/core//hooks/store";
-import { useUpdateStatusVisit } from "@/core//hooks/use-planning";
+import {
+  useDeleteVisits,
+  useUpdateStatusVisit,
+} from "@/core//hooks/use-planning";
 import { Spinner } from "@/core//components/ui/spinner";
 import { Member, Visits } from "@prisma/client";
 import { CrudPermissions } from "@/core/lib/types";
@@ -56,9 +58,6 @@ export default function PlanningCalendar({
   userId,
   permission,
 }: Props) {
-
- 
-  
   const { canAdd, canModify, canDelete } = permission;
   const { mutate: updateStatus, isPending: loading } = useUpdateStatusVisit();
   const { planning } = usePlanningStore();
@@ -72,6 +71,8 @@ export default function PlanningCalendar({
   const [showMultipleVisitsModal, setShowMultipleVisitsModal] =
     useState<boolean>(false);
   const [multipleVisits, setMultipleVisits] = useState<Visits[]>([]);
+
+  const { mutate: deleteVisit, isPending: loadingDelete } = useDeleteVisits();
 
   // Effect to handle responsive view change
   useEffect(() => {
@@ -743,15 +744,19 @@ export default function PlanningCalendar({
                           size="sm"
                           variant="outline"
                           className="bg-white/70 hover:bg-white"
+                          onClick={() => {
+                            open(
+                              <CustomModal>
+                                <PlanningForm
+                                  details={{ ...planning, visit: [visit] }}
+                                  accompanimentId={accompanimentId}
+                                  userId={userId}
+                                />
+                              </CustomModal>
+                            );
+                          }}
                         >
                           <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="bg-white/70 hover:bg-white"
-                        >
-                          <MoreVertical className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
@@ -816,8 +821,20 @@ export default function PlanningCalendar({
                   {/* Actions rapides */}
                   <div className="flex gap-2 mt-4">
                     {canDelete && (
-                      <Button className="flex-1 bg-red/70 hover:bg-white text-red-700 border border-red-200 cursor-pointer">
-                        <CalendarDays className="w-4 h-4 mr-2" />
+                      <Button
+                        disabled={loadingDelete}
+                        onClick={() =>
+                          deleteVisit({ param: { visitId: visit.id! } })
+                        }
+                        className="flex-1 bg-red/70 hover:bg-white text-red-700 border border-red-200 cursor-pointer"
+                      >
+                        {loadingDelete ? (
+                          <Spinner variant="ellipsis" />
+                        ) : visit.status ? (
+                          <X className="w-4 h-4 mr-2" />
+                        ) : (
+                          <CalendarDays className="w-4 h-4 mr-2" />
+                        )}
                         Supprimer
                       </Button>
                     )}

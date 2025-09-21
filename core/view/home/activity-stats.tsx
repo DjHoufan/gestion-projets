@@ -120,7 +120,7 @@ export function ActivityStats({ data, isLoading }: Props) {
                       {statusLabels[a.status]}
                     </Badge>
                     <div className="text-xs text-muted-foreground mt-1">
-                      {new Date(a.date).toLocaleDateString("fr-FR")}
+                      {a.date ? new Date(a.date).toLocaleDateString("fr-FR") : ''}
                     </div>
                   </div>
                 </div>

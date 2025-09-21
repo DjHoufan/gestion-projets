@@ -53,6 +53,14 @@ type PatchRequestVisit = InferRequestType<
   (typeof client.api.planning)[":plangId"]["status"]["visit"]["$patch"]
 >;
 
+type VdeleteResponse = InferResponseType<
+  (typeof client.api.planning.visit)[":visitId"]["$delete"],
+  200
+>;
+type VdeleteRequest = InferRequestType<
+  (typeof client.api.planning.visit)[":visitId"]["$delete"]
+>;
+
 // === Query: Get planning ===
 export const useGetPlanning = () => {
   return useQuery({
@@ -107,8 +115,6 @@ export const useGetPlanning = () => {
 };
 
 export const useGetMyPlanning = (id: string) => {
- 
-
   return useQuery({
     queryKey: [QueryKeyString.planning + id],
     queryFn: async () => {
@@ -252,7 +258,7 @@ export const useCreatePlanning = () => {
       queryClient.invalidateQueries({
         queryKey: [QueryKeyString.planning, QueryKeyString.planning],
       });
-      // close();
+      close();
     },
     onError: (err) => {
       close();
@@ -302,6 +308,8 @@ export const useCreatevisit = () => {
         };
         setPlanning(transformedData);
       }
+
+      close();
 
       toast.success({
         message: "Le planning a été enregistré avec succès",
@@ -537,6 +545,73 @@ export const useDeleteOneVisit = () => {
       toast.error({
         message: `Échec de la mise a jour du créneau : ${parsedError.message}`,
       });
+    },
+  });
+};
+
+export const useDeleteVisits = () => {
+  const queryClient = useQueryClient();
+  const { close } = useModal();
+  const { removeVisit } = usePlanningStore();
+
+  return useMutation<VdeleteResponse, Error, VdeleteRequest>({
+    mutationFn: async ({ param }) => {
+      const res = await client.api.planning.visit[":visitId"]["$delete"]({
+        param,
+      });
+
+      if (!res.ok) {
+        const errorBody = await res.text();
+
+        console.log("errorBody", errorBody);
+
+        throw new Error(`Erreur API: ${res.status} - ${errorBody}`);
+      }
+
+      return await res.json();
+    },
+    onSuccess: ({ data }) => {
+      console.log("data", data);
+
+      removeVisit(data.id);
+
+      toast.success({
+        message: "Le créneau été supprimer avec succès",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.planning, QueryKeyString.Wmembers],
+      });
+      close();
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      // Vérifie si c'est une erreur API avec un body JSON
+      let errorMessage =
+        "Échec de la mise à jour du créneau, veuillez réessayer.";
+
+      try {
+        if (error instanceof Error) {
+          // Si ton hook met directement le body dans error.message
+          const parsed = JSON.parse(
+            error.message.replace("Erreur API: 409 - ", "")
+          );
+          if (parsed?.error) {
+            errorMessage = parsed.error;
+          }
+        } else if (error?.response?.data?.error) {
+          // Si ça vient d'Axios / fetch avec réponse structurée
+          errorMessage = error.response.data.error;
+        }
+      } catch {
+        // si parsing échoue → garde le message par défaut
+      }
+
+      toast.error({
+        message: errorMessage,
+      });
+
+      close();
     },
   });
 };

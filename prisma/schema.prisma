@@ -422,8 +422,8 @@ model Rencontre {
   accompanimentId String        @db.Uuid
   accompaniment   Accompaniment @relation(fields: [accompanimentId], references: [id])
 
-  visitId String @default("0edd8c57-40f4-4bea-b1dc-731363f1d56e") @db.Uuid
-  visit   Visits @relation(fields: [visitId], references: [id])
+  visitId String?  @db.Uuid
+  visit   Visits? @relation(fields: [visitId], references: [id])
 
   usersId    String    @db.Uuid
   users      Users     @relation(fields: [usersId], references: [id])

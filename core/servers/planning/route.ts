@@ -156,6 +156,31 @@ const app = new Hono()
 
     return c.json({ data: response });
   })
+  .delete("visit/:visitId", sessionMiddleware, async (c) => {
+    const { visitId } = c.req.param();
+
+    try {
+      const response = await db.visits.delete({
+        where: { id: visitId },
+      });
+
+      return c.json({ data: response });
+    } catch (error: any) {
+      if (error.code === "P2003") {
+        if (error.message.includes("Rencontre_visitId_fkey")) {
+          return c.json(
+            {
+              error:
+                "Ce créneau est lié à une rencontre, suppression impossible.",
+            },
+            409 // <- Status HTTP Conflict
+          );
+        }
+      }
+ 
+      return c.json({ error: "Erreur interne du serveur" }, 500);
+    }
+  })
   .delete("/:plangId", sessionMiddleware, async (c) => {
     const { plangId } = c.req.param();
 
