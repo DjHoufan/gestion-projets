@@ -494,7 +494,7 @@ export default function PlanningCalendar({
                   open(
                     <CustomModal>
                       <PlanningForm
-                        details={planning}
+                        details={{ ...planning!, visit: [] }}
                         accompanimentId={accompanimentId}
                         userId={userId}
                       />
@@ -744,17 +744,6 @@ export default function PlanningCalendar({
                           size="sm"
                           variant="outline"
                           className="bg-white/70 hover:bg-white"
-                          onClick={() => {
-                            open(
-                              <CustomModal>
-                                <PlanningForm
-                                  details={{ ...planning, visit: [visit] }}
-                                  accompanimentId={accompanimentId}
-                                  userId={userId}
-                                />
-                              </CustomModal>
-                            );
-                          }}
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
