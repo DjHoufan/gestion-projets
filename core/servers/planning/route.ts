@@ -60,7 +60,14 @@ const app = new Hono()
         usersId: plangId,
       },
       include: {
-        visit: true,
+        visit: {
+          where: {
+            Rencontre: {
+              none: {},
+            },
+            status: false,
+          },
+        },
         accompaniments: {
           include: {
             users: true,
@@ -70,6 +77,7 @@ const app = new Hono()
         },
       },
     });
+
     return c.json({ data });
   })
   .get("/:plangId", async (c) => {

@@ -16,10 +16,7 @@ import {
   DialogTrigger,
 } from "@/core/components/ui/dialog";
 import { RencontreForm } from "@/core/view/rapports/form/rencontre-form";
-import {
-  RencontreDetail,
-  signatureDetail,
-} from "@/core/lib/types";
+import { RencontreDetail, signatureDetail } from "@/core/lib/types";
 import { useModal } from "@/core/providers/modal-provider";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -84,7 +81,7 @@ export const RencontreView = () => {
               {format(new Date(rencontre.visit.date), "dd/MM/yyyy")}
             </span>
             <span className="text-sm text-slate-500">
-              {format(new Date(rencontre.visit.date), "HH:mm")}
+              {rencontre.visit.startTime} - {rencontre.visit.endTime}
             </span>
           </div>
         );
@@ -98,7 +95,7 @@ export const RencontreView = () => {
           variant="outline"
           className="bg-blue-50 text-blue-700 border-blue-200"
         >
-          {row.original.lieu}
+          {row.original.visit.location}
         </Badge>
       ),
     },
@@ -178,7 +175,16 @@ export const RencontreView = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {}}
+            onClick={() =>
+              open(
+                <RencontreForm
+                  details={row.original}
+                  open={true}
+                  onOpenChangeAction={close}
+                  userId={user.id}
+                />
+              )
+            }
             className="h-8 w-8 p-0 hover:bg-green-50 hover:border-green-300"
           >
             <Edit className="h-4 w-4 text-green-600" />
@@ -284,7 +290,6 @@ export const RencontreView = () => {
                   </div>
                 </div>
 
-                {/* Quick Stats */}
                 <div className="space-y-4 mb-6">
                   <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex gap-5 justify-between">
                     <div className="flex items-center justify-between gap-5">
@@ -363,12 +368,15 @@ export const RencontreView = () => {
                   <div className="flex items-center gap-3 text-indigo-100">
                     <Clock className="h-4 w-4" />
                     <span className="text-sm">
-                      {format(new Date(selectedRencontre.visit.date), "HH:mm")}
+                      {selectedRencontre.visit.startTime} -{" "}
+                      {selectedRencontre.visit.endTime}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-indigo-100">
                     <MapPin className="h-4 w-4" />
-                    <span className="text-sm">{selectedRencontre.visit.location}</span>
+                    <span className="text-sm">
+                      {selectedRencontre.visit.location}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -380,7 +388,10 @@ export const RencontreView = () => {
                   <div className="border-b pb-4">
                     <h1 className="text-2xl font-bold text-slate-900 mb-2">
                       Rencontre du{" "}
-                      {format(new Date(selectedRencontre.visit.date), "dd/MM/yyyy")}
+                      {format(
+                        new Date(selectedRencontre.visit.date),
+                        "dd/MM/yyyy"
+                      )}
                     </h1>
                     <div className="flex items-center gap-4 text-sm text-slate-600">
                       <div className="flex items-center gap-1">
@@ -389,7 +400,10 @@ export const RencontreView = () => {
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="h-4 w-4" />
-                        {format(new Date(selectedRencontre.visit.date), "HH:mm")}
+                        {format(
+                          new Date(selectedRencontre.visit.date),
+                          "HH:mm"
+                        )}
                       </div>
                     </div>
                   </div>

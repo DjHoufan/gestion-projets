@@ -115,7 +115,7 @@ const getDashboardStats = unstable_cache(
     return data;
   },
   ["stats-dashboard"],
-  { revalidate: 600 } // 10 min
+  { revalidate: 300 } // 10 min
 );
 
 const app = new Hono()

@@ -154,16 +154,24 @@ export const useCreateRencontre = () => {
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      if (data) {
-        updateFields({
-          rencontres: [
-            //@ts-ignore
-            ...(user?.rencontres || []),
-            //@ts-ignore
-            data,
-          ],
-        });
-      }
+      queryClient.setQueryData<any>(
+        ["accompanist", data?.usersId!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            rencontres: [...((oldData?.rencontres as any[]) ?? []), data],
+          };
+        }
+      );
+
+      updateFields({
+        rencontres: [
+          //@ts-ignore
+          ...(user?.rencontres || []),
+          //@ts-ignore
+          data,
+        ],
+      });
 
       toast.success({
         message:
@@ -171,6 +179,9 @@ export const useCreateRencontre = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [QueryKeyString.rencontre],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.planning + data?.usersId!],
       });
       close();
     },
@@ -187,29 +198,54 @@ export const useCreateRencontre = () => {
 // === Mutation: Update Rencontre ===
 export const useUpdateRencontre = () => {
   const queryClient = useQueryClient();
+  const { close } = useModal();
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PatchRpV, Error, PatchRqV>({
     mutationFn: async ({ json, param }) => {
-      const res = await client.api.rapport.rencontre[":rId"]["$patch"]({
+      const response = await client.api.rapport.rencontre[":rId"]["$patch"]({
         json,
         param,
       });
+      if (!response.ok) {
+        const errorBody = await response.text();
 
-      if (!res.ok) {
-        const errorBody = await res.text();
-
-        throw new Error(`Erreur API: ${res.status} - ${errorBody}`);
+        throw new Error(errorBody);
       }
 
-      return await res.json();
+      return await response.json();
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
+      queryClient.setQueryData<any>(
+        ["accompanist", data?.usersId!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            rencontres: [...((oldData?.rencontres as any[]) ?? []), data],
+          };
+        }
+      );
+
+      updateFields({
+        rencontres: [
+          //@ts-ignore
+          ...(user?.rencontres || []),
+          //@ts-ignore
+          data,
+        ],
+      });
+
+      close();
+
       toast.success({
         message:
           "Les données de la visite de terrain a été modifié avec succès",
       });
       queryClient.invalidateQueries({
         queryKey: [QueryKeyString.rencontre],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.planning + data?.usersId!],
       });
     },
     onError: (err) => {

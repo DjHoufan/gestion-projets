@@ -266,17 +266,12 @@ export function definePermissions(
   rp: RolePermission,
   pathname: string
 ): Permissions {
- 
-
   const scopedAccess = (rp.access ?? [])
     .map((a) => a.split("|").map((s) => s.trim()))
     .filter(([route]) => route === pathname);
- 
 
   // Extraire toutes les actions sauf le premier élément (la route)
   const perms = scopedAccess.flatMap(([_, ...actions]) => actions);
-
- 
 
   // Flags simples
   const canView = perms.includes("view");
@@ -289,6 +284,8 @@ export function definePermissions(
   // Flag admin implicite
   const isAdmin =
     rp.type === "admin" || rp.type === "accompanist" || rp.type === "trainer";
+
+ 
 
   return {
     canAdd: canAdd || isAdmin,

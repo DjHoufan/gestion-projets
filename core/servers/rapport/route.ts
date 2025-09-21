@@ -308,7 +308,7 @@ const app = new Hono()
     zValidator("json", RencontreSchema),
     sessionMiddleware,
     async (c) => {
-      const response = handleDatatUpsert<Rencontre>(
+      const response = await handleDatatUpsert<Rencontre>(
         c,
         c.req.param("rId"),
         "rc"
