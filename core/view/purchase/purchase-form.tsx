@@ -60,9 +60,7 @@ import ImageUpload from "@/core/components/global/upload-image";
 import { DatePicker } from "@/core/components/global/data-picker";
 import { FormProps, PurchaseDetail } from "@/core/lib/types";
 import SearchSelect from "@/core/components/global/search_select";
-import {
-  useGetMyAccompaniments,
-} from "@/core/hooks/use-accompaniment";
+import { useGetMyAccompaniments } from "@/core/hooks/use-accompaniment";
 import {
   useCreatePurchase,
   useUpdatePurchase,
@@ -150,23 +148,56 @@ const ArticleForm = ({
   };
 
   return (
-    <Form {...articleForm}>
-      <form
-        onSubmit={(e) => {
-          e.stopPropagation(); // Empêche la propagation de l'événement
-          articleForm.handleSubmit(handleSubmit)(e); // Exécute la soumission du formulaire
-        }}
-        className="space-y-4  p-5 "
-      >
-        <div className="flex justify-between gap-5">
+    <div className=" h-[800px] overflow-y-auto">
+      <Form {...articleForm}>
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation(); // Empêche la propagation de l'événement
+            articleForm.handleSubmit(handleSubmit)(e); // Exécute la soumission du formulaire
+          }}
+          className="space-y-4  p-5 "
+        >
+          <div className="flex justify-between gap-5">
+            <FormField
+              control={articleForm.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Nom de l'article</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ex: Pizza Margherita" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={articleForm.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Prix unitaire</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ex: 2500 DJF" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <FormField
             control={articleForm.control}
-            name="name"
+            name="quantity"
             render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Nom de l'article</FormLabel>
+              <FormItem>
+                <FormLabel>Quantité</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: Pizza Margherita" {...field} />
+                  <QuantityControl
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -175,88 +206,57 @@ const ArticleForm = ({
 
           <FormField
             control={articleForm.control}
-            name="price"
+            name="image"
             render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Prix unitaire</FormLabel>
+              <FormItem>
+                <FormLabel>URL de l'image</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: 2500 DJF" {...field} />
+                  <ImageUpload
+                    value={field.value ? field.value : ""}
+                    disabled={false}
+                    onChange={(url) => field.onChange(url)}
+                    folder="images"
+                    buttonPosition="top-right"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
 
-        <FormField
-          control={articleForm.control}
-          name="quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Quantité</FormLabel>
-              <FormControl>
-                <QuantityControl
+          <FormField
+            control={articleForm.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <DatePicker
+                  disabled={false}
+                  position="top"
                   value={field.value}
                   onChange={field.onChange}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={articleForm.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL de l'image</FormLabel>
-              <FormControl>
-                <ImageUpload
-                  value={field.value ? field.value : ""}
-                  disabled={false}
-                  onChange={(url) => field.onChange(url)}
-                  folder="images"
-                  buttonPosition="top-right"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={articleForm.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date</FormLabel>
-              <DatePicker
-                disabled={false}
-                position="top"
-                value={field.value}
-                onChange={field.onChange}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex gap-2 pt-4">
-          <Button type="submit" className="flex-1">
-            {isEditing ? "Modifier" : "Ajouter"} l'article
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            className="flex-1 bg-transparent"
-          >
-            Annuler
-          </Button>
-        </div>
-      </form>
-    </Form>
+          <div className="flex gap-2 pt-4">
+            <Button type="submit" className="flex-1">
+              {isEditing ? "Modifier" : "Ajouter"} l'article
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              className="flex-1 bg-transparent"
+            >
+              Annuler
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 };
 

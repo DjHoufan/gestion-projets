@@ -141,8 +141,8 @@ export function ConflictsView() {
       size: 150,
     },
     {
-      id: "actions",
-      header: "Actions",
+      id: "details",
+      header: "Details",
       cell: ({ row }: any) => {
         const conflict = row.original;
         const isResolved =
@@ -162,14 +162,6 @@ export function ConflictsView() {
               </DialogTrigger>
               <ConflictDetailsModal conflict={conflict} />
             </Dialog>
-            {!isResolved && (
-              <Button
-                size="sm"
-                className="bg-emerald-600 hover:bg-emerald-700 h-8 text-xs px-2"
-              >
-                Résoudre
-              </Button>
-            )}
           </div>
         );
       },

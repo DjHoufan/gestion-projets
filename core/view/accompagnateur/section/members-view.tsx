@@ -20,7 +20,7 @@ import {
   GraduationCap,
   Search,
 } from "lucide-react";
- 
+
 import { useMyData } from "@/core/hooks/store";
 
 export function MembersView() {
@@ -40,13 +40,6 @@ export function MembersView() {
 
   return (
     <section className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Membres</h2>
-        <Button className="bg-emerald-600 hover:bg-emerald-700">
-          Ajouter Membre
-        </Button>
-      </div>
-
       {/* Search and Filters */}
       <Card>
         <CardContent className="p-4">

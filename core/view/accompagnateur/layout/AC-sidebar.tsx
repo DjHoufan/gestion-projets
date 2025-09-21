@@ -47,7 +47,7 @@ const menuItems: MenuItem[] = [
     textColor: "text-emerald-600",
   },
   {
-    title: "Membres",
+    title: "Bénéficiaire",
     url: "members",
     icon: User,
     color: "bg-purple-500",
@@ -104,6 +104,16 @@ const menuItems: MenuItem[] = [
   },
 ];
 
+const hoverColors: Record<string, string> = {
+  "bg-blue-500": "group-hover:bg-blue-500",
+  "bg-emerald-500": "group-hover:bg-emerald-500",
+  "bg-purple-500": "group-hover:bg-purple-500",
+  "bg-orange-500": "group-hover:bg-orange-500",
+  "bg-indigo-500": "group-hover:bg-indigo-500",
+  "bg-red-500": "group-hover:bg-red-500",
+  "bg-teal-500": "group-hover:bg-teal-500",
+};
+
 type Props = {
   toggleSidebarAction: () => void;
 };
@@ -111,7 +121,7 @@ type Props = {
 export function ACSidebar({ toggleSidebarAction }: Props) {
   const { set, value: url } = useCustomeTabs();
   return (
-    <div className="md:w-[300px] h-screen bg-slate-50/50 backdrop-blur-sm  flex flex-col border-r-2 border-r-teal-500/20">
+    <div className="md:w-[300px] h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900  transition-transform duration-300 ease-in-out   flex flex-col border-r-2 border-r-teal-500/20">
       <div className="relative border-b border-slate-700/50 bg-gradient-to-r from-teal-600/20 to-teal-600/20 backdrop-blur-sm">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 to-teal-500/10" />
         <div className="relative p-6 flex items-center justify-between">
@@ -136,7 +146,7 @@ export function ACSidebar({ toggleSidebarAction }: Props) {
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 p-4 space-y-1 overflow-y-auto">
+      <div className="flex-1 p-4 space-y-1 overflow-y-auto ">
         {menuItems.map((item: MenuItem) => {
           const isActive: boolean = url === item.url || url === item.url2;
           return (
@@ -144,35 +154,29 @@ export function ACSidebar({ toggleSidebarAction }: Props) {
               key={item.title}
               onClick={() => set(item.url)}
               className={`
-                group relative w-full p-3 rounded-lg transition-all duration-200 border text-left
+                group relative w-full p-3 rounded-lg transition-all duration-200 border text-left text-slate-300
                 ${
                   isActive
-                    ? `${item.lightColor} border-${
+                    ? ` bg-gradient-to-r from-slate-800/80 to-slate-700/80 border-${
                         item.color.split("-")[1]
-                      }-200`
-                    : "hover:bg-white/80 border-transparent hover:border-gray-200"
+                      }-500`
+                    : " border-transparent hover:bg-gradient-to-r hover:from-slate-800/80 hover:to-slate-700/80 hover:text-white hover:shadow-lg"
                 }
               `}
             >
               <div className="flex items-center gap-3">
                 {/* Minimalist Icon */}
                 <div
-                  className={`
-                    w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200
+                  className={` w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200
                     ${
                       isActive
                         ? item.color
-                        : "bg-gray-100 group-hover:bg-gray-200"
-                    }
-                  `}
+                        : `bg-gradient-to-r from-teal-600/20 to-teal-600/20 ${
+                            hoverColors[item.color]
+                          }  `
+                    }`}
                 >
-                  {item.icon && (
-                    <item.icon
-                      className={`h-4 w-4 ${
-                        isActive ? "text-white" : "text-gray-600"
-                      }`}
-                    />
-                  )}
+                  {item.icon && <item.icon className={`h-4 w-4 text-white `} />}
                 </div>
 
                 {/* Content */}
@@ -181,11 +185,7 @@ export function ACSidebar({ toggleSidebarAction }: Props) {
                     <span
                       className={`
                         text-sm font-medium truncate
-                        ${
-                          isActive
-                            ? item.textColor
-                            : "text-slate-700 group-hover:text-slate-900"
-                        }
+                        ${isActive ? item.textColor : "text-slate-300   "}
                       `}
                     >
                       {item.title}

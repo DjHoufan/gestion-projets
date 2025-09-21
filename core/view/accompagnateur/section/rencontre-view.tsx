@@ -11,7 +11,9 @@ import { Card, CardContent } from "@/core/components/ui/card";
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/core/components/ui/dialog";
 import { RencontreForm } from "@/core/view/rapports/form/rencontre-form";
 import {
@@ -39,6 +41,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useMyData } from "@/core/hooks/store";
+import { ScrollArea } from "@/core/components/ui/scroll-area";
+import { Separator } from "@/core/components/ui/separator";
 
 export const RencontreView = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
@@ -66,6 +70,8 @@ export const RencontreView = () => {
   );
 
   const openDetails = (rencontre: RencontreDetail) => {
+    console.log("Opening details for rencontre:", rencontre);
+
     setselectedRencontre(rencontre);
     setIsDetailsOpen(true);
   };
@@ -86,7 +92,6 @@ export const RencontreView = () => {
           </div>
         );
       },
-      size: 150,
     },
     {
       id: "lieu",
@@ -99,106 +104,41 @@ export const RencontreView = () => {
           {row.original.lieu}
         </Badge>
       ),
-      size: 150,
     },
     {
-      id: "order",
-      header: "Ordre du Jour",
+      header: "order du jour",
       cell: ({ row }: any) => (
-        <div className="flex flex-wrap gap-1">
-          {row.original.order.map((item: string, idx: number) => (
-            <Badge
-              key={idx}
-              variant="secondary"
-              className="bg-slate-100 text-slate-700 hover:bg-slate-200"
-            >
-              {item}
-            </Badge>
-          ))}
-        </div>
+        <TruncatedTextWithDialog
+          items={row.original.order}
+          type="order"
+          maxLength={40}
+        />
       ),
-      size: 200,
     },
     {
-      id: "decisions",
-      header: "Décisions",
+      header: "Decisions",
       cell: ({ row }: any) => (
-        <div className="flex flex-wrap gap-1">
-          {row.original.decisions.map((item: string, idx: number) => (
-            <Badge
-              key={idx}
-              className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200"
-            >
-              {item}
-            </Badge>
-          ))}
-        </div>
+        <TruncatedTextWithDialog
+          items={row.original.order}
+          type="decisions"
+          maxLength={40}
+        />
       ),
-      size: 200,
     },
-    {
-      header: "Actions",
-      cell: ({ row }: any) => (
-        <div className="flex flex-wrap gap-1">
-          {row.original.actions.map((item: string, idx: number) => (
-            <Badge
-              key={idx}
-              className="bg-orange-100 text-orange-700 hover:bg-orange-200 border-orange-200"
-            >
-              {item}
-            </Badge>
-          ))}
-        </div>
-      ),
-      size: 200,
-    },
-    {
-      id: "files",
-      header: "Fichiers",
-      cell: ({ row }: any) => {
-        const files = row.original.files;
-        return files && files.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
-            {files.slice(0, 3).map((file: FileItem) => (
-              <div
-                key={file.id}
-                className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                title={file.name}
-              >
-                <FileIcon type={file.type} className="h-4 w-4 text-slate-600" />
-                <span className="text-xs text-slate-700 truncate max-w-20">
-                  {file.name}
-                </span>
-              </div>
-            ))}
-            {files.length > 3 && (
-              <div className="flex items-center justify-center p-2 bg-slate-100 rounded-lg text-xs text-slate-600">
-                +{files.length - 3}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 text-slate-400 text-sm">
-            <Paperclip className="h-4 w-4" />
-            <span>Aucun fichier</span>
-          </div>
-        );
-      },
-      size: 200,
-    },
+
     {
       id: "participants",
       header: "Participants",
       cell: ({ row }: any) => {
         const signatures = row.original.signatures;
         return signatures && signatures.length > 0 ? (
-          <div className="flex flex-col gap-2">
-            {signatures.map((signature: signatureDetail) => (
-              <div
-                key={signature.id}
-                className="flex items-center gap-3 p-2 bg-slate-50 rounded-lg"
-              >
-                <Avatar className="h-8 w-8 ring-2 ring-white shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="flex -space-x-2">
+              {signatures.slice(0, 3).map((signature: signatureDetail) => (
+                <Avatar
+                  key={signature.id}
+                  className="h-8 w-8 ring-2 ring-white shadow-sm"
+                >
                   <AvatarImage
                     src={
                       signature.member.profile ||
@@ -210,42 +150,24 @@ export const RencontreView = () => {
                     {signature.member.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm text-slate-900 truncate">
-                    {signature.member.name}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    {signature.present ? (
-                      <div className="flex items-center gap-1">
-                        <CheckCircle className="h-3 w-3 text-green-500" />
-                        <span className="text-xs text-green-600 font-medium">
-                          Présent
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3 text-red-500" />
-                        <span className="text-xs text-red-600 font-medium">
-                          Absent
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            {signatures.length > 3 && (
+              <span className="text-xs text-slate-500 ml-1">
+                +{signatures.length - 3}
+              </span>
+            )}
           </div>
         ) : (
           <div className="flex items-center gap-2 text-slate-400 text-sm">
             <Users className="h-4 w-4" />
-            <span>Aucun participant</span>
+            <span>Aucun</span>
           </div>
         );
       },
-      size: 250,
     },
     {
-      header: "Actions",
+      header: "Détails",
       cell: ({ row }: any) => (
         <div className="flex items-center gap-2 justify-center">
           <Button
@@ -335,7 +257,13 @@ export const RencontreView = () => {
         description="Assurez la gestion des informations et des rencontres pour vos différents accompagnateurs"
         canAdd={true}
         onAddButtonClick={() =>
-          open(<RencontreForm open={true} onOpenChangeAction={close} />)
+          open(
+            <RencontreForm
+              open={true}
+              onOpenChangeAction={close}
+              userId={user.id}
+            />
+          )
         }
         pageSize={10}
         addButtonText="Enregistre une nouvelle rencontre"
@@ -748,3 +676,86 @@ export const RencontreView = () => {
     </section>
   );
 };
+
+function TruncatedTextWithDialog({
+  items,
+  type,
+  maxLength = 50,
+}: {
+  items: string[];
+  type: "decisions" | "actions" | "order";
+  maxLength?: number;
+}) {
+  if (!items || items.length === 0) {
+    return (
+      <span className="text-slate-400 text-sm italic">
+        Aucune{" "}
+        {type === "decisions"
+          ? "décision"
+          : type === "actions"
+          ? "action"
+          : "point"}
+      </span>
+    );
+  }
+
+  const colorClasses = {
+    decisions: "bg-green-50 text-green-700 border-green-200",
+    actions: "bg-orange-50 text-orange-700 border-orange-200",
+    order: "bg-blue-50 text-blue-700 border-blue-200",
+  };
+
+  const titles = {
+    decisions: "Décisions",
+    actions: "Actions",
+    order: "Ordre du Jour",
+  };
+
+  // Show first item truncated
+  const firstItem = items[0];
+  const truncatedText =
+    firstItem.length > maxLength
+      ? `${firstItem.substring(0, maxLength)}...`
+      : firstItem;
+  const hasMore = items.length > 1 || firstItem.length > maxLength;
+
+  return (
+    <div className="space-y-1">
+      <div className={`p-2 rounded-md border text-sm ${colorClasses[type]}`}>
+        <p>{truncatedText}</p>
+        {hasMore && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 mt-1 text-xs p-1"
+              >
+                Voir détails {items.length > 1 && `(${items.length} éléments)`}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle>{titles[type]}</DialogTitle>
+              </DialogHeader>
+              <ScrollArea className="max-h-[60vh]">
+                <div className="space-y-3">
+                  {items.map((item, idx) => (
+                    <div key={idx} className="p-3 bg-slate-50 rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <span className="text-slate-400 text-sm mt-0.5 flex-shrink-0">
+                          {idx + 1}.
+                        </span>
+                        <p className="text-slate-700">{item}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    </div>
+  );
+}

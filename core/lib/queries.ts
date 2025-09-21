@@ -629,6 +629,7 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
       signatures: {
         create: newData.signatures.map((sig) => ({
           date: sig.date,
+          present: sig.present,
           member: { connect: { id: sig.memberId } },
         })),
       },
@@ -636,6 +637,14 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
         connect: newData.files?.map((f) => ({
           id: f.id,
         })),
+      },
+    },
+    include: {
+      files: true,
+      signatures: {
+        include: {
+          member: true,
+        },
       },
     },
   });

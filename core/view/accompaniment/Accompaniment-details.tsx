@@ -140,31 +140,48 @@ export const AccompanimentDetails = ({
             onClick={() =>
               open(
                 <CustomModal>
-                  <iframe
-                    src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                      data.file.url ?? ""
-                    )}`}
-                    width="100%"
-                    height="550px"
-                  >
-                    This is an embedded
-                    <a
-                      target="_blank"
-                      href={data.file.url ?? "#"}
-                      rel="noreferrer"
+                  {data.file.type === "application/pdf" ? (
+                    <iframe
+                      src={data.file.url ?? ""}
+                      width="100%"
+                      height="550px"
+                      style={{ border: "none" }}
                     >
-                      Microsoft Office
-                    </a>{" "}
-                    document, powered by
-                    <a
-                      target="_blank"
-                      href="https://office.com/webapps"
-                      rel="noreferrer"
+                      <a
+                        href={data.file.url ?? "#"}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Ouvrir le PDF
+                      </a>
+                    </iframe>
+                  ) : (
+                    <iframe
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                        data.file.url ?? ""
+                      )}`}
+                      width="100%"
+                      height="550px"
                     >
-                      Office
-                    </a>
-                    .
-                  </iframe>
+                      This is an embedded
+                      <a
+                        target="_blank"
+                        href={data.file.url ?? "#"}
+                        rel="noreferrer"
+                      >
+                        Microsoft Office
+                      </a>{" "}
+                      document, powered by
+                      <a
+                        target="_blank"
+                        href="https://office.com/webapps"
+                        rel="noreferrer"
+                      >
+                        Office
+                      </a>
+                      .
+                    </iframe>
+                  )}
                 </CustomModal>
               )
             }
@@ -336,8 +353,8 @@ export const AccompanimentDetails = ({
                         alt={data.users?.name!}
                       />
                       <AvatarFallback className="bg-emerald-100 text-emerald-700 font-bold text-sm sm:text-lg">
-                        {data.users?.name!
-                          .split(" ")
+                        {data.users
+                          ?.name!.split(" ")
                           .map((n) => n[0])
                           .join("")}
                       </AvatarFallback>

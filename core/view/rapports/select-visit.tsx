@@ -22,7 +22,7 @@ export const SelectVisit = ({ disabled, id, onChangeValueAction }: Props) => {
   const { data, isPending } = useGetPlanning();
   const [selectedTourId, setSelectedTourId] = useState(id);
 
-  // Flatten all visits from all plannings and add accompaniment info
+ 
   const allTours = (data ?? [])
     .flatMap((planning) =>
       planning.visit.map((visit) => ({
@@ -69,7 +69,7 @@ export const SelectVisit = ({ disabled, id, onChangeValueAction }: Props) => {
                 value={tour.id}
                 className="rounded-md m-1 hover:bg-teal-50 transition-colors duration-150 py-3 w-full "
               >
-                <div className="flex items-center justify-between w-[350px]  ">
+                <div className="flex items-center justify-between w-[450px]  ">
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col items-center justify-center bg-teal-100 rounded-md p-1.5 w-10">
                       <span className="text-xs font-bold text-teal-800">

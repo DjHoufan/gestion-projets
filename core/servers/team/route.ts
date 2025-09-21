@@ -13,6 +13,7 @@ import { db } from "@/core/lib/db";
 import { User } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/core/supabase/client";
 import { profile } from "console";
+import { unstable_cache } from "next/cache";
 
 const getData = (id: string, body: User) => ({
   ...body,
@@ -24,78 +25,8 @@ const handleDatatUpsert = async (c: any, id: string) => {
   return await upsertTeam(data);
 };
 
-const app = new Hono()
-  .get("/", async (c) => {
-    const data = await db.users.findMany({
-      include: {
-        cv: true,
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-    return c.json({ data });
-  })
-  .get("/employe", async (c) => {
-    const data = await db.users.findMany({
-      where: {
-        type: "employe",
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-    return c.json({ data });
-  })
-  .get("/accompanist", async (c) => {
-    const data = await db.users.findMany({
-      where: {
-        type: "accompanist",
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-    return c.json({ data });
-  })
-  .get("/profile/:teamId", async (c) => {
-    const { teamId } = c.req.param();
-
-    const data = await db.users.findFirst({
-      where: {
-        id: teamId,
-      },
-    });
-
-    return c.json({ data });
-  })
-  .get("/users/:chatId", async (c) => {
-    const { chatId } = c.req.param();
-
-    const data = await db.users.findMany({
-      where: {
-        chatParticipant: {
-          none: {
-            chatId: chatId,
-          },
-        },
-      },
-    });
-
-    return c.json({ data });
-  })
-  .get("/trainer", async (c) => {
-    const data = await db.users.findMany({
-      where: {
-        type: "trainer",
-      },
-    });
-
-    return c.json({ data });
-  })
-  .get("/:teamId", async (c) => {
-    const { teamId } = c.req.param();
-
+const getDashboardStats = unstable_cache(
+  async (teamId: string) => {
     const data = await db.users.findFirst({
       where: {
         id: teamId,
@@ -179,6 +110,86 @@ const app = new Hono()
         },
       },
     });
+
+    return data;
+  },
+  ["stats-dashboard"],
+  { revalidate: 600  } // 10 min
+);
+
+const app = new Hono()
+  .get("/", async (c) => {
+    const data = await db.users.findMany({
+      include: {
+        cv: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return c.json({ data });
+  })
+  .get("/employe", async (c) => {
+    const data = await db.users.findMany({
+      where: {
+        type: "employe",
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return c.json({ data });
+  })
+  .get("/accompanist", async (c) => {
+    const data = await db.users.findMany({
+      where: {
+        type: "accompanist",
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return c.json({ data });
+  })
+  .get("/profile/:teamId", async (c) => {
+    const { teamId } = c.req.param();
+
+    const data = await db.users.findFirst({
+      where: {
+        id: teamId,
+      },
+    });
+
+    return c.json({ data });
+  })
+  .get("/users/:chatId", async (c) => {
+    const { chatId } = c.req.param();
+
+    const data = await db.users.findMany({
+      where: {
+        chatParticipant: {
+          none: {
+            chatId: chatId,
+          },
+        },
+      },
+    });
+
+    return c.json({ data });
+  })
+  .get("/trainer", async (c) => {
+    const data = await db.users.findMany({
+      where: {
+        type: "trainer",
+      },
+    });
+
+    return c.json({ data });
+  })
+  .get("/:teamId", async (c) => {
+    const { teamId } = c.req.param();
+
+    const data = await getDashboardStats(teamId);
 
     return c.json({ data });
   })
@@ -287,33 +298,29 @@ const app = new Hono()
       return c.json({ data: user });
     }
   )
-  .patch(
-    "updateProfilev3/:userId/:value/:op",
-    sessionMiddleware,
-    async (c) => {
-      const { value, op, userId } = c.req.param();
+  .patch("updateProfilev3/:userId/:value/:op", sessionMiddleware, async (c) => {
+    const { value, op, userId } = c.req.param();
 
-      console.log("je suis la", { value, op, userId });
+    console.log("je suis la", { value, op, userId });
 
-      const user = await db.users.update({
-        where: { id: userId },
-        data: op === "cv" ? { filesId: value } : { profile: value },
-        include: {
-          cv: true,
+    const user = await db.users.update({
+      where: { id: userId },
+      data: op === "cv" ? { filesId: value } : { profile: value },
+      include: {
+        cv: true,
+      },
+    });
+
+    if (op === "profile") {
+      await supabaseAdmin.auth.updateUser({
+        data: {
+          profile: profile,
         },
       });
-
-      if (op === "profile") {
-        await supabaseAdmin.auth.updateUser({
-          data: {
-            profile: profile,
-          },
-        });
-      }
-
-      return c.json({ data: user });
     }
-  )
+
+    return c.json({ data: user });
+  })
   .delete("/:teamId", sessionMiddleware, async (c) => {
     const { teamId } = c.req.param();
 

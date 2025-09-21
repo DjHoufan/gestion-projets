@@ -177,7 +177,7 @@ export function PurchasesView() {
               onClick={() =>
                 open(
                   <CustomModal>
-                    <PurchaseForm details={purchase} />
+                    <PurchaseForm details={purchase} userId={user.id} admin="non" />
                   </CustomModal>
                 )
               }

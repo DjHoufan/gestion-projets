@@ -7,6 +7,7 @@ import { QueryKeyString } from "@/core/lib/constants";
 import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "@/core/components/global/custom-toast";
+import { useMyData } from "@/core/hooks/store";
 
 // === Type Inference Rencontre ===
 type PostRpV = InferResponseType<
@@ -129,6 +130,7 @@ export const useGetOneRencontre = (id: string) => {
 export const useCreateRencontre = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PostRpV, Error, PostRqV>({
     mutationFn: async ({ json }: PostRqV) => {
@@ -142,7 +144,18 @@ export const useCreateRencontre = () => {
 
       return await response.json();
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
+      if (data) {
+        updateFields({
+          rencontres: [
+            //@ts-ignore
+            ...(user?.rencontres || []),
+            //@ts-ignore
+            data,
+          ],
+        });
+      }
+
       toast.success({
         message:
           "Les données de la visite de terrain  a été enregistré avec succès",
@@ -165,7 +178,6 @@ export const useCreateRencontre = () => {
 // === Mutation: Update Rencontre ===
 export const useUpdateRencontre = () => {
   const queryClient = useQueryClient();
- 
 
   return useMutation<PatchRpV, Error, PatchRqV>({
     mutationFn: async ({ json, param }) => {
@@ -190,11 +202,8 @@ export const useUpdateRencontre = () => {
       queryClient.invalidateQueries({
         queryKey: [QueryKeyString.rencontre],
       });
-     
     },
     onError: (err) => {
-    
-
       const parsedError = JSON.parse(err.message);
 
       toast.error({

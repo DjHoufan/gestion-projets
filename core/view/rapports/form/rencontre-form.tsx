@@ -63,11 +63,13 @@ import { UploadMultiFilesMinimal } from "@/core/components/global/multi-uploads"
 import { Spinner } from "@/core/components/ui/spinner";
 import { useQueryClient } from "@tanstack/react-query";
 import { QueryKeyString } from "@/core/lib/constants";
+import { SelectVisit } from "@/core/view/rapports/select-visit";
 
 type Props = {
   details?: RencontreDetail;
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
+  userId?: string;
 };
 
 const steps = [
@@ -108,7 +110,12 @@ const steps = [
   },
 ];
 
-export function RencontreForm({ details, open, onOpenChangeAction }: Props) {
+export function RencontreForm({
+  details,
+  open,
+  onOpenChangeAction,
+  userId,
+}: Props) {
   const queryClient = useQueryClient();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -138,7 +145,7 @@ export function RencontreForm({ details, open, onOpenChangeAction }: Props) {
       ],
       signatures: details?.signatures || [],
       accompanimentId: details?.accompanimentId || "",
-      usersId: details?.usersId || "",
+      usersId: details?.usersId || userId || "",
     },
   });
 
@@ -340,7 +347,10 @@ export function RencontreForm({ details, open, onOpenChangeAction }: Props) {
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
+                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
                             <FormField
                               control={form.control}
                               name="date"
