@@ -19,8 +19,8 @@ export const Welcome = () => {
                 Tableau de Bord Intelligent
               </h2>
               <p className="text-lg opacity-90 max-w-2xl">
-                Pilotez vos formations avec des insights en temps réel et des
-                outils d'analyse avancés
+                Piloter l'accompagnement des jeunes bénéficiaires avec des
+                outils avancés et en temps réel
               </p>
             </div>
           </div>
