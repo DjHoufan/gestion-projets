@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/core/lib/db";
-import { startOfMonth, startOfYear, subMonths, subYears } from "date-fns";
+import { startOfMonth, startOfYear, subMonths } from "date-fns";
 
 /* ---------------- TYPES ---------------- */
 type Project = {
@@ -38,8 +38,8 @@ type Visit = {
 
 type Rencontre = {
   id: string;
-  date: Date;
-  lieu: string;
+  visitId: string; // <-- la rencontre référence une visit
+  lieu?: string; // lieu propre à la rencontre (optionnel)
   decisions?: string[];
 };
 
@@ -76,7 +76,8 @@ interface RawData {
   accompaniments: (Omit<Accompaniment, "createdAt"> & { createdAt: string })[];
   visits: (Omit<Visit, "date"> & { date: string })[];
   users: (Omit<User, "createdAt"> & { createdAt: string })[];
-  rencontres: (Omit<Rencontre, "date"> & { date: string })[];
+  // now rencontres include visitId (string) coming from DB; no date string here
+  rencontres: (Omit<Rencontre, never> & { visitId: string; lieu?: string; decisions?: string[] })[];
   conflits: (Omit<Conflit, "createdAt"> & { createdAt: string })[];
   signatures: (Omit<Signature, "createdAt"> & { createdAt: string })[];
 }
@@ -154,8 +155,9 @@ export interface GlobalActivitiesData {
   };
   recentActivities: {
     type: "Visite" | "Rencontre" | "Conflit";
-    location: string;
-    date: string;
+    visitId?: string;
+    location?: string;
+    date?: string;
     status: string;
     details: string;
   }[];
@@ -223,13 +225,18 @@ export async function getAllStatsData(year: number = new Date().getFullYear()) {
   );
   const allVisits = parseDates<Visit, "date">(raw.visits, ["date"]);
   const allUsers = parseDates<User, "createdAt">(raw.users, ["createdAt"]);
-  const allRencontres = parseDates<Rencontre, "date">(raw.rencontres, ["date"]);
+  // rencontres n'ont pas de date propre : on les laisse telles quelles (visitId présent)
+  const allRencontres: Rencontre[] = raw.rencontres || [];
   const allConflits = parseDates<Conflit, "createdAt">(raw.conflits, [
     "createdAt",
   ]);
   const allSignatures = parseDates<Signature, "createdAt">(raw.signatures, [
     "createdAt",
   ]);
+
+  // ---- Pré-indexation des visites par id (évite find répétitifs)
+  const visitsById = new Map<string, Visit>();
+  for (const v of allVisits) visitsById.set(v.id, v);
 
   /* ---------------- PRIMARY METRICS ---------------- */
   const primaryMetrics: PrimaryMetric[] = [
@@ -348,10 +355,15 @@ export async function getAllStatsData(year: number = new Date().getFullYear()) {
       (v) =>
         v.date && v.date.getFullYear() === year && v.date.getMonth() === index
     ).length,
-    meetings: allRencontres.filter(
-      (r) =>
-        r.date && r.date.getFullYear() === year && r.date.getMonth() === index
-    ).length,
+    // meetings: on regarde la date de la visite liée
+    meetings: allRencontres.filter((r) => {
+      const visit = visitsById.get(r.visitId);
+      return (
+        visit?.date &&
+        visit.date.getFullYear() === year &&
+        visit.date.getMonth() === index
+      );
+    }).length,
     conflicts: allConflits.filter(
       (c) =>
         c.createdAt &&
@@ -481,18 +493,30 @@ export async function getAllStatsData(year: number = new Date().getFullYear()) {
     recentActivities: [
       ...allVisits.slice(-5).map((v) => ({
         type: "Visite" as const,
+        visitId: v.id,
         location: v.location,
         date: v.date.toISOString(),
         status: v.status ? "Terminée" : "En attente",
         details: "",
       })),
-      ...allRencontres.slice(-5).map((r) => ({
-        type: "Rencontre" as const,
-        location: r.lieu,
-        date: r.date.toISOString(),
-        status: "Terminée",
-        details: r.decisions?.join(", ") || "",
-      })),
+      ...allRencontres.slice(-5).map((r) => {
+        const visit = visitsById.get(r.visitId);
+        // si visite manquante on utilise le lieu propre à la rencontre (r.lieu) ou fallback
+        const location = visit?.location || r.lieu || "N/A";
+        const date = visit?.date?.toISOString() || undefined;
+
+        // détails : décisions join -> si vide on met chaîne vide
+        const details = r.decisions?.join(", ") || "";
+
+        return {
+          type: "Rencontre" as const,
+          visitId: r.visitId,
+          location,
+          date,
+          status: "Terminée",
+          details,
+        };
+      }),
       ...allConflits.slice(-5).map((c) => ({
         type: "Conflit" as const,
         location: c.accompanimentId || "N/A",
@@ -502,6 +526,5 @@ export async function getAllStatsData(year: number = new Date().getFullYear()) {
       })),
     ],
   };
-
   return { primaryMetrics, statsDatas, projectUsers, globalActivities };
 }

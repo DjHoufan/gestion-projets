@@ -11,11 +11,13 @@ import { useGetakis } from "@/core/hooks/use-stats";
 const Home = () => {
   const { data, isPending } = useGetakis();
 
+  console.log({ data });
+
   return (
     <div className="p-6 space-y-6 max-w-full">
       <Welcome />
       <MetricsGrid data={data?.primaryMetrics ?? []} isPending={isPending} />
- 
+
       <MainDashboard statsData={data?.statsDatas ?? []} isPending={isPending} />
       <ProjectUsers
         data={
