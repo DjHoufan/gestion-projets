@@ -99,7 +99,6 @@ export const PlanningForm = ({
       const visitsWithPlanningId = data.visit.map((visitItem) => ({
         ...visitItem,
         planningId: details.id,
-        id: details.visit[0].id,
       }));
       if (update) {
         updateVisit({
