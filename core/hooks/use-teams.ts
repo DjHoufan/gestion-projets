@@ -271,8 +271,8 @@ export const useGetOnTeam = (id: string) => {
 
         rencontres: data.rencontres.map((r) => ({
           ...r,
-         
-          visit:{
+
+          visit: {
             ...r.visit,
             date: new Date(r.visit.date),
           },
@@ -340,7 +340,7 @@ export const useGetOnTeam = (id: string) => {
           })),
           rencontre: a.rencontre.map((r) => ({
             ...r,
-         
+
             signatures: r.signatures.map((s) => ({
               ...s,
               date: new Date(s.date),
@@ -518,7 +518,6 @@ export const useUpdatePassword = () => {
       toast.success({ message: "Mot de passe modifié avec succès" });
     },
     onError: (err) => {
-
       toast.error({
         message: `Erreur lors du changement de mot de passe : ${err.message}`,
       });
@@ -541,7 +540,6 @@ export const useUpdateProfile = () => {
       return result;
     },
     onSuccess: ({ data }) => {
-
       queryClient.setQueryData<any>(
         ["accompanist", data.id],
         (oldData: any) => {
@@ -568,7 +566,6 @@ export const useUpdateProfile = () => {
       toast.success({ message: "le profil a été mis à jour" });
     },
     onError: (err) => {
-
       toast.error({
         message: `Erreur lors du changement de mot de passe : ${err.message}`,
       });
@@ -580,12 +577,12 @@ export const useUpdateCvOrProfile = () => {
   const queryClient = useQueryClient();
   const { updateFields } = useMyData();
   return useMutation<PatchResProfileOrCV, Error, PatchReqProfileOrCv>({
-    mutationFn: async ({ param ,json }) => {
-      const res = await client.api.team.updateProfilev3[":userId"][
-        ":op"
-      ]["$patch"]({
+    mutationFn: async ({ param, json }) => {
+      const res = await client.api.team.updateProfilev3[":userId"][":op"][
+        "$patch"
+      ]({
         param,
-        json
+        json,
       });
 
       const result = await res.json();
@@ -593,7 +590,6 @@ export const useUpdateCvOrProfile = () => {
       return result;
     },
     onSuccess: ({ data }) => {
-
       queryClient.setQueryData<any>(
         ["accompanist", data.id],
         (oldData: any) => {
@@ -611,6 +607,18 @@ export const useUpdateCvOrProfile = () => {
         }
       );
 
+      queryClient.setQueryData<any>(
+        [QueryKeyString.profile],
+        (oldData: any) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            profile: data.profile ?? oldData.profile,
+          };
+        }
+      );
+
       updateFields({
         profile: data.profile,
         cv: data.cv,
@@ -619,7 +627,6 @@ export const useUpdateCvOrProfile = () => {
       toast.success({ message: "le profil a été mis à jour" });
     },
     onError: (err) => {
-
       toast.error({
         message: `Erreur lors du changement de mot de passe : ${err.message}`,
       });

@@ -420,6 +420,8 @@ export const EquipeForm = ({ details }: FormProps<UserDetail>) => {
                         </FormLabel>
                         <FormControl>
                           <Input
+                            disabled={details ? true : false}
+
                             type="email"
                             placeholder="email@example.com"
                             className="bg-white border-orange-200 focus:border-emerald -400 focus:ring-emerald -400/20 transition-all duration-200 rounded-xl h-12"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetProfile } from "@/core/hooks/use-teams";
+import { useGetProfile, useUpdateCvOrProfile } from "@/core/hooks/use-teams";
 import { IdType } from "@/core/lib/types";
 import { LoadingProfile } from "@/core/view/profile/profile-loading";
 import {
@@ -24,11 +24,16 @@ import {
 } from "lucide-react";
 import { calculerAge, formatDate, formatDateTime } from "@/core/lib/utils";
 import { useRouter } from "next/navigation";
+import CustomModal from "@/core/components/wrappeds/custom-modal";
+import ImageUpload from "@/core/components/global/upload-image";
+import { useModal } from "@/core/providers/modal-provider";
 
 export const ProfileBody = ({ Id }: IdType) => {
   const router = useRouter();
+  const { open } = useModal();
 
   const { data: user, isPending } = useGetProfile(Id);
+  const { mutate: updateProfileOrCv } = useUpdateCvOrProfile();
 
   if (!user || isPending) {
     return <LoadingProfile />;
@@ -87,6 +92,31 @@ export const ProfileBody = ({ Id }: IdType) => {
                     variant="outline"
                     size="sm"
                     className="mt-4 border-emerald-200 hover:bg-emerald-50 bg-transparent"
+                    onClick={() =>
+                      open(
+                        <CustomModal size="md:max-w-[400px]">
+                          <div className="flex items-center justify-center h-full">
+                            <ImageUpload
+                              value={""}
+                              disabled={false}
+                              onChange={(url) => {
+                                if (url) {
+                                  updateProfileOrCv({
+                                    param: {
+                                      op: "profile",
+                                      userId: user.id,
+                                    },
+                                    json: { value: url },
+                                  });
+                                }
+                              }}
+                              folder="profile"
+                              buttonPosition="top-right"
+                            />
+                          </div>
+                        </CustomModal>
+                      )
+                    }
                   >
                     <Edit className="w-3 h-3 mr-2" />
                     Modifier photo

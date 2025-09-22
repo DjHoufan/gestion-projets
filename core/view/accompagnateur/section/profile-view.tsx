@@ -78,10 +78,10 @@ const ProfileView = () => {
   const { open } = useModal();
   const { mutate: updatePassword, isPending } = useUpdatePassword();
   const { mutate: updateProfile, isPending: loading } = useUpdateProfile();
-  const { mutate: updateProfileOrCv, isPending: loadingcvorprofile } =
+  const { mutate: updateProfileOrCv } =
     useUpdateCvOrProfile();
 
-  const cvRef = useRef<Files | null>(null);
+ 
 
   const [showCurrentPassword, setShowCurrentPassword] =
     useState<boolean>(false);
@@ -89,7 +89,7 @@ const ProfileView = () => {
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isUploadingCV, setIsUploadingCV] = useState<boolean>(false);
+ 
 
   // Configuration du formulaire avec react-hook-form et Zod
   const form = useForm<UpdatePasswordFormData>({
@@ -161,41 +161,7 @@ const ProfileView = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Vérifier que c'est un PDF
-      if (file.type !== "application/pdf") {
-        alert("Veuillez sélectionner un fichier PDF");
-        return;
-      }
-      // Vérifier la taille (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Le fichier ne doit pas dépasser 5MB");
-        return;
-      }
-      setSelectedFile(file);
-    }
-  };
-
-  const handleCVUpload = async () => {
-    if (!selectedFile) return;
-
-    setIsUploadingCV(true);
-
-    // Simulation d'upload
-    setTimeout(() => {
-      alert(`CV "${selectedFile.name}" uploadé avec succès`);
-      setSelectedFile(null);
-      setIsUploadingCV(false);
-      // Reset file input
-      const fileInput = document.getElementById(
-        "cv-upload"
-      ) as HTMLInputElement;
-      if (fileInput) fileInput.value = "";
-    }, 2000);
-  };
-
+ 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("fr-FR");
   };
