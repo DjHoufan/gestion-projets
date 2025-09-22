@@ -733,6 +733,10 @@ export const EmployeAccesSchema = z.object({
   access: z.array(z.string()).optional(),
 });
 
+export const ValueSchema = z.object({
+  value: z.string({message:"valeur est obligatoire"}).min(1,{message:"valeur ne peut pas être vide"}),
+});
+
 export type ProjetSchemaType = z.input<typeof projetSchema>;
 export type AuthSchemaInput = z.input<typeof AuthSchema>;
 export type UserSchemaInput = z.input<typeof UserSchema>;

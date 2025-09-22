@@ -7,6 +7,7 @@ import {
   EmployeAccesSchema,
   ProfileUserSchema,
   UserSchema,
+  ValueSchema,
 } from "@/core/lib/schemas";
 import { sessionMiddleware } from "@/core/lib/session-middleware";
 import { db } from "@/core/lib/db";
@@ -252,12 +253,11 @@ const app = new Hono()
         return c.json({ error: "Not Found" }, 404);
       }
 
-
       const { error: updateError, data } =
         await supabaseAdmin.auth.admin.updateUserById(user.authId, {
           password: newpassword,
         });
- 
+
       if (updateError) {
         return c.json({ error: "Not Found" }, 404);
       }
@@ -294,28 +294,34 @@ const app = new Hono()
       return c.json({ data: user });
     }
   )
-  .patch("updateProfilev3/:userId/:value/:op", sessionMiddleware, async (c) => {
-    const { value, op, userId } = c.req.param();
+  .patch(
+    "updateProfilev3/:userId/:op",
+    zValidator("json", ValueSchema),
+    sessionMiddleware,
+    async (c) => {
+      const { op, userId } = c.req.param();
 
+      const { value } = await c.req.json();
 
-    const user = await db.users.update({
-      where: { id: userId },
-      data: op === "cv" ? { filesId: value } : { profile: value },
-      include: {
-        cv: true,
-      },
-    });
-
-    if (op === "profile") {
-      await supabaseAdmin.auth.updateUser({
-        data: {
-          profile: profile,
+      const user = await db.users.update({
+        where: { id: userId },
+        data: op === "cv" ? { filesId: value } : { profile: value },
+        include: {
+          cv: true,
         },
       });
-    }
 
-    return c.json({ data: user });
-  })
+      if (op === "profile") {
+        await supabaseAdmin.auth.updateUser({
+          data: {
+            profile: value,
+          },
+        });
+      }
+
+      return c.json({ data: user });
+    }
+  )
   .delete("/:teamId", sessionMiddleware, async (c) => {
     const { teamId } = c.req.param();
 

@@ -366,7 +366,7 @@ const ProfileView = () => {
                 </div>
               </div>
 
-              {/* <Button
+              <Button
                 variant="outline"
                 size="sm"
                 className="gap-2 bg-transparent"
@@ -378,21 +378,13 @@ const ProfileView = () => {
                           value={""}
                           disabled={false}
                           onChange={(url) => {
-                            console.log({ url });
-
-                            console.log({
-                              op: "profile",
-                              value: url,
-                              userId: user.id,
-                            });
-
                             if (url) {
                               updateProfileOrCv({
                                 param: {
                                   op: "profile",
-                                  value: url,
                                   userId: user.id,
                                 },
+                                json: { value: url },
                               });
                             }
                           }}
@@ -406,7 +398,7 @@ const ProfileView = () => {
               >
                 <Edit2Icon className="h-4 w-4" />
                 Modifier
-              </Button> */}
+              </Button>
             </div>
           </CardHeader>
         </Card>
@@ -515,9 +507,10 @@ const ProfileView = () => {
                                     updateProfileOrCv({
                                       param: {
                                         op: "cv",
-                                        value: value[0].id,
+
                                         userId: user.id,
                                       },
+                                      json: { value: value[0].id },
                                     });
                                   }}
                                 />
@@ -546,9 +539,10 @@ const ProfileView = () => {
                             updateProfileOrCv({
                               param: {
                                 op: "cv",
-                                value: value[0].id,
+
                                 userId: user.id,
                               },
+                              json: { value: value[0].id },
                             });
                           }}
                         />

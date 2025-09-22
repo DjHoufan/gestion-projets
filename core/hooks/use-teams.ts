@@ -39,11 +39,11 @@ type PatchReqProfile = InferRequestType<
 >;
 
 type PatchResProfileOrCV = InferResponseType<
-  (typeof client.api.team.updateProfilev3)[":userId"][":value"][":op"]["$patch"],
+  (typeof client.api.team.updateProfilev3)[":userId"][":op"]["$patch"],
   200
 >;
 type PatchReqProfileOrCv = InferRequestType<
-  (typeof client.api.team.updateProfilev3)[":userId"][":value"][":op"]["$patch"]
+  (typeof client.api.team.updateProfilev3)[":userId"][":op"]["$patch"]
 >;
 
 type DeleteResponse = InferResponseType<
@@ -580,11 +580,12 @@ export const useUpdateCvOrProfile = () => {
   const queryClient = useQueryClient();
   const { updateFields } = useMyData();
   return useMutation<PatchResProfileOrCV, Error, PatchReqProfileOrCv>({
-    mutationFn: async ({ param }) => {
-      const res = await client.api.team.updateProfilev3[":userId"][":value"][
+    mutationFn: async ({ param ,json }) => {
+      const res = await client.api.team.updateProfilev3[":userId"][
         ":op"
       ]["$patch"]({
         param,
+        json
       });
 
       const result = await res.json();
