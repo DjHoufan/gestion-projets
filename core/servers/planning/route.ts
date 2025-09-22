@@ -149,6 +149,31 @@ const app = new Hono()
       return c.json({ data: response });
     }
   )
+  .patch(
+    "visit/:visitId",
+    zValidator("json", VisitsSchemaCreate),
+
+    sessionMiddleware,
+    async (c) => {
+      const { visitId } = c.req.param();
+
+      const visitsData = c.req.valid("json");
+      const dataItems = visitsData.map((visit) => getDataITems(visit));
+
+     
+      
+
+      const response = await db.visits.update({
+        where: {
+          id: visitId,
+        },
+        data: {
+          ...dataItems[0],
+        },
+      });
+      return c.json({ data: response });
+    }
+  )
   .delete("/:pItemId/visit", sessionMiddleware, async (c) => {
     const { pItemId } = c.req.param();
 
@@ -177,7 +202,7 @@ const app = new Hono()
           );
         }
       }
- 
+
       return c.json({ error: "Erreur interne du serveur" }, 500);
     }
   })

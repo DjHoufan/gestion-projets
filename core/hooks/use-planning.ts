@@ -21,6 +21,13 @@ type PostRequestItem = InferRequestType<
   (typeof client.api.planning.visit)["$post"]
 >;
 
+type PatchRes = InferResponseType<
+  (typeof client.api.planning.visit)[":visitId"]["$patch"]
+>;
+type PatchReq = InferRequestType<
+  (typeof client.api.planning.visit)[":visitId"]["$patch"]
+>;
+
 type PatchResponse = InferResponseType<
   (typeof client.api.planning)[":plangId"]["$patch"],
   200
@@ -274,6 +281,7 @@ export const useCreatePlanning = () => {
 export const useCreatevisit = () => {
   const queryClient = useQueryClient();
   const { setPlanning } = usePlanningStore();
+  const { close } = useModal();
 
   return useMutation<PostResponseItem, Error, PostRequestItem>({
     mutationFn: async ({ json }: PostRequestItem) => {
@@ -329,12 +337,15 @@ export const useCreatevisit = () => {
 // === Mutation: Create visit ===
 export const useUpdatevisit = () => {
   const queryClient = useQueryClient();
-  const { setPlanning } = usePlanningStore();
+  const {  updateVisit } = usePlanningStore();
+  const { close } = useModal();
 
-  return useMutation<PostResponseItem, Error, PostRequestItem>({
-    mutationFn: async ({ json }: PostRequestItem) => {
-      const response = await client.api.planning.visit["$post"]({
+
+  return useMutation<PatchRes, Error, PatchReq>({
+    mutationFn: async ({ json, param }: PatchReq) => {
+      const response = await client.api.planning.visit[":visitId"]["$patch"]({
         json,
+        param,
       });
 
       if (!response.ok) {
@@ -346,24 +357,10 @@ export const useUpdatevisit = () => {
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      if (data) {
-        const transformedData = {
-          ...data,
-          visit: data.visit.map((visit) => ({
-            ...visit,
-            date: new Date(visit.date),
-          })),
-          users: data.users
-            ? {
-                ...data.users,
-                dob: new Date(data.users.dob),
-                createdAt: new Date(data.users.createdAt),
-                updatedAt: new Date(data.users.updatedAt),
-              }
-            : null,
-        };
-        setPlanning(transformedData);
-      }
+      updateVisit({
+        ...data,
+        date: new Date(data.date),
+      });
 
       close();
 

@@ -41,7 +41,11 @@ import { timeSlots } from "@/core/lib/utils";
 import SearchSelect from "@/core/components/global/search_select";
 import { ScrollArea } from "@/core/components/ui/scroll-area";
 import { DatePicker } from "@/core/components/global/data-picker";
-import { useCreatePlanning, useCreatevisit } from "@/core/hooks/use-planning";
+import {
+  useCreatePlanning,
+  useCreatevisit,
+  useUpdatevisit,
+} from "@/core/hooks/use-planning";
 import { Spinner } from "@/core/components/ui/spinner";
 
 type Props = {
@@ -57,24 +61,21 @@ export const PlanningForm = ({
   userId,
   update = false,
 }: Props) => {
-  console.log({
-    details,
-  });
-
   const { mutate: create, isPending: ploading } = useCreatePlanning();
   const { mutate: visite, isPending: vloading } = useCreatevisit();
 
-  let isSubmitting = ploading || vloading;
-
   const { data: projets, isPending } = useGetAccompaniments();
   const { data: accompanists, isPending: loading } = useGetAccompanist();
+  const { mutate: updateVisit, isPending: uloading } = useUpdatevisit();
+
+  let isSubmitting = ploading || vloading || uloading;
 
   const form = useForm<PlanningSchemaInput>({
     resolver: zodResolver(PlanningSchema),
     defaultValues: {
       usersId: details?.usersId || userId || "",
       accompanimentId: accompanimentId || "",
-      visit: [],
+      visit: update ? details?.visit : [],
     },
   });
 
@@ -98,9 +99,17 @@ export const PlanningForm = ({
       const visitsWithPlanningId = data.visit.map((visitItem) => ({
         ...visitItem,
         planningId: details.id,
+        id: details.visit[0].id,
       }));
-
-      visite({ json: visitsWithPlanningId });
+      if (update) {
+        console.log("update", visitsWithPlanningId);
+        updateVisit({
+          json: visitsWithPlanningId,
+          param: { visitId: details.visit[0].id },
+        });
+      } else {
+        visite({ json: visitsWithPlanningId });
+      }
     } else {
       create({ json: data });
     }
@@ -178,16 +187,18 @@ export const PlanningForm = ({
                     {fields.length} créneau{fields.length > 1 ? "x" : ""}
                   </Badge>
                 </CardTitle>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addVisit}
-                  className="flex items-center gap-2 bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-200"
-                >
-                  <Plus className="h-4 w-4" />
-                  Ajouter un créneau
-                </Button>
+                {!update && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addVisit}
+                    className="flex items-center gap-2 bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-200"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Ajouter un créneau
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent className="space-y-6 w-full">
@@ -360,7 +371,7 @@ export const PlanningForm = ({
               ) : (
                 <>
                   <Plus className=" h-4 w-4" />
-                  Créer le planning
+                  {update ? "Modifier le creneau" : "  Créer le planning"}
                 </>
               )}
             </Button>
