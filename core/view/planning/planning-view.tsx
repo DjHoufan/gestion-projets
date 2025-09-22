@@ -494,6 +494,7 @@ export default function PlanningCalendar({
                   open(
                     <CustomModal>
                       <PlanningForm
+                        update={false}
                         details={planning}
                         accompanimentId={accompanimentId}
                         userId={userId}
@@ -748,7 +749,7 @@ export default function PlanningCalendar({
                             open(
                               <CustomModal>
                                 <PlanningForm
-                                  details={{...planning,visit:[visit]}}
+                                  details={{ ...planning, visit: [visit] }}
                                   accompanimentId={accompanimentId}
                                   userId={userId}
                                   update={true}
