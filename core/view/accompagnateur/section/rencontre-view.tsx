@@ -64,7 +64,6 @@ export const RencontreView = () => {
   );
 
   const openDetails = (rencontre: RencontreDetail) => {
-
     setselectedRencontre(rencontre);
     setIsDetailsOpen(true);
   };
@@ -687,13 +686,13 @@ export const RencontreView = () => {
   );
 };
 
-function TruncatedTextWithDialog({
+export function TruncatedTextWithDialog({
   items,
   type,
   maxLength = 50,
 }: {
   items: string[];
-  type: "decisions" | "actions" | "order";
+  type: "decisions" | "actions" | "order" | "nature";
   maxLength?: number;
 }) {
   if (!items || items.length === 0) {
@@ -713,12 +712,14 @@ function TruncatedTextWithDialog({
     decisions: "bg-green-50 text-green-700 border-green-200",
     actions: "bg-orange-50 text-orange-700 border-orange-200",
     order: "bg-blue-50 text-blue-700 border-blue-200",
+    nature: "bg-red-50 text-red-700 border-red-200",
   };
 
   const titles = {
     decisions: "Décisions",
     actions: "Actions",
     order: "Ordre du Jour",
+    nature: "Nature du conflit",
   };
 
   // Show first item truncated

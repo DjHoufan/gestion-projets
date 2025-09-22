@@ -49,8 +49,10 @@ import {
 import { TeamCard } from "@/core/view/team/team-card";
 import { useSendResetPassword } from "@/core/hooks/use-auth";
 import { Spinner } from "@/core/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 export const EquipeBody = ({ permission }: PermissionProps) => {
+  const route = useRouter();
   const { canAdd, canModify, canDelete, canReset } = useMemo(() => {
     return definePermissions(permission, "equipe");
   }, [permission]);
@@ -200,6 +202,7 @@ export const EquipeBody = ({ permission }: PermissionProps) => {
               <DropdownMenuContent align="end" className="w-48 rounded-xl">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+
                 <DropdownMenuItem
                   onClick={() =>
                     open(
@@ -211,8 +214,18 @@ export const EquipeBody = ({ permission }: PermissionProps) => {
                   className="flex items-center gap-2 rounded-lg cursor-pointer"
                 >
                   <Eye className="h-4 w-4" />
-                  Détail
+                  Voir
                 </DropdownMenuItem>
+                {user.type === "accompanist" && (
+                  <DropdownMenuItem
+                    onClick={() => route.push(`/equipes/${user.id}`)}
+                    className="flex items-center gap-2 rounded-lg cursor-pointer"
+                  >
+                    <Eye className="h-4 w-4" />
+                    Détail
+                  </DropdownMenuItem>
+                )}
+
                 {canReset && (
                   <DropdownMenuItem
                     onClick={() => send({ json: { email: user.email } })}

@@ -10,6 +10,7 @@ import {
 import { ConflitForm } from "@/core/view/rapports/form/conflit-form";
 import { useDeleteConflit } from "@/core/hooks/use-conflit";
 import { ConflictShow } from "@/core/view/rapports/card/conflit-show";
+import { TruncatedTextWithDialog } from "@/core/view/accompagnateur/section/rencontre-view";
 
 export const ConflitColumns = (
   permission: CrudPermissions
@@ -46,6 +47,13 @@ export const ConflitColumns = (
   {
     accessorKey: "nature",
     header: "Nature",
+    cell: ({ row }: any) => (
+      <TruncatedTextWithDialog
+        items={[row.original.nature]}
+        type="nature"
+        maxLength={40}
+      />
+    ),
   },
 
   {

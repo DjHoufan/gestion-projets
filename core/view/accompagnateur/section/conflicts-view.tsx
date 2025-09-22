@@ -39,6 +39,7 @@ import { DataTable } from "@/core/components/global/data-table";
 import { useModal } from "@/core/providers/modal-provider";
 import { ConflitForm } from "@/core/view/rapports/form/conflit-form";
 import { useMyData } from "@/core/hooks/store";
+import { TruncatedTextWithDialog } from "@/core/view/accompagnateur/section/rencontre-view";
 
 export function ConflictsView() {
   const { data: user } = useMyData();
@@ -71,9 +72,11 @@ export function ConflictsView() {
       id: "nature",
       header: "Nature",
       cell: ({ row }: any) => (
-        <div className="max-w-xs truncate" title={row.original.nature}>
-          {row.original.nature}
-        </div>
+        <TruncatedTextWithDialog
+          items={[row.original.nature]}
+          type="nature"
+          maxLength={40}
+        />
       ),
       size: 200,
     },

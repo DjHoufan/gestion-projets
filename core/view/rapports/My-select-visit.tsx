@@ -28,6 +28,8 @@ export const SelectMyVisit = ({
   const { data, isPending } = useGetMyPlanning(userId);
   const [selectedTourId, setSelectedTourId] = useState(id);
 
+  
+
   const allTours = (data ?? [])
     .flatMap((planning) =>
       planning.visit.map((visit) => ({
