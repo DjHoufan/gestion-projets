@@ -266,17 +266,12 @@ export function definePermissions(
   rp: RolePermission,
   pathname: string
 ): Permissions {
- 
-
   const scopedAccess = (rp.access ?? [])
     .map((a) => a.split("|").map((s) => s.trim()))
     .filter(([route]) => route === pathname);
- 
 
   // Extraire toutes les actions sauf le premier élément (la route)
   const perms = scopedAccess.flatMap(([_, ...actions]) => actions);
-
- 
 
   // Flags simples
   const canView = perms.includes("view");
@@ -286,11 +281,22 @@ export function definePermissions(
   const canReset = perms.includes("reset");
   const canDetails = perms.includes("details");
 
-  // Flag admin implicite
-  const isAdmin =
-    rp.type === "admin" || rp.type === "accompanist" || rp.type === "trainer";
+  // // Flag admin implicite
+  // const isAdmin =
+  //   rp.type === "admin" || rp.type === "accompanist" || rp.type === "trainer";
 
-  return {
+  // return {
+  //   canAdd: canAdd || isAdmin,
+  //   canModify: canModify || isAdmin,
+  //   canDelete: canDelete || isAdmin,
+  //   canReset: canReset || isAdmin,
+  //   canDetails: canDetails || isAdmin,
+  //   canView: canView || isAdmin,
+  // };
+
+  const isAdmin = ["admin", "accompanist", "trainer"].includes(rp.type);
+
+  const basePermissions = {
     canAdd: canAdd || isAdmin,
     canModify: canModify || isAdmin,
     canDelete: canDelete || isAdmin,
@@ -298,4 +304,10 @@ export function definePermissions(
     canDetails: canDetails || isAdmin,
     canView: canView || isAdmin,
   };
+
+  if (pathname === "accompagnements" && rp.type === "accompanist") {
+    return { ...basePermissions, canModify: false };
+  }
+
+  return basePermissions;
 }

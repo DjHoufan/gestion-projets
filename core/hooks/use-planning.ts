@@ -326,6 +326,61 @@ export const useCreatevisit = () => {
   });
 };
 
+// === Mutation: Create visit ===
+export const useUpdatevisit = () => {
+  const queryClient = useQueryClient();
+  const { setPlanning } = usePlanningStore();
+
+  return useMutation<PostResponseItem, Error, PostRequestItem>({
+    mutationFn: async ({ json }: PostRequestItem) => {
+      const response = await client.api.planning.visit["$post"]({
+        json,
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+
+        throw new Error(errorBody);
+      }
+
+      return await response.json();
+    },
+    onSuccess: ({ data }) => {
+      if (data) {
+        const transformedData = {
+          ...data,
+          visit: data.visit.map((visit) => ({
+            ...visit,
+            date: new Date(visit.date),
+          })),
+          users: data.users
+            ? {
+                ...data.users,
+                dob: new Date(data.users.dob),
+                createdAt: new Date(data.users.createdAt),
+                updatedAt: new Date(data.users.updatedAt),
+              }
+            : null,
+        };
+        setPlanning(transformedData);
+      }
+
+      close();
+
+      toast.success({
+        message: "Le planning a été enregistré avec succès",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.planning, QueryKeyString.planning],
+      });
+    },
+    onError: (err) => {
+      toast.error({
+        message: `Échec de la création du planning : ${err.message}`,
+      });
+    },
+  });
+};
 // === Mutation: Update planning ===
 export const useUpdatePlanning = () => {
   const queryClient = useQueryClient();

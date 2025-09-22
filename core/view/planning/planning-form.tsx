@@ -48,9 +48,15 @@ type Props = {
   details: Plannings | null;
   accompanimentId: string;
   userId: string;
+  update?: boolean;
 };
 
-export const PlanningForm = ({ details, accompanimentId, userId }: Props) => {
+export const PlanningForm = ({
+  details,
+  accompanimentId,
+  userId,
+  update = false,
+}: Props) => {
   console.log({
     details,
   });
@@ -348,7 +354,7 @@ export const PlanningForm = ({ details, accompanimentId, userId }: Props) => {
             >
               {isSubmitting ? (
                 <div className="flex items-center gap-2">
-                  {details ? "Modification" : "Enregistrement"}
+                  {update ? "Modification" : "Enregistrement"}
                   <Spinner variant="ellipsis" />
                 </div>
               ) : (
