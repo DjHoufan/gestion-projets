@@ -45,7 +45,7 @@ export const TeamDetail = ({ Id }: IdType) => {
     "plannings",
     "accompagnements",
   ];
-  const activeSection = useScrollSpy(sectionIds, 200)
+  const activeSection = useScrollSpy(sectionIds, 200);
 
   const navigationItems = [
     {
@@ -77,17 +77,17 @@ export const TeamDetail = ({ Id }: IdType) => {
     },
   ];
 
- const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
     if (element) {
-      const headerHeight = 80
-      const elementPosition = element.offsetTop - headerHeight
+      const headerHeight = 80;
+      const elementPosition = element.offsetTop - headerHeight;
       window.scrollTo({
         top: elementPosition,
         behavior: "smooth",
-      })
+      });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen ">
@@ -110,10 +110,12 @@ export const TeamDetail = ({ Id }: IdType) => {
             </Avatar>
 
             <div className=" bg-gradient-to-r from-teal-500/10 to-teal-500/10 backdrop-blur-sm rounded-xl p-4 mb-4 border border-slate-600/30">
-              <h1 className="text-2xl font-bold text-balance mb-2 text-white">
+              <h1 className="text-xl font-bold text-balance mb-2 text-white">
                 {data?.name}
               </h1>
-              <p className="text-lg text-slate-300 mb-3">Accompagnateur</p>
+              <p className="text-lg text-slate-300 mb-3">
+                {data?.gender === "homme" ? "Accompagnateur" : "Accompagnatrice"}
+              </p>
               <Badge
                 variant={data?.status === "enabled" ? "default" : "secondary"}
                 className={cn(
