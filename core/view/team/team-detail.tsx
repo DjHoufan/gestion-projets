@@ -114,7 +114,7 @@ export const TeamDetail = ({ Id }: IdType) => {
                 {data?.name}
               </h1>
               <p className="text-lg text-slate-300 mb-3">
-                {data?.gender === 'homme' ? "Accompagnateur" : "Accompagnatrice"}
+                {data?.gender === "homme" ? "Accompagnateur" : "Accompagnatrice"}
               </p>
               <Badge
                 variant={data?.status === "enabled" ? "default" : "secondary"}
