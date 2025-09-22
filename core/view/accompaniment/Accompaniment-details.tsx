@@ -33,7 +33,6 @@ import {
   TrendingUp,
   Activity,
   Download,
-  MapIcon,
   Building,
   User,
   Mail,

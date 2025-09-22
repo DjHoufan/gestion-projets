@@ -68,7 +68,7 @@ export const PlanningForm = ({ details, accompanimentId, userId }: Props) => {
     defaultValues: {
       usersId: details?.usersId || userId || "",
       accompanimentId: accompanimentId || "",
-      visit: details?.visit || [],
+      visit: [],
     },
   });
 
