@@ -252,17 +252,12 @@ const app = new Hono()
         return c.json({ error: "Not Found" }, 404);
       }
 
-      console.log({ userId: user.authId });
 
       const { error: updateError, data } =
         await supabaseAdmin.auth.admin.updateUserById(user.authId, {
           password: newpassword,
         });
-
-      console.log({ data });
-
-      console.log({ updateError });
-
+ 
       if (updateError) {
         return c.json({ error: "Not Found" }, 404);
       }
@@ -302,7 +297,6 @@ const app = new Hono()
   .patch("updateProfilev3/:userId/:value/:op", sessionMiddleware, async (c) => {
     const { value, op, userId } = c.req.param();
 
-    console.log("je suis la", { value, op, userId });
 
     const user = await db.users.update({
       where: { id: userId },

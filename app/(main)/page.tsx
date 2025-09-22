@@ -11,7 +11,6 @@ import { useGetakis } from "@/core/hooks/use-stats";
 const Home = () => {
   const { data, isPending } = useGetakis();
 
-  console.log({ data });
 
   return (
     <div className="p-6 space-y-6 max-w-full">

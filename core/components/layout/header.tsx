@@ -118,7 +118,6 @@ export const Header = ({
               table: "MessageView",
             },
             async (payload) => {
-              console.log({ payload });
 
               const type = payload.eventType as string;
               const newMessage = payload.new as MessageView;

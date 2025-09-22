@@ -102,7 +102,6 @@ export const PlanningForm = ({
         id: details.visit[0].id,
       }));
       if (update) {
-        console.log("update", visitsWithPlanningId);
         updateVisit({
           json: visitsWithPlanningId,
           param: { visitId: details.visit[0].id },

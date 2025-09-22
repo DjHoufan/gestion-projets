@@ -615,7 +615,6 @@ export const useDeleteVisits = () => {
       if (!res.ok) {
         const errorBody = await res.text();
 
-        console.log("errorBody", errorBody);
 
         throw new Error(`Erreur API: ${res.status} - ${errorBody}`);
       }
@@ -623,7 +622,6 @@ export const useDeleteVisits = () => {
       return await res.json();
     },
     onSuccess: ({ data }) => {
-      console.log("data", data);
 
       removeVisit(data.id);
 
@@ -636,7 +634,6 @@ export const useDeleteVisits = () => {
       close();
     },
     onError: (error: any) => {
-      console.log("error", error);
 
       // Vérifie si c'est une erreur API avec un body JSON
       let errorMessage =

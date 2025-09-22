@@ -64,7 +64,6 @@ export const RencontreView = () => {
   );
 
   const openDetails = (rencontre: RencontreDetail) => {
-    console.log("Opening details for rencontre:", rencontre);
 
     setselectedRencontre(rencontre);
     setIsDetailsOpen(true);

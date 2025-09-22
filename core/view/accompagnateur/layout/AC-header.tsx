@@ -54,7 +54,6 @@ export const DashboardHeader = ({
 
   const { data } = useMyData();
 
-  console.log({ data });
 
   const userName = data?.name!;
   const userEmail = data?.email!;

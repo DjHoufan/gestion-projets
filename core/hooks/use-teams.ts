@@ -518,7 +518,6 @@ export const useUpdatePassword = () => {
       toast.success({ message: "Mot de passe modifié avec succès" });
     },
     onError: (err) => {
-      console.log({ err });
 
       toast.error({
         message: `Erreur lors du changement de mot de passe : ${err.message}`,
@@ -542,7 +541,6 @@ export const useUpdateProfile = () => {
       return result;
     },
     onSuccess: ({ data }) => {
-      console.log("response", { data });
 
       queryClient.setQueryData<any>(
         ["accompanist", data.id],
@@ -570,7 +568,6 @@ export const useUpdateProfile = () => {
       toast.success({ message: "le profil a été mis à jour" });
     },
     onError: (err) => {
-      console.log({ err });
 
       toast.error({
         message: `Erreur lors du changement de mot de passe : ${err.message}`,
@@ -595,7 +592,6 @@ export const useUpdateCvOrProfile = () => {
       return result;
     },
     onSuccess: ({ data }) => {
-      console.log("response", { data });
 
       queryClient.setQueryData<any>(
         ["accompanist", data.id],
@@ -622,7 +618,6 @@ export const useUpdateCvOrProfile = () => {
       toast.success({ message: "le profil a été mis à jour" });
     },
     onError: (err) => {
-      console.log({ err });
 
       toast.error({
         message: `Erreur lors du changement de mot de passe : ${err.message}`,
