@@ -621,7 +621,7 @@ export const AccompanimentDetails = ({
                   <Button
                     onClick={() =>
                       open(
-                        <CustomModal>
+                        <CustomModal size="md:max-w-[1000px]">
                           <PurchaseForm Id={data.id} />
                         </CustomModal>
                       )

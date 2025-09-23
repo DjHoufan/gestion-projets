@@ -7,14 +7,7 @@ import {
 } from "@/core/components/ui/card";
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/core/components/ui/table";
+ 
 import {
   Dialog,
   DialogContent,
@@ -192,6 +185,9 @@ export function PurchasesView() {
   ];
 
   const PurchaseDetailsModal = ({ purchase }: { purchase: any }) => {
+
+    console.log(purchase);
+    
     return (
       <DialogContent className="!max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
@@ -273,6 +269,7 @@ export function PurchasesView() {
                             .join("")}
                         </AvatarFallback>
                       </Avatar>
+                      
                       <span className="text-xs font-medium">{member.name}</span>
                     </div>
                   ))}
@@ -299,6 +296,16 @@ export function PurchasesView() {
                     <Avatar className="h-16 w-16 rounded-md">
                       <AvatarImage
                         src={item.image || "/placeholder.svg"}
+                        alt={item.name}
+                        className="object-cover"
+                      />
+                      <AvatarFallback className="bg-emerald-100 text-emerald-700 rounded-md">
+                        <Package className="h-8 w-8" />
+                      </AvatarFallback>
+                    </Avatar>
+                      <Avatar className="h-16 w-16 rounded-md">
+                      <AvatarImage
+                        src={item.facture || "/placeholder.svg"}
                         alt={item.name}
                         className="object-cover"
                       />
@@ -491,22 +498,7 @@ export function PurchasesView() {
         addButtonText="Enregistre un nouveau bénéficiaires"
         isPending={allPurchases ? false : true}
       />
-      {allPurchases.length === 0 && (
-        <Card>
-          <CardContent className="text-center py-12">
-            <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Aucun achat enregistré
-            </h3>
-            <p className="text-gray-500 mb-4">
-              Commencez par enregistrer votre premier achat.
-            </p>
-            <Button className="bg-emerald-600 hover:bg-emerald-700">
-              Enregistrer un Achat
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+       
     </section>
   );
 }

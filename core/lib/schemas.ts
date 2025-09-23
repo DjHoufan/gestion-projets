@@ -256,6 +256,12 @@ export const PurchaseItemSchema = z.object({
       invalid_type_error: "L'image doit être une URL valide.",
     })
     .url("Veuillez fournir une URL d’image valide."),
+  facture: z
+    .string({
+      required_error: "La facture est obligatoire.",
+      invalid_type_error: "La facture doit être une URL valide.",
+    })
+    .url("Veuillez fournir une URL d’image valide."),
 
   date: z.coerce.date({
     invalid_type_error: "La date doit être une date valide.",
@@ -734,7 +740,9 @@ export const EmployeAccesSchema = z.object({
 });
 
 export const ValueSchema = z.object({
-  value: z.string({message:"valeur est obligatoire"}).min(1,{message:"valeur ne peut pas être vide"}),
+  value: z
+    .string({ message: "valeur est obligatoire" })
+    .min(1, { message: "valeur ne peut pas être vide" }),
 });
 
 export type ProjetSchemaType = z.input<typeof projetSchema>;

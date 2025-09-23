@@ -111,6 +111,7 @@ export const PurchaseCard = ({ id }: { id: string }) => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Article</TableHead>
+                  <TableHead>Facture</TableHead>
                   <TableHead>Image</TableHead>
                   <TableHead>Prix unitaire</TableHead>
                   <TableHead>Quantité</TableHead>
@@ -122,6 +123,13 @@ export const PurchaseCard = ({ id }: { id: string }) => {
                 {purchase.purchaseItems.map((item: any) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.name}</TableCell>
+                    <TableCell>
+                      <img
+                        src={item.facture}
+                        alt={item.name}
+                        className="h-10 w-10 rounded-md object-cover"
+                      />
+                    </TableCell>
                     <TableCell>
                       <img
                         src={item.image}

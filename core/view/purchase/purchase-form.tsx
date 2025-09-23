@@ -22,16 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/core/components/ui/table";
-import {
-  Plus,
-  Trash2,
-  Edit,
-  Minus,
-  Eye,
-  Boxes,
-  Check,
-  FileDiff,
-} from "lucide-react";
+import { Plus, Trash2, Edit, Minus, Eye, Boxes, Check } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
@@ -138,6 +129,7 @@ const ArticleForm = ({
       price: "",
       quantity: 1,
       image: "",
+      facture: "",
       date: new Date(),
     },
   });
@@ -209,7 +201,27 @@ const ArticleForm = ({
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>URL de l'image</FormLabel>
+                <FormLabel>l'image de l'article *</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value ? field.value : ""}
+                    disabled={false}
+                    onChange={(url) => field.onChange(url)}
+                    folder="images"
+                    buttonPosition="top-right"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={articleForm.control}
+            name="facture"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Facture *</FormLabel>
                 <FormControl>
                   <ImageUpload
                     value={field.value ? field.value : ""}
@@ -419,6 +431,7 @@ export const PurchaseForm = ({
                       <Table>
                         <TableHeader>
                           <TableRow>
+                            <TableHead>Facture</TableHead>
                             <TableHead>Image</TableHead>
                             <TableHead>Article</TableHead>
                             <TableHead>Prix unitaire</TableHead>
@@ -440,6 +453,23 @@ export const PurchaseForm = ({
 
                             return (
                               <TableRow key={field.id}>
+                                <TableCell>
+                                  <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
+                                    {field.facture ? (
+                                      <img
+                                        src={field.facture || "/placeholder.svg"}
+                                        alt={field.facture}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          e.currentTarget.style.display =
+                                            "none";
+                                        }}
+                                      />
+                                    ) : (
+                                      <Eye className="h-4 w-4 text-gray-400" />
+                                    )}
+                                  </div>
+                                </TableCell>
                                 <TableCell>
                                   <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
                                     {field.image ? (

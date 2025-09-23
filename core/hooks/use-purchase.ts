@@ -7,7 +7,7 @@ import { QueryKeyString } from "@/core/lib/constants";
 import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "@/core/components/global/custom-toast";
-import { usePurchases } from "@/core/hooks/store";
+import { useMyData, usePurchases } from "@/core/hooks/store";
 
 // === Type Inference ===
 type PostResponse = InferResponseType<(typeof client.api.purchase)["$post"]>;
@@ -105,6 +105,8 @@ export const useCreatePurchase = () => {
 
   // purchases.setData(data?.purchases || []);
   const { close } = useModal();
+    const { data: user, updateFields } = useMyData();
+  
 
   return useMutation<PostResponse, Error, PostRequest>({
     mutationFn: async ({ json }: PostRequest) => {
@@ -129,6 +131,54 @@ export const useCreatePurchase = () => {
         updatedAt: new Date(data.data.updatedAt),
       };
       purchases.addData(transformedData);
+
+      // Pour le queryClient
+      queryClient.setQueryData<any>(
+        ["accompanist", user?.id!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            accompaniments: (oldData?.accompaniments || []).map(
+              (accompaniment: any) =>
+                accompaniment.id === transformedData.accompanimentId
+                  ? {
+                      ...accompaniment,
+                      purchases: (accompaniment.purchases || []).map(
+                        (purchase: any) =>
+                          purchase.id === transformedData.id
+                            ? {
+                                ...purchase,
+                                ...transformedData, // total, updatedAt, etc.
+                                purchaseItems: transformedData.purchaseItems,
+                              }
+                            : purchase
+                      ),
+                    }
+                  : accompaniment
+            ),
+          };
+        }
+      );
+
+      // Pour updateFields
+      updateFields({
+        accompaniments: (user?.accompaniments || []).map((accompaniment) =>
+          accompaniment.id === transformedData.accompanimentId
+            ? {
+                ...accompaniment,
+                purchases: (accompaniment.purchases || []).map((purchase) =>
+                  purchase.id === transformedData.id
+                    ? {
+                        ...purchase,
+                        ...transformedData,
+                        purchaseItems: transformedData.purchaseItems,
+                      }
+                    : purchase
+                ),
+              }
+            : accompaniment
+        ),
+      });
 
       toast.success({
         message: "L'achat  a été enregistré avec succès",
@@ -262,7 +312,6 @@ export const useDeletPurchase = () => {
       });
     },
     onError: (err) => {
-    
       toast.error({
         message: `Erreur lors de la suppression : ${err.message}`,
       });
@@ -315,7 +364,6 @@ export const useDeletPurchaseItem = () => {
       });
     },
     onError: (err) => {
-      
       toast.error({
         message: `Erreur lors de la suppression : ${err.message}`,
       });

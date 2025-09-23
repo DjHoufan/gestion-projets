@@ -100,6 +100,7 @@ export const PruchaseItemForm = ({
       name: details?.name || "",
       price: details?.price || "",
       image: details?.image || "",
+      facture: details?.facture || "",
       quantity: details?.quantity || 1,
       date: details?.date || new Date(),
       purchaseId: details?.purchaseId || purchaseId,
@@ -119,26 +120,63 @@ export const PruchaseItemForm = ({
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={(e) => {
-          e.stopPropagation(); // Empêche la propagation de l'événement
-          form.handleSubmit(handleSubmit)(e); // Exécute la soumission du formulaire
-        }}
-        className="space-y-4"
-      >
-        <div className="flex justify-between gap-5">
+    <div className=" h-[800px] overflow-y-auto">
+      <Form {...form}>
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation(); // Empêche la propagation de l'événement
+            form.handleSubmit(handleSubmit)(e); // Exécute la soumission du formulaire
+          }}
+          className="space-y-4"
+        >
+          <div className="flex justify-between gap-5">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Nom de l'article</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isSubmitting}
+                      placeholder="Ex: Pizza Margherita"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Prix unitaire</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isSubmitting}
+                      placeholder="Ex: 2500 DJF"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
-            name="name"
+            name="quantity"
             render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Nom de l'article</FormLabel>
+              <FormItem>
+                <FormLabel>Quantité</FormLabel>
                 <FormControl>
-                  <Input
+                  <QuantityControl
                     disabled={isSubmitting}
-                    placeholder="Ex: Pizza Margherita"
-                    {...field}
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -148,102 +186,86 @@ export const PruchaseItemForm = ({
 
           <FormField
             control={form.control}
-            name="price"
+            name="image"
             render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Prix unitaire</FormLabel>
+              <FormItem>
+                <FormLabel>L'image de l'article</FormLabel>
                 <FormControl>
-                  <Input
+                  <ImageUpload
                     disabled={isSubmitting}
-                    placeholder="Ex: 2500 DJF"
-                    {...field}
+                    value={field.value ? field.value : ""}
+                    onChange={(url) => field.onChange(url)}
+                    folder="images"
+                    buttonPosition="top-right"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
-        <FormField
-          control={form.control}
-          name="quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Quantité</FormLabel>
-              <FormControl>
-                <QuantityControl
+
+          <FormField
+            control={form.control}
+            name="facture"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Facture *</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    disabled={isSubmitting}
+                    value={field.value ? field.value : ""}
+                    onChange={(url) => field.onChange(url)}
+                    folder="images"
+                    buttonPosition="top-right"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <DatePicker
                   disabled={isSubmitting}
+                  position="top"
                   value={field.value}
                   onChange={field.onChange}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL de l'image</FormLabel>
-              <FormControl>
-                <ImageUpload
-                  disabled={isSubmitting}
-                  value={field.value ? field.value : ""}
-                  onChange={(url) => field.onChange(url)}
-                  folder="images"
-                  buttonPosition="top-right"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date</FormLabel>
-              <DatePicker
-                disabled={isSubmitting}
-                position="top"
-                value={field.value}
-                onChange={field.onChange}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex gap-2 pt-4">
-          <Button disabled={isSubmitting} type="submit" className="flex-1">
-            {isSubmitting ? (
-              <div className="flex items-center gap-2">
-                {details ? "Modification" : "Enregistrement"}
-                <Spinner variant="ellipsis" />
-              </div>
-            ) : (
-              <>
-                <Check className="mr-2 h-4 w-4" />
-                {details ? "Modifier l'article" : "Enregistrer l'article"}
-              </>
+                <FormMessage />
+              </FormItem>
             )}
-          </Button>
-          <Button
-            disabled={isSubmitting}
-            onClick={() => closeAction(false)}
-            type="button"
-            variant="outline"
-            className="flex-1 bg-transparent"
-          >
-            Annuler
-          </Button>
-        </div>
-      </form>
-    </Form>
+          />
+
+          <div className="flex gap-2 pt-4">
+            <Button disabled={isSubmitting} type="submit" className="flex-1">
+              {isSubmitting ? (
+                <div className="flex items-center gap-2">
+                  {details ? "Modification" : "Enregistrement"}
+                  <Spinner variant="ellipsis" />
+                </div>
+              ) : (
+                <>
+                  <Check className="mr-2 h-4 w-4" />
+                  {details ? "Modifier l'article" : "Enregistrer l'article"}
+                </>
+              )}
+            </Button>
+            <Button
+              disabled={isSubmitting}
+              onClick={() => closeAction(false)}
+              type="button"
+              variant="outline"
+              className="flex-1 bg-transparent"
+            >
+              Annuler
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 };
