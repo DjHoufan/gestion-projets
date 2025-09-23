@@ -8,6 +8,7 @@ import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "@/core/components/global/custom-toast";
 import { useMyData, usePurchases } from "@/core/hooks/store";
+import { acceleratedValues } from "framer-motion";
 
 // === Type Inference ===
 type PostResponse = InferResponseType<(typeof client.api.purchase)["$post"]>;
@@ -105,8 +106,7 @@ export const useCreatePurchase = () => {
 
   // purchases.setData(data?.purchases || []);
   const { close } = useModal();
-    const { data: user, updateFields } = useMyData();
-  
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PostResponse, Error, PostRequest>({
     mutationFn: async ({ json }: PostRequest) => {
@@ -131,7 +131,6 @@ export const useCreatePurchase = () => {
         updatedAt: new Date(data.data.updatedAt),
       };
       purchases.addData(transformedData);
-
       // Pour le queryClient
       queryClient.setQueryData<any>(
         ["accompanist", user?.id!],
@@ -148,8 +147,18 @@ export const useCreatePurchase = () => {
                           purchase.id === transformedData.id
                             ? {
                                 ...purchase,
-                                ...transformedData, // total, updatedAt, etc.
-                                purchaseItems: transformedData.purchaseItems,
+                                ...transformedData, // maj total, updatedAt, etc.
+                                purchaseItems: [
+                                  // on enlève les doublons (par id)
+                                  ...(purchase.purchaseItems || []).filter(
+                                    (item: any) =>
+                                      !transformedData.purchaseItems.some(
+                                        (newItem) => newItem.id === item.id
+                                      )
+                                  ),
+                                  // on ajoute les nouveaux
+                                  ...transformedData.purchaseItems,
+                                ],
                               }
                             : purchase
                       ),
@@ -159,6 +168,11 @@ export const useCreatePurchase = () => {
           };
         }
       );
+      
+
+      console.log({transformedData})
+
+      console.log({acceleratedValues: user?.accompaniments });
 
       // Pour updateFields
       updateFields({
@@ -171,7 +185,15 @@ export const useCreatePurchase = () => {
                     ? {
                         ...purchase,
                         ...transformedData,
-                        purchaseItems: transformedData.purchaseItems,
+                        purchaseItems: [
+                          ...(purchase.purchaseItems || []).filter(
+                            (item) =>
+                              !transformedData.purchaseItems.some(
+                                (newItem) => newItem.id === item.id
+                              )
+                          ),
+                          ...transformedData.purchaseItems,
+                        ],
                       }
                     : purchase
                 ),

@@ -622,7 +622,7 @@ export const AccompanimentDetails = ({
                     onClick={() =>
                       open(
                         <CustomModal size="md:max-w-[1000px]">
-                          <PurchaseForm Id={data.id} />
+                          <PurchaseForm Id={data.id}   />
                         </CustomModal>
                       )
                     }

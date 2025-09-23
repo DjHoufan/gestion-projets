@@ -51,7 +51,10 @@ import ImageUpload from "@/core/components/global/upload-image";
 import { DatePicker } from "@/core/components/global/data-picker";
 import { FormProps, PurchaseDetail } from "@/core/lib/types";
 import SearchSelect from "@/core/components/global/search_select";
-import { useGetMyAccompaniments } from "@/core/hooks/use-accompaniment";
+import {
+  useGetAccompaniments,
+  useGetMyAccompaniments,
+} from "@/core/hooks/use-accompaniment";
 import {
   useCreatePurchase,
   useUpdatePurchase,
@@ -275,14 +278,10 @@ const ArticleForm = ({
 export const PurchaseForm = ({
   details,
   Id,
-  userId = "",
-  admin = "oui",
 }: FormProps<PurchaseDetail> & {
   Id?: string;
-  userId?: string;
-  admin?: string;
 }) => {
-  const { data: projets, isPending } = useGetMyAccompaniments(userId, admin);
+  const { data: projets, isPending } = useGetAccompaniments();
 
   const { mutate: create, isPending: cloading } = useCreatePurchase();
   const { mutate: updates, isPending: uloading } = useUpdatePurchase();
@@ -457,7 +456,9 @@ export const PurchaseForm = ({
                                   <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
                                     {field.facture ? (
                                       <img
-                                        src={field.facture || "/placeholder.svg"}
+                                        src={
+                                          field.facture || "/placeholder.svg"
+                                        }
                                         alt={field.facture}
                                         className="w-full h-full object-cover"
                                         onError={(e) => {

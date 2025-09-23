@@ -208,6 +208,9 @@ export const useGetMyAccompaniments = (id: string, admin: string) => {
         param: { id: id, admin: admin },
       });
 
+      console.log({response});
+      
+
       if (!response.ok) {
         throw new Error(
           "Échec de la récupération de la liste des accompagnementss"
