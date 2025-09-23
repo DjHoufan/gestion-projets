@@ -7,7 +7,7 @@ import { QueryKeyString } from "@/core/lib/constants";
 import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "@/core/components/global/custom-toast";
-import { usePlanningStore } from "@/core/hooks/store";
+import { useMyData, usePlanningStore } from "@/core/hooks/store";
 // import { useplannings } from "@/core/hooks/store";
 
 // === Type Inference ===
@@ -226,7 +226,7 @@ export const useGetOnePlanning = (id: string) => {
 export const useCreatePlanning = () => {
   const queryClient = useQueryClient();
   const { setPlanning } = usePlanningStore();
-
+  const { data: user, updateFields } = useMyData();
   const { close } = useModal();
 
   return useMutation<PostResponse, Error, PostRequest>({
@@ -259,6 +259,25 @@ export const useCreatePlanning = () => {
       };
       setPlanning(newdata);
 
+      queryClient.setQueryData<any>(
+        ["accompanist", data?.usersId!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            plannings: [...((oldData?.plannings as any[]) ?? []), data],
+          };
+        }
+      );
+
+      updateFields({
+        plannings: [
+          //@ts-ignore
+          ...(user?.plannings || []),
+          //@ts-ignore
+          newdata,
+        ],
+      });
+
       toast.success({
         message: "Le planning a été enregistré avec succès",
       });
@@ -282,6 +301,7 @@ export const useCreatevisit = () => {
   const queryClient = useQueryClient();
   const { setPlanning } = usePlanningStore();
   const { close } = useModal();
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PostResponseItem, Error, PostRequestItem>({
     mutationFn: async ({ json }: PostRequestItem) => {
@@ -314,7 +334,42 @@ export const useCreatevisit = () => {
               }
             : null,
         };
+
         setPlanning(transformedData);
+
+        queryClient.setQueryData<any>(
+          ["accompanist", transformedData.usersId],
+          (oldData: any) => {
+            return {
+              ...(oldData ?? {}),
+              plannings: (oldData?.plannings || []).map((planning: any) =>
+                planning.id === transformedData.id // l'id du planning
+                  ? {
+                      ...planning,
+                      visit: [
+                        ...(planning.visit || []),
+                        ...(transformedData.visit || []), // on concatène le tableau
+                      ],
+                    }
+                  : planning
+              ),
+            };
+          }
+        );
+
+        updateFields({
+          plannings: (user?.plannings || []).map((planning) =>
+            planning.id === transformedData.id
+              ? {
+                  ...planning,
+                  visit: [
+                    ...(planning.visit || []),
+                    ...(transformedData.visit || []),
+                  ],
+                }
+              : planning
+          ),
+        });
       }
 
       close();
@@ -337,9 +392,8 @@ export const useCreatevisit = () => {
 // === Mutation: Create visit ===
 export const useUpdatevisit = () => {
   const queryClient = useQueryClient();
-  const {  updateVisit } = usePlanningStore();
+  const { updateVisit } = usePlanningStore();
   const { close } = useModal();
-
 
   return useMutation<PatchRes, Error, PatchReq>({
     mutationFn: async ({ json, param }: PatchReq) => {
@@ -508,6 +562,7 @@ export const useUpdateStatusVisit = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
   const { updateVisit } = usePlanningStore();
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PatchResponseVisit, Error, PatchRequestVisit>({
     mutationFn: async ({ json, param }) => {
@@ -530,6 +585,38 @@ export const useUpdateStatusVisit = () => {
       updateVisit({
         ...data,
         date: new Date(data.date),
+      });
+
+      // Pour le queryClient
+      queryClient.setQueryData<any>(
+        ["accompanist", user?.id!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            plannings: (oldData?.plannings || []).map((planning: any) =>
+              planning.id === data.planningId
+                ? {
+                    ...planning,
+                    visit: (planning.visit || []).filter(
+                      (v: any) => v.id !== data.id
+                    ),
+                  }
+                : planning
+            ),
+          };
+        }
+      );
+
+      // Pour updateFields
+      updateFields({
+        plannings: (user?.plannings || []).map((planning) =>
+          planning.id === data.planningId
+            ? {
+                ...planning,
+                visit: (planning.visit || []).filter((v) => v.id !== data.id),
+              }
+            : planning
+        ),
       });
 
       toast.success({
@@ -615,14 +702,12 @@ export const useDeleteVisits = () => {
       if (!res.ok) {
         const errorBody = await res.text();
 
-
         throw new Error(`Erreur API: ${res.status} - ${errorBody}`);
       }
 
       return await res.json();
     },
     onSuccess: ({ data }) => {
-
       removeVisit(data.id);
 
       toast.success({
@@ -634,7 +719,6 @@ export const useDeleteVisits = () => {
       close();
     },
     onError: (error: any) => {
-
       // Vérifie si c'est une erreur API avec un body JSON
       let errorMessage =
         "Échec de la mise à jour du créneau, veuillez réessayer.";

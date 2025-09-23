@@ -478,6 +478,7 @@ export const DeleteVisit = async (id: string) => {
 };
 
 export const upsertEmargement = async (data: Partial<Emargement>) => {
+  // ✅ Validation
   const validation = EmargementSchema.safeParse(data);
   if (!validation.success) {
     const errorDetails = validation.error.errors
@@ -485,18 +486,36 @@ export const upsertEmargement = async (data: Partial<Emargement>) => {
       .join(", ");
     throw new Error(`Données invalides: ${errorDetails}`);
   }
+
   const { data: newData } = validation;
 
+  // ✅ Récupérer l'ancien montant seulement si update
+  const oldvalue = data.id
+    ? (
+        await db.emargement.findUnique({
+          where: { id: data.id },
+          select: { montant: true },
+        })
+      )?.montant ?? 0
+    : 0;
+
+  // ✅ Upsert direct
   const res = await db.emargement.upsert({
     where: { id: data.id },
-    update: { ...newData },
-    create: {
-      ...newData,
-    },
-    include: {
-      member: true,
-    },
+    update: newData,
+    create: newData,
+    include: { member: true },
   });
+
+  // ✅ Mise à jour budget uniquement si signature existe
+  if (res.signature) {
+    const diff = oldvalue > 0 ? res.montant - oldvalue : res.montant;
+
+    await db.accompaniment.update({
+      where: { id: res.member.accompanimentId! },
+      data: { budget: { increment: diff } },
+    });
+  }
 
   return res;
 };
