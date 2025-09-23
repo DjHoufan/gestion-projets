@@ -187,24 +187,36 @@ export const useUpdateEmargement = () => {
       return await res.json();
     },
     onSuccess: ({ data }) => {
+      if (!data) return;
       queryClient.setQueryData<any>(
         ["accompanist", data?.usersId!],
         (oldData: any) => {
+          const emargements = oldData?.emargements ?? [];
+
+          // Si un emargement avec le même id existe, on le met à jour
+          const updatedEmargements = emargements.some(
+            (e: any) => e.id === data.id
+          )
+            ? emargements.map((e: any) => (e.id === data.id ? data : e))
+            : [...emargements, data]; // sinon on ajoute
+
           return {
             ...(oldData ?? {}),
-            emargements: [...((oldData?.emargements as any[]) ?? []), data],
+            emargements: updatedEmargements,
           };
         }
       );
 
       updateFields({
-        emargements: [
-          //@ts-ignore
-          ...(user?.emargements || []),
-          //@ts-ignore
-          data,
-        ],
+        emargements: (() => {
+          const emargements = user?.emargements ?? [];
+
+          return emargements.some((e: any) => e.id === data.id)
+            ? emargements.map((e: any) => (e.id === data.id ? data : e))
+            : [...emargements, data];
+        })(),
       });
+
       toast.success({
         message: "Les données de la map a été modifié avec succès",
       });

@@ -327,6 +327,7 @@ model PurchaseItems {
   name     String
   price    String
   image    String
+  facture    String @default("d")
   quantity Int
 
   date DateTime
@@ -422,7 +423,7 @@ model Rencontre {
   accompanimentId String        @db.Uuid
   accompaniment   Accompaniment @relation(fields: [accompanimentId], references: [id])
 
-  visitId String @default("5874ecdd-6a80-4374-a956-d95c70c7b5cd") @db.Uuid
+  visitId String @db.Uuid
   visit   Visits @relation(fields: [visitId], references: [id])
 
   usersId    String    @db.Uuid
