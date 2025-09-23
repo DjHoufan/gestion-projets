@@ -36,6 +36,9 @@ export const PurchaseCard = ({ id }: { id: string }) => {
   const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
 
   const purchase = usePurchases().getById(id)!;
+
+  console.log({purchase});
+  
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [purchaseItem, setPurchaseItem] = useState<PurchaseItems | null>(null);
   const { mutate: useDelete, isPending: loading } = useDeletPurchaseItem();
@@ -106,7 +109,7 @@ export const PurchaseCard = ({ id }: { id: string }) => {
             </div>
           </div>
 
-          <ScrollArea className="max-h-[500px] w-full">
+         <ScrollArea className="max-h-[600px] w-full">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -124,40 +127,85 @@ export const PurchaseCard = ({ id }: { id: string }) => {
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.name}</TableCell>
                     <TableCell>
-                      <img
-                        src={item.facture}
-                        alt={item.name}
-                        className="h-10 w-10 rounded-md object-cover"
-                      />
+                      <div className="flex flex-col items-center gap-2">
+                        <img
+                          src={item.facture || "/placeholder.svg"}
+                          alt={`Facture ${item.name}`}
+                          className="h-20 w-20 rounded-md object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                          crossOrigin="anonymous"
+                          onClick={() => {
+                            setPreviewImage(item.facture)
+                            setPreviewTitle(`Facture - ${item.name}`)
+                          }}
+                        />
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setPreviewImage(item.facture)
+                              setPreviewTitle(`Facture - ${item.name}`)
+                            }}
+                          >
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => downloadImage(item.facture, `facture-${item.name}.png`)}
+                          >
+                            <Download className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
                     </TableCell>
                     <TableCell>
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="h-10 w-10 rounded-md object-cover"
-                      />
+                      <div className="flex flex-col items-center gap-2">
+                        <img
+                          src={item.image || "/placeholder.svg"}
+                          alt={item.name}
+                          className="h-20 w-20 rounded-md object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                          crossOrigin="anonymous"
+                          onClick={() => {
+                            setPreviewImage(item.image)
+                            setPreviewTitle(`Image - ${item.name}`)
+                          }}
+                        />
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setPreviewImage(item.image)
+                              setPreviewTitle(`Image - ${item.name}`)
+                            }}
+                          >
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => downloadImage(item.image, `${item.name}.png`)}
+                          >
+                            <Download className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
                     </TableCell>
-                    <TableCell>
-                      {parseFloat(item.price).toLocaleString()} Fdj
-                    </TableCell>
+                    <TableCell>{Number.parseFloat(item.price).toLocaleString()} Fdj</TableCell>
                     <TableCell>{item.quantity}</TableCell>
-                    <TableCell>
-                      {(
-                        parseFloat(item.price) * item.quantity
-                      ).toLocaleString()}{" "}
-                      Fdj
-                    </TableCell>
+                    <TableCell>{(Number.parseFloat(item.price) * item.quantity).toLocaleString()} Fdj</TableCell>
                     <TableCell>
                       <Button
                         onClick={() => {
-                          setPurchaseItem(item);
-                          setIsOpen(true);
+                          setPurchaseItem(item)
+                          setIsOpen(true)
                         }}
                         variant="ghost"
                         size="icon"
                         className="hover:bg-red-100 cursor-pointer"
                       >
-                        <Trash2 className="text-red-500 " />
+                        <Trash2 className="text-red-500" />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -171,9 +219,4 @@ export const PurchaseCard = ({ id }: { id: string }) => {
   );
 };
 
-/**
- * 
- *   <SheetTrigger asChild>
-          < 
-        </SheetTrigger>
- */
+ 

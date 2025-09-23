@@ -207,9 +207,7 @@ export const useGetMyAccompaniments = (id: string, admin: string) => {
       const response = await client.api.accompaniment.my[":id"][":admin"].$get({
         param: { id: id, admin: admin },
       });
-
-      console.log({response});
-      
+ 
 
       if (!response.ok) {
         throw new Error(

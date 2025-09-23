@@ -131,7 +131,7 @@ export const useCreatePurchase = () => {
         updatedAt: new Date(data.data.updatedAt),
       };
       purchases.addData(transformedData);
-      // Pour le queryClient
+
       queryClient.setQueryData<any>(
         ["accompanist", user?.id!],
         (oldData: any) => {
@@ -142,61 +142,81 @@ export const useCreatePurchase = () => {
                 accompaniment.id === transformedData.accompanimentId
                   ? {
                       ...accompaniment,
-                      purchases: (accompaniment.purchases || []).map(
-                        (purchase: any) =>
-                          purchase.id === transformedData.id
-                            ? {
-                                ...purchase,
-                                ...transformedData, // maj total, updatedAt, etc.
-                                purchaseItems: [
-                                  // on enlève les doublons (par id)
-                                  ...(purchase.purchaseItems || []).filter(
-                                    (item: any) =>
-                                      !transformedData.purchaseItems.some(
-                                        (newItem) => newItem.id === item.id
-                                      )
-                                  ),
-                                  // on ajoute les nouveaux
-                                  ...transformedData.purchaseItems,
-                                ],
-                              }
-                            : purchase
-                      ),
+                      purchases: (() => {
+                        const existing = (accompaniment.purchases || []).find(
+                          (purchase: any) => purchase.id === transformedData.id
+                        );
+                        if (existing) {
+                          // ✅ UPDATE
+                          return (accompaniment.purchases || []).map(
+                            (purchase: any) =>
+                              purchase.id === transformedData.id
+                                ? {
+                                    ...purchase,
+                                    ...transformedData,
+                                    purchaseItems: [
+                                      ...(purchase.purchaseItems || []).filter(
+                                        (item: any) =>
+                                          !transformedData.purchaseItems.some(
+                                            (newItem) => newItem.id === item.id
+                                          )
+                                      ),
+                                      ...transformedData.purchaseItems,
+                                    ],
+                                  }
+                                : purchase
+                          );
+                        } else {
+                          // ✅ INSERT (nouvel achat)
+                          return [
+                            ...(accompaniment.purchases || []),
+                            transformedData,
+                          ];
+                        }
+                      })(),
                     }
                   : accompaniment
             ),
           };
         }
       );
-      
 
-      console.log({transformedData})
-
-      console.log({acceleratedValues: user?.accompaniments });
-
-      // Pour updateFields
       updateFields({
         accompaniments: (user?.accompaniments || []).map((accompaniment) =>
           accompaniment.id === transformedData.accompanimentId
             ? {
                 ...accompaniment,
-                purchases: (accompaniment.purchases || []).map((purchase) =>
-                  purchase.id === transformedData.id
-                    ? {
-                        ...purchase,
-                        ...transformedData,
-                        purchaseItems: [
-                          ...(purchase.purchaseItems || []).filter(
-                            (item) =>
-                              !transformedData.purchaseItems.some(
-                                (newItem) => newItem.id === item.id
-                              )
-                          ),
-                          ...transformedData.purchaseItems,
-                        ],
-                      }
-                    : purchase
-                ),
+                purchases: (() => {
+                  const existing = (accompaniment.purchases || []).find(
+                    (purchase) => purchase.id === transformedData.id
+                  );
+                  if (existing) {
+                    // ✅ UPDATE
+                    return (accompaniment.purchases || []).map((purchase) =>
+                      purchase.id === transformedData.id
+                        ? {
+                            ...purchase,
+                            ...transformedData,
+                            purchaseItems: [
+                              ...(purchase.purchaseItems || []).filter(
+                                (item) =>
+                                  !transformedData.purchaseItems.some(
+                                    (newItem) => newItem.id === item.id
+                                  )
+                              ),
+                              ...transformedData.purchaseItems,
+                            ],
+                          }
+                        : purchase
+                    );
+                  } else {
+                    // ✅ INSERT
+                    return [
+                      ...(accompaniment.purchases || []),
+                      transformedData,
+                    ];
+                  }
+                })(),
               }
             : accompaniment
         ),
@@ -224,6 +244,7 @@ export const useCreatePurchase = () => {
 export const useCreatePurchaseItem = () => {
   const queryClient = useQueryClient();
   const purchases = usePurchases();
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PostResponseItem, Error, PostRequestItem>({
     mutationFn: async ({ json }: PostRequestItem) => {
@@ -250,6 +271,96 @@ export const useCreatePurchaseItem = () => {
         updatedAt: new Date(data.data.updatedAt),
       };
       purchases.replace(transformedData);
+
+      queryClient.setQueryData<any>(
+        ["accompanist", user?.id!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            accompaniments: (oldData?.accompaniments || []).map(
+              (accompaniment: any) =>
+                accompaniment.id === transformedData.accompanimentId
+                  ? {
+                      ...accompaniment,
+                      purchases: (() => {
+                        const existing = (accompaniment.purchases || []).find(
+                          (purchase: any) => purchase.id === transformedData.id
+                        );
+                        if (existing) {
+                          // ✅ UPDATE
+                          return (accompaniment.purchases || []).map(
+                            (purchase: any) =>
+                              purchase.id === transformedData.id
+                                ? {
+                                    ...purchase,
+                                    ...transformedData,
+                                    purchaseItems: [
+                                      ...(purchase.purchaseItems || []).filter(
+                                        (item: any) =>
+                                          !transformedData.purchaseItems.some(
+                                            (newItem) => newItem.id === item.id
+                                          )
+                                      ),
+                                      ...transformedData.purchaseItems,
+                                    ],
+                                  }
+                                : purchase
+                          );
+                        } else {
+                          // ✅ INSERT (nouvel achat)
+                          return [
+                            ...(accompaniment.purchases || []),
+                            transformedData,
+                          ];
+                        }
+                      })(),
+                    }
+                  : accompaniment
+            ),
+          };
+        }
+      );
+
+      updateFields({
+        accompaniments: (user?.accompaniments || []).map((accompaniment) =>
+          accompaniment.id === transformedData.accompanimentId
+            ? {
+                ...accompaniment,
+                purchases: (() => {
+                  const existing = (accompaniment.purchases || []).find(
+                    (purchase) => purchase.id === transformedData.id
+                  );
+                  if (existing) {
+                    // ✅ UPDATE
+                    return (accompaniment.purchases || []).map((purchase) =>
+                      purchase.id === transformedData.id
+                        ? {
+                            ...purchase,
+                            ...transformedData,
+                            purchaseItems: [
+                              ...(purchase.purchaseItems || []).filter(
+                                (item) =>
+                                  !transformedData.purchaseItems.some(
+                                    (newItem) => newItem.id === item.id
+                                  )
+                              ),
+                              ...transformedData.purchaseItems,
+                            ],
+                          }
+                        : purchase
+                    );
+                  } else {
+                    // ✅ INSERT
+                    return [
+                      ...(accompaniment.purchases || []),
+                      transformedData,
+                    ];
+                  }
+                })(),
+              }
+            : accompaniment
+        ),
+      });
 
       toast.success({
         message: "L'achat  a été enregistré avec succès",
