@@ -75,6 +75,8 @@ const app = new Hono()
     errorHandler,
     async (c) => {
       const response = await handleDatatUpsert<Emargement>(c, v4(), "em");
+
+      
       return c.json({ data: response });
     }
   )

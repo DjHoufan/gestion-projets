@@ -7,7 +7,7 @@ import {
 import { UpdatedData } from "@/core/lib/user";
 import { Files, Visits } from "@prisma/client";
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist, createJSONStorage, subscribeWithSelector } from "zustand/middleware";
 
 type dataProps<T extends { id: string }> = {
   data: T[];
@@ -86,42 +86,48 @@ type useTabsProps = {
   set: (id: string) => void;
 };
 
-export const useTabs = create(
-  persist<useTabsProps>(
-    (set) => ({
-      value: "overview",
-      set: (id: string) => set({ value: id }),
-    }),
-    {
-      name: "00X4_tab",
-      storage: createJSONStorage(() => localStorage),
-    }
+export const useTabs = create<useTabsProps>()(
+  subscribeWithSelector(
+    persist(
+      (set) => ({
+        value: "overview",
+        set: (id: string) => set({ value: id }),
+      }),
+      {
+        name: "00X4_tab",
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
   )
 );
 
-export const useSelectProject = create(
-  persist<useTabsProps>(
-    (set) => ({
-      value: "",
-      set: (id: string) => set({ value: id }),
-    }),
-    {
-      name: "10X9_tab",
-      storage: createJSONStorage(() => localStorage),
-    }
+export const useSelectProject = create<useTabsProps>()(
+  subscribeWithSelector(
+    persist(
+      (set) => ({
+        value: "",
+        set: (id: string) => set({ value: id }),
+      }),
+      {
+        name: "10X9_tab",
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
   )
 );
 
-export const useCustomeTabs = create(
-  persist<useTabsProps>(
-    (set) => ({
-      value: "overview",
-      set: (id: string) => set({ value: id }),
-    }),
-    {
-      name: "10X9_tab",
-      storage: createJSONStorage(() => localStorage),
-    }
+export const useCustomeTabs = create<useTabsProps>()(
+  subscribeWithSelector(
+    persist(
+      (set) => ({
+        value: "overview",
+        set: (id: string) => set({ value: id }),
+      }),
+      {
+        name: "10X9_tab",
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
   )
 );
 
@@ -132,19 +138,21 @@ type SidebarStore = {
   setMobileOpen: (open: boolean) => void;
   toggleMobile: () => void;
 };
-export const useSidebar = create(
-  persist<SidebarStore>(
-    (set, get) => ({
-      value: "emargement",
-      set: (value: string) => set({ value }),
-      isMobileOpen: false,
-      setMobileOpen: (open: boolean) => set({ isMobileOpen: open }),
-      toggleMobile: () => set({ isMobileOpen: !get().isMobileOpen }),
-    }),
-    {
-      name: "01X7_tab",
-      storage: createJSONStorage(() => localStorage),
-    }
+export const useSidebar = create<SidebarStore>()(
+  subscribeWithSelector(
+    persist(
+      (set, get) => ({
+        value: "emargement",
+        set: (value: string) => set({ value }),
+        isMobileOpen: false,
+        setMobileOpen: (open: boolean) => set({ isMobileOpen: open }),
+        toggleMobile: () => set({ isMobileOpen: !get().isMobileOpen }),
+      }),
+      {
+        name: "01X7_tab",
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
   )
 );
 
@@ -153,16 +161,18 @@ type SidebarProps = {
   set: (id: string) => void;
 };
 
-export const useSelectAC = create(
-  persist<SidebarProps>(
-    (set) => ({
-      value: "",
-      set: (id: string) => set({ value: id }),
-    }),
-    {
-      name: "01X8_AC",
-      storage: createJSONStorage(() => localStorage),
-    }
+export const useSelectAC = create<SidebarProps>()(
+  subscribeWithSelector(
+    persist(
+      (set) => ({
+        value: "",
+        set: (id: string) => set({ value: id }),
+      }),
+      {
+        name: "01X8_AC",
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
   )
 );
 
@@ -175,61 +185,98 @@ type PlanningStore = {
   resetPlanning: () => void;
 };
 
-export const usePlanningStore = create<PlanningStore>((set, get) => ({
-  planning: null,
-  setPlanning: (planning) => set({ planning }),
+export const usePlanningStore = create<PlanningStore>()(
+  subscribeWithSelector((set, get) => ({
+    planning: null,
+    setPlanning: (planning) => set({ planning }),
 
-  addVisit: (visits) => {
-    const planning = get().planning;
-    if (!planning) {
-      return;
-    }
+    addVisit: (visits) => {
+      const planning = get().planning;
+      if (!planning) {
+        return;
+      }
 
-    const newVisits = Array.isArray(visits) ? visits : [visits];
+      const newVisits = Array.isArray(visits) ? visits : [visits];
 
-    set({
-      planning: {
-        ...planning,
-        visit: [...planning.visit, ...newVisits],
-      },
-    });
-  },
+      set({
+        planning: {
+          ...planning,
+          visit: [...planning.visit, ...newVisits],
+        },
+      });
+    },
 
-  removeVisit: (visitId) => {
-    const planning = get().planning;
-    if (!planning) {
-      return;
-    }
-    set({
-      planning: {
-        ...planning,
-        visit: planning.visit.filter((v) => v.id !== visitId),
-      },
-    });
-  },
+    removeVisit: (visitId) => {
+      const planning = get().planning;
+      if (!planning) {
+        return;
+      }
+      set({
+        planning: {
+          ...planning,
+          visit: planning.visit.filter((v) => v.id !== visitId),
+        },
+      });
+    },
 
-  updateVisit: (visit) => {
-    const planning = get().planning;
-    if (!planning) {
-      return;
-    }
-    set({
-      planning: {
-        ...planning,
-        visit: planning.visit.map((v) => (v.id === visit.id ? visit : v)),
-      },
-    });
-  },
+    updateVisit: (visit) => {
+      const planning = get().planning;
+      if (!planning) {
+        return;
+      }
+      set({
+        planning: {
+          ...planning,
+          visit: planning.visit.map((v) => (v.id === visit.id ? visit : v)),
+        },
+      });
+    },
 
-  resetPlanning: () => set({ planning: null }),
-}));
+    resetPlanning: () => set({ planning: null }),
+  }))
+);
 
 type ChatProps = {
   id: string | null;
   setChat: (value: string) => void;
 };
 
-export const useChat = create<ChatProps>((set) => ({
-  id: null,
-  setChat: (value) => set({ id: value }),
+export const useChat = create<ChatProps>()(
+  subscribeWithSelector((set) => ({
+    id: null,
+    setChat: (value) => set({ id: value }),
+  }))
+);
+
+// ✅ Sélecteurs optimisés pour éviter les re-renders
+export const useTabsValue = () => useTabs((state) => state.value);
+export const useTabsSet = () => useTabs((state) => state.set);
+
+export const useSelectProjectValue = () => useSelectProject((state) => state.value);
+export const useSelectProjectSet = () => useSelectProject((state) => state.set);
+
+export const useCustomeTabsValue = () => useCustomeTabs((state) => state.value);
+export const useCustomeTabsSet = () => useCustomeTabs((state) => state.set);
+
+export const useSidebarValue = () => useSidebar((state) => state.value);
+export const useSidebarSet = () => useSidebar((state) => state.set);
+export const useSidebarMobile = () => useSidebar((state) => state.isMobileOpen);
+export const useSidebarMobileActions = () => useSidebar((state) => ({ 
+  setMobileOpen: state.setMobileOpen, 
+  toggleMobile: state.toggleMobile 
 }));
+
+export const useSelectACValue = () => useSelectAC((state) => state.value);
+export const useSelectACSet = () => useSelectAC((state) => state.set);
+
+export const usePlanningData = () => usePlanningStore((state) => state.planning);
+export const usePlanningActions = () => usePlanningStore((state) => ({
+  setPlanning: state.setPlanning,
+  addVisit: state.addVisit,
+  removeVisit: state.removeVisit,
+  updateVisit: state.updateVisit,
+  resetPlanning: state.resetPlanning,
+}));
+
+export const useChatId = () => useChat((state) => state.id);
+export const useChatActions = () => useChat((state) => ({ setChat: state.setChat }));

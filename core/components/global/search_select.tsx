@@ -25,6 +25,7 @@ import {
   PopoverTrigger,
 } from "@/core/components/ui/popover";
 import { Spinner } from "@/core/components/ui/spinner";
+import { memoizeComponent, useOptimizedCallback } from "@/core/lib/component-optimization";
 
 type IconType = React.ComponentType<LucideProps>;
 
@@ -43,7 +44,8 @@ interface SearchProps<T extends BaseItem>
   onChangeValue: (value: string) => void;
 }
 
-export default function SearchSelect<T extends BaseItem>({
+// ✅ Composant optimisé avec React.memo
+const SearchSelectComponent = <T extends BaseItem>({
   className,
   Icon,
   items = [],
@@ -51,16 +53,27 @@ export default function SearchSelect<T extends BaseItem>({
   selectedId,
   disabled = false,
   loading = false,
-}: SearchProps<T>) {
+}: SearchProps<T>) => {
   const [open, setOpen] = React.useState(false);
 
+  // ✅ Optimisation du calcul du selectedItem
   const selectedItem = React.useMemo(
     () => items.find((item) => item.id === selectedId),
     [items, selectedId]
   );
 
+  // ✅ Optimisation des event handlers
+  const handleSelect = useOptimizedCallback((itemId: string) => {
+    onChangeValue(itemId);
+    setOpen(false);
+  }, [onChangeValue]);
+
+  const handleOpenChange = useOptimizedCallback((isOpen: boolean) => {
+    setOpen(isOpen);
+  }, []);
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -104,7 +117,7 @@ export default function SearchSelect<T extends BaseItem>({
               {items.map((item) => (
                 <CommandItem
                   key={item.id}
-                  onSelect={() => onChangeValue(item.id)}
+                  onSelect={() => handleSelect(item.id)}
                   className="text-sm"
                 >
                   <ScanSearch className="mr-2 h-4 w-4" />
@@ -123,4 +136,17 @@ export default function SearchSelect<T extends BaseItem>({
       </PopoverContent>
     </Popover>
   );
-}
+};
+
+// ✅ Export du composant mémorisé
+export default memoizeComponent(SearchSelectComponent, (prevProps, nextProps) => {
+  // ✅ Comparaison personnalisée pour éviter les re-renders inutiles
+  return (
+    prevProps.loading === nextProps.loading &&
+    prevProps.disabled === nextProps.disabled &&
+    prevProps.selectedId === nextProps.selectedId &&
+    prevProps.items === nextProps.items &&
+    prevProps.onChangeValue === nextProps.onChangeValue &&
+    prevProps.Icon === nextProps.Icon
+  );
+});

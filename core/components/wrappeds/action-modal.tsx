@@ -8,6 +8,7 @@ import {
 import { cn } from "@/core/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import type { ReactNode } from "react";
+import { memoizeComponent } from "@/core/lib/component-optimization";
 
 interface ActionModalProps {
   open: boolean;
@@ -25,6 +26,7 @@ interface ActionModalProps {
   title?: string; // Optional title prop
 }
 
+// ✅ ActionModal optimisé avec React.memo (nom original conservé)
 const ActionModal = ({
   open,
   onClose,
@@ -45,4 +47,15 @@ const ActionModal = ({
   );
 };
 
-export default ActionModal;
+// ✅ Export du composant mémorisé avec nom original
+export default memoizeComponent(ActionModal, (prevProps, nextProps) => {
+  // ✅ Comparaison personnalisée pour éviter les re-renders
+  return (
+    prevProps.open === nextProps.open &&
+    prevProps.onClose === nextProps.onClose &&
+    prevProps.children === nextProps.children &&
+    prevProps.size === nextProps.size &&
+    prevProps.z === nextProps.z &&
+    prevProps.title === nextProps.title
+  );
+});

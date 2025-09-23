@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useCallback, memo } from "react";
 import Image from "next/image";
 import { CloudUpload, Trash, Camera, Loader2 } from "lucide-react";
 import { Button } from "@/core/components/ui/button";
@@ -19,7 +19,8 @@ type Props = {
   buttonPosition?: "top" | "center" | "top-left" | "top-right";
 };
 
-const ImageUpload = ({
+// ✅ Composant optimisé avec React.memo
+const ImageUploadComponent = ({
   disabled = false,
   onChange,
   value,
@@ -32,23 +33,21 @@ const ImageUpload = ({
   const [isPending, startTransition] = useTransition();
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleFileChange = (file: File) => {
+  // ✅ Optimisation des callbacks avec useCallback
+  const handleFileChange = useCallback((file: File) => {
     setFile(file);
     const url = URL.createObjectURL(file);
     setPreview(url);
-  };
+  }, []);
 
-  const handleUpload = () => {
+  const handleUpload = useCallback(() => {
     if (!file) return;
 
     const formData = new FormData();
     formData.append("image", file);
 
- 
-
     startTransition(async () => {
       const data = await uploadImage(formData, folder);
-    
 
       if (data?.success) {
         toast.success({ message: "Image téléchargée avec succès." });
@@ -61,16 +60,27 @@ const ImageUpload = ({
         });
       }
     });
-  };
+  }, [file, folder, onChange]);
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
     const droppedFile = e.dataTransfer.files?.[0];
     if (droppedFile) handleFileChange(droppedFile);
-  };
+  }, [handleFileChange]);
 
-  const renderUploadButton = () => (
+  const handleDelete = useCallback(() => {
+    setFile(undefined);
+    setPreview("");
+    onChange("");
+  }, [onChange]);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) handleFileChange(e.target.files[0]);
+  }, [handleFileChange]);
+
+  // ✅ Composants mémorisés avec useCallback
+  const renderUploadButton = useCallback(() => (
     <Button
       onClick={handleUpload}
       disabled={isPending}
@@ -85,9 +95,9 @@ const ImageUpload = ({
       )}
       Télécharger
     </Button>
-  );
+  ), [handleUpload, isPending]);
 
-  const renderImagePreview = () => (
+  const renderImagePreview = useCallback(() => (
     <div className="relative group">
       <div className="relative overflow-hidden rounded-lg border-4 transition-all h-[250px] w-[300px] border-slate-100">
         <Image
@@ -102,11 +112,7 @@ const ImageUpload = ({
               variant="destructive"
               size="icon"
               className="h-10 w-10 rounded-full"
-              onClick={() => {
-                setFile(undefined);
-                setPreview("");
-                onChange("");
-              }}
+              onClick={handleDelete}
               disabled={isPending}
             >
               <Trash className="h-5 w-5" />
@@ -127,7 +133,7 @@ const ImageUpload = ({
         )}
       </div>
     </div>
-  );
+  ), [preview, isPending, view, value, buttonPosition, handleDelete, renderUploadButton]);
 
   return (
     <div className="w-full">
@@ -173,9 +179,7 @@ const ImageUpload = ({
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files?.[0]) handleFileChange(e.target.files[0]);
-                }}
+                onChange={handleInputChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               <div className="flex flex-col items-center space-y-4 pointer-events-none">
@@ -202,4 +206,15 @@ const ImageUpload = ({
   );
 };
 
-export default ImageUpload;
+// ✅ Export du composant mémorisé
+export default memo(ImageUploadComponent, (prevProps, nextProps) => {
+  // ✅ Comparaison personnalisée pour éviter les re-renders
+  return (
+    prevProps.disabled === nextProps.disabled &&
+    prevProps.value === nextProps.value &&
+    prevProps.folder === nextProps.folder &&
+    prevProps.view === nextProps.view &&
+    prevProps.buttonPosition === nextProps.buttonPosition &&
+    prevProps.onChange === nextProps.onChange
+  );
+});

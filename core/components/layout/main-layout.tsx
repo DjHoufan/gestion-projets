@@ -2,7 +2,7 @@
 import { Header } from "@/core/components/layout/header";
 import { Sidebar } from "@/core/components/layout/sidebar";
 import { User } from "@supabase/supabase-js";
-import { useState } from "react";
+import { useState, memo } from "react";
 
 type Props = {
   children: React.ReactNode;
@@ -10,6 +10,7 @@ type Props = {
   userId: string;
 };
 
+// ✅ MainLayout optimisé avec React.memo (nom original conservé)
 const MainLayout = ({ children, user, userId }: Props) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -33,4 +34,12 @@ const MainLayout = ({ children, user, userId }: Props) => {
   );
 };
 
-export default MainLayout;
+// ✅ Export du composant mémorisé avec nom original
+export default memo(MainLayout, (prevProps, nextProps) => {
+  // ✅ Comparaison personnalisée pour éviter les re-renders
+  return (
+    prevProps.user === nextProps.user &&
+    prevProps.userId === nextProps.userId &&
+    prevProps.children === nextProps.children
+  );
+});

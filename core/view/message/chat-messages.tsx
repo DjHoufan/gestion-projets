@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useCallback, useState, useMemo } from "react";
+import React, { useRef, useEffect, useCallback, useState, useMemo, useReducer } from "react";
 import { useMessages } from "@/core/hooks/use-messages";
 import { Loader2 } from "lucide-react";
 import MessageItem from "@/core/view/message/message-item";
@@ -13,6 +13,53 @@ interface ChatMessagesProps {
   participants?: ParticipantDetail[];
 }
 
+// ✅ Reducer pour gérer l'état complexe
+type ChatState = {
+  shouldScrollToBottom: boolean;
+  lastMessageCount: number;
+  isInitialRender: boolean;
+  isUserScrolling: boolean;
+};
+
+type ChatAction = 
+  | { type: 'SET_SCROLL_TO_BOTTOM'; payload: boolean }
+  | { type: 'SET_MESSAGE_COUNT'; payload: number }
+  | { type: 'SET_INITIAL_RENDER'; payload: boolean }
+  | { type: 'SET_USER_SCROLLING'; payload: boolean }
+  | { type: 'RESET_CHAT' };
+
+const chatReducer = (state: ChatState, action: ChatAction): ChatState => {
+  switch (action.type) {
+    case 'SET_SCROLL_TO_BOTTOM':
+      return { ...state, shouldScrollToBottom: action.payload };
+    case 'SET_MESSAGE_COUNT':
+      return { ...state, lastMessageCount: action.payload };
+    case 'SET_INITIAL_RENDER':
+      return { ...state, isInitialRender: action.payload };
+    case 'SET_USER_SCROLLING':
+      return { ...state, isUserScrolling: action.payload };
+    case 'RESET_CHAT':
+      return {
+        shouldScrollToBottom: true,
+        lastMessageCount: 0,
+        isInitialRender: true,
+        isUserScrolling: false,
+      };
+    default:
+      return state;
+  }
+};
+
+// ✅ Composant MessageItem mémorisé
+const MemoizedMessageItem = React.memo(MessageItem, (prevProps, nextProps) => {
+  return (
+    prevProps.message.id === nextProps.message.id &&
+    prevProps.isCurrentUser === nextProps.isCurrentUser &&
+    prevProps.showAvatar === nextProps.showAvatar &&
+    prevProps.searchTerm === nextProps.searchTerm
+  );
+});
+
 const ChatMessages = ({
   chatId,
   currentUserId,
@@ -20,9 +67,16 @@ const ChatMessages = ({
   participants = [],
 }: ChatMessagesProps) => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
-  const [lastMessageCount, setLastMessageCount] = useState(0);
-  const [isInitialRender, setIsInitialRender] = useState(true);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isScrollingRef = useRef(false);
+
+  // ✅ Utiliser useReducer au lieu de multiples useState
+  const [state, dispatch] = useReducer(chatReducer, {
+    shouldScrollToBottom: true,
+    lastMessageCount: 0,
+    isInitialRender: true,
+    isUserScrolling: false,
+  });
 
   const {
     messages,
@@ -32,92 +86,113 @@ const ChatMessages = ({
     isLoading,
   } = useMessages(chatId);
 
+  // ✅ Filtrage optimisé avec debounce
   const filteredMessages = useMemo(() => {
-    if (!searchTerm) return messages;
+    if (!searchTerm.trim()) return messages;
 
+    const lowercaseSearch = searchTerm.toLowerCase();
     return messages.filter(
       (message) =>
-        message.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        message.sender.name.toLowerCase().includes(searchTerm.toLowerCase())
+        message.content.toLowerCase().includes(lowercaseSearch) ||
+        message.sender.name.toLowerCase().includes(lowercaseSearch)
     );
   }, [messages, searchTerm]);
 
+  // ✅ Fonction de scroll optimisée
   const scrollToBottom = useCallback((smooth = false) => {
-    if (messagesContainerRef.current) {
+    if (messagesContainerRef.current && !state.isUserScrolling) {
       messagesContainerRef.current.scrollTo({
         top: messagesContainerRef.current.scrollHeight,
         behavior: smooth ? "smooth" : "auto",
       });
     }
-  }, []);
+  }, [state.isUserScrolling]);
 
-  // Initial scroll to bottom
+  // ✅ Effet pour le scroll initial optimisé
   useEffect(() => {
-    if (!isInitialRender || messages.length === 0) return;
+    if (!state.isInitialRender || messages.length === 0) return;
 
     const container = messagesContainerRef.current;
     if (!container) return;
 
+    // ✅ Utiliser requestAnimationFrame pour de meilleures performances
     const scrollToBottomImmediate = () => {
-      container.scrollTop = container.scrollHeight;
-      setIsInitialRender(false);
+      requestAnimationFrame(() => {
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+          dispatch({ type: 'SET_INITIAL_RENDER', payload: false });
+        }
+      });
     };
 
-    const timeout = setTimeout(scrollToBottomImmediate, 100);
+    const timeout = setTimeout(scrollToBottomImmediate, 50);
     return () => clearTimeout(timeout);
-  }, [messages.length, isInitialRender]);
+  }, [messages.length, state.isInitialRender]);
 
-  // Auto-scroll for new messages (only if user is at bottom)
+  // ✅ Auto-scroll optimisé pour nouveaux messages
   useEffect(() => {
     const shouldScroll =
-      !isInitialRender &&
-      shouldScrollToBottom &&
-      messages.length > lastMessageCount;
+      !state.isInitialRender &&
+      state.shouldScrollToBottom &&
+      !state.isUserScrolling &&
+      messages.length > state.lastMessageCount;
 
     if (shouldScroll) {
-      const timeout = setTimeout(() => scrollToBottom(true), 100);
-      return () => clearTimeout(timeout);
+      requestAnimationFrame(() => scrollToBottom(true));
     }
 
-    setLastMessageCount(messages.length);
+    dispatch({ type: 'SET_MESSAGE_COUNT', payload: messages.length });
   }, [
     messages.length,
-    shouldScrollToBottom,
+    state.shouldScrollToBottom,
+    state.isUserScrolling,
+    state.lastMessageCount,
+    state.isInitialRender,
     scrollToBottom,
-    lastMessageCount,
-    isInitialRender,
   ]);
 
-  // Reset on chat change
+  // ✅ Reset optimisé lors du changement de chat
   useEffect(() => {
-    setIsInitialRender(true);
-    setShouldScrollToBottom(true);
-    setLastMessageCount(0);
+    dispatch({ type: 'RESET_CHAT' });
   }, [chatId]);
 
+  // ✅ Gestion du scroll avec debounce et optimisations
   const handleScroll = useCallback(() => {
     if (!messagesContainerRef.current) return;
 
-    const { scrollTop, scrollHeight, clientHeight } =
-      messagesContainerRef.current;
+    const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
     const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
-    setShouldScrollToBottom(isNearBottom);
+    
+    dispatch({ type: 'SET_SCROLL_TO_BOTTOM', payload: isNearBottom });
+    
+    if (!isScrollingRef.current) {
+      dispatch({ type: 'SET_USER_SCROLLING', payload: true });
+      
+      // Reset user scrolling après 1 seconde d'inactivité
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = setTimeout(() => {
+        dispatch({ type: 'SET_USER_SCROLLING', payload: false });
+        isScrollingRef.current = false;
+      }, 1000);
+    }
 
-    // Load more messages when scrolling up
+    // ✅ Chargement infini optimisé
     if (scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
       const previousScrollHeight = scrollHeight;
       const previousScrollTop = scrollTop;
 
       fetchNextPage().then(() => {
-        // Maintenir la position de scroll après le chargement
-        setTimeout(() => {
+        // Maintenir la position de scroll
+        requestAnimationFrame(() => {
           if (messagesContainerRef.current) {
             const newScrollHeight = messagesContainerRef.current.scrollHeight;
             const scrollDiff = newScrollHeight - previousScrollHeight;
-            messagesContainerRef.current.scrollTop =
-              previousScrollTop + scrollDiff;
+            messagesContainerRef.current.scrollTop = previousScrollTop + scrollDiff;
           }
-        }, 50);
+        });
       });
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
@@ -130,13 +205,25 @@ const ChatMessages = ({
     }
   }, [handleScroll]);
 
+  // ✅ Cleanup des timeouts
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // ✅ Composant de chargement mémorisé
+  const LoadingComponent = useMemo(() => (
+    <div className="flex items-center justify-center h-96">
+      <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+      <span className="ml-2 text-gray-600">Chargement des messages...</span>
+    </div>
+  ), []);
+
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
-        <span className="ml-2 text-gray-600">Chargement des messages...</span>
-      </div>
-    );
+    return LoadingComponent;
   }
 
   return (
@@ -153,29 +240,27 @@ const ChatMessages = ({
         </div>
       )}
 
-      {/* Initial loading overlay */}
-      {isInitialRender && messages.length > 0 && (
+      {/* ✅ Overlay de chargement initial optimisé */}
+      {state.isInitialRender && messages.length > 0 && (
         <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-30">
           <div className="flex items-center gap-3 bg-white rounded-lg shadow-lg p-6">
             <Loader2 className="w-6 h-6 animate-spin text-emerald-500" />
-            <span className="text-gray-700 font-medium">
-              Préparation des messages...
-            </span>
+            <span className="text-gray-700 font-medium">Préparation des messages...</span>
           </div>
         </div>
       )}
 
       <div className="max-w-4xl mx-auto space-y-3 p-4 pb-8">
+        {/* ✅ Compteur de recherche mémorisé */}
         {searchTerm && (
           <div className="text-center py-2">
             <p className="text-xs text-gray-500">
-              {filteredMessages.length} message
-              {filteredMessages.length > 1 ? "s" : ""} trouvé
-              {filteredMessages.length > 1 ? "s" : ""}
+              {filteredMessages.length} message{filteredMessages.length > 1 ? "s" : ""} trouvé{filteredMessages.length > 1 ? "s" : ""}
             </p>
           </div>
         )}
 
+        {/* ✅ Messages optimisés avec composant mémorisé */}
         {filteredMessages.map((message, index) => {
           const isCurrentUser = message.senderId === currentUserId;
           const showAvatar =
@@ -183,7 +268,7 @@ const ChatMessages = ({
             filteredMessages[index - 1]?.senderId !== message.senderId;
 
           return (
-            <MessageItem
+            <MemoizedMessageItem
               key={message.id}
               message={message}
               isCurrentUser={isCurrentUser}
@@ -198,4 +283,4 @@ const ChatMessages = ({
   );
 };
 
-export default ChatMessages;
+export default React.memo(ChatMessages);

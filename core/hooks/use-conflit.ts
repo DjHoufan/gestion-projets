@@ -5,6 +5,8 @@ import { client } from "@/core/lib/rpc";
 import { QueryKeyString } from "@/core/lib/constants";
 
 import { toast } from "@/core/components/global/custom-toast";
+import { useMyData } from "@/core/hooks/store";
+import { useModal } from "@/core/providers/modal-provider";
 
 // === Type Inference Conflit  ===
 type PostRpV = InferResponseType<(typeof client.api.rapport.conflit)["$post"]>;
@@ -109,6 +111,8 @@ export const useGetOneConflit = (id: string) => {
 // === Mutation: Create Conflit  ===
 export const useCreateConflit = () => {
   const queryClient = useQueryClient();
+  const { close } = useModal();
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PostRpV, Error, PostRqV>({
     mutationFn: async ({ json }: PostRqV) => {
@@ -122,7 +126,26 @@ export const useCreateConflit = () => {
 
       return await response.json();
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
+      queryClient.setQueryData<any>(
+        ["accompanist", data?.usersId!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            conflit: [...((oldData?.conflit as any[]) ?? []), data],
+          };
+        }
+      );
+
+      updateFields({
+        conflit: [
+          //@ts-ignore
+          ...(user?.conflit || []),
+          //@ts-ignore
+          data,
+        ],
+      });
+
       toast.success({
         message: "Les données du Conflit de   a été enregistré avec succès",
       });

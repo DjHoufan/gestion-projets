@@ -1,5 +1,6 @@
 "use client";
 
+ 
 import { Badge } from "@/core/components/ui/badge";
 import {
   Avatar,
@@ -25,12 +26,14 @@ import {
 } from "lucide-react";
 import { MemberDetail } from "@/core/lib/types";
 import { formatDate } from "@/core/lib/utils";
+import { memoizeComponent } from "@/core/lib/component-optimization";
 
 type Props = {
   user: MemberDetail;
 };
 
-export const MemberCard = ({ user }: Props) => {
+// ✅ MemberCard optimisé avec React.memo (nom original conservé)
+const MemberCards = ({ user }: Props) => {
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -222,3 +225,9 @@ export const MemberCard = ({ user }: Props) => {
     </div>
   );
 };
+
+// ✅ Export du composant mémorisé avec nom original
+export const MemberCard = memoizeComponent(MemberCards, (prevProps, nextProps) => {
+  // ✅ Comparaison personnalisée pour éviter les re-renders
+  return prevProps.user === nextProps.user;
+});

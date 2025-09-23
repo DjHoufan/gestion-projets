@@ -1,19 +1,60 @@
 "use client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { toast } from "@/core/components/global/custom-toast";
 // Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
 import {
   isServer,
   QueryClient,
   QueryClientProvider,
+  MutationCache,
+  QueryCache,
 } from "@tanstack/react-query";
 
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 5 * 60 * 60 * 1000, // 5 heures
+        // ✅ Optimisations de cache
+        staleTime: 5 * 60 * 1000, // 5 minutes (au lieu de 5 heures)
+        gcTime: 10 * 60 * 1000, // 10 minutes
+        retry: (failureCount, error: any) => {
+          // ✅ Retry intelligent
+          if (error?.status === 404 || error?.status === 403) return false;
+          return failureCount < 3;
+        },
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: 'always',
+        // ✅ Background refetch optimisé
+        refetchInterval: false,
+        refetchIntervalInBackground: false,
+      },
+      mutations: {
+        // ✅ Retry pour les mutations
+        retry: (failureCount, error: any) => {
+          if (error?.status >= 400 && error?.status < 500) return false;
+          return failureCount < 2;
+        },
+        retryDelay: 1000,
       },
     },
+    // ✅ Cache global pour les erreurs
+    queryCache: new QueryCache({
+      onError: (error: any, query) => {
+        // Log des erreurs sans spam
+        if (error?.status !== 404) {
+          console.error(`Query error for ${query.queryKey}:`, error);
+        }
+      },
+    }),
+    // ✅ Cache global pour les mutations
+    mutationCache: new MutationCache({
+      onError: (error: any) => {
+        toast.error({
+          message: error?.message || "Une erreur est survenue",
+        });
+      },
+    }),
   });
 }
 

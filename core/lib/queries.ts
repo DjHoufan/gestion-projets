@@ -493,6 +493,9 @@ export const upsertEmargement = async (data: Partial<Emargement>) => {
     create: {
       ...newData,
     },
+    include: {
+      member: true,
+    },
   });
 
   return res;
@@ -577,6 +580,10 @@ export const upsertConflit = async (data: Partial<Conflit>) => {
         })),
       },
       createdAt: new Date(),
+    },
+    include: {
+      partieImpliques: true,
+      files: true,
     },
   });
 

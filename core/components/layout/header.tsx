@@ -39,11 +39,11 @@ import {
 } from "@/core/hooks/use-chat";
 import { supabaseClientBrowser } from "@/core/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { MessageViewDetail, notifType } from "@/core/lib/types";
 import { MessageView } from "@prisma/client";
 import { formatTimeMessage } from "@/core/lib/utils";
-import { useChat } from "@/core/hooks/store";
+import { useChatId } from "@/core/hooks/store";
 
 type Props = {
   isMobile: boolean;
@@ -58,23 +58,29 @@ export const Header = ({
   user,
   userId,
 }: Props) => {
-  const { id } = useChat();
+  const id = useChatId(); // ✅ Sélecteur optimisé
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // ✅ Mémoriser les métadonnées utilisateur
   const { access = [], type } = useMemo(() => {
     return user?.user_metadata || {};
-  }, [user]);
+  }, [user?.user_metadata]);
 
   const myRoutes = useMemo(() => {
     return access.map((item: string) => item.split("|")[0].trim());
   }, [access]);
 
   const queryClient = useQueryClient();
-
   const router = useRouter();
   const { mutate: Logout, isPending } = useLogout();
 
-  const userName: string = user.user_metadata.name;
-  const userEmail = user.email;
-  const profile = user.user_metadata.profile;
+  // ✅ Mémoriser les données utilisateur
+  const userInfo = useMemo(() => ({
+    userName: user.user_metadata.name,
+    userEmail: user.email,
+    profile: user.user_metadata.profile,
+  }), [user.user_metadata.name, user.email, user.user_metadata.profile]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -83,80 +89,113 @@ export const Header = ({
   const { mutate: updatView } = useUpdateMessageView(userId);
   const { mutate: updateAllMyView } = useUpdateAllMyMessageView(userId);
 
-  const markAsRead = (notificationId: string) => {
+  // ✅ Mémoriser la fonction markAsRead
+  const markAsRead = useCallback((notificationId: string) => {
     updatView({
       param: {
         mvId: notificationId,
       },
     });
-  };
+  }, [updatView]);
 
+  // ✅ Mémoriser markAllAsRead
   const markAllAsRead = useCallback(() => {
     updateAllMyView();
   }, [updateAllMyView]);
 
-  const handleNewNotification = (newNotif: notifType, userId: string) => {
-    queryClient.setQueryData([userId], (oldData: MessageViewDetail[]) => {
-      if (!oldData) return oldData;
+  // ✅ Mémoriser et optimiser handleNewNotification
+  const handleNewNotification = useCallback((newNotif: notifType, userId: string) => {
+    // ✅ Debounce pour éviter les notifications spam
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    
+    debounceRef.current = setTimeout(() => {
+      queryClient.setQueryData([userId], (oldData: MessageViewDetail[]) => {
+        if (!oldData) return [newNotif];
+        
+        // ✅ Éviter les doublons
+        const exists = oldData.some(item => item.id === newNotif.id);
+        if (exists) return oldData;
+        
+        return [newNotif, ...oldData];
+      });
+    }, 100); // Debounce de 100ms
+  }, [queryClient]);
 
-      return [newNotif, ...oldData];
-    });
-  };
-
+  // ✅ useEffect optimisé avec cleanup amélioré
   useEffect(() => {
-    let channel: RealtimeChannel | null = null;
+    if (!userId || !user.id) return;
 
     const setupSubscription = async () => {
       try {
-        channel = supabaseClientBrowser
-          .channel("vueChannel")
+        // ✅ Cleanup de l'ancien channel si existe
+        if (channelRef.current) {
+          await supabaseClientBrowser.removeChannel(channelRef.current);
+          channelRef.current = null;
+        }
+
+        // ✅ Channel avec nom unique pour éviter les conflits
+        const channelName = `notifications_${userId}_${Date.now()}`;
+        
+        channelRef.current = supabaseClientBrowser
+          .channel(channelName)
           .on(
             "postgres_changes",
             {
-              event: "*",
+              event: "INSERT",
               schema: "public",
               table: "MessageView",
+              filter: `userId=neq.${user.id}`, // ✅ Filtrer côté serveur
             },
             async (payload) => {
+              try {
+                const newMessage = payload.new as MessageView;
+                
+                // ✅ Vérification supplémentaire côté client
+                if (user.id === newMessage.userId) return;
 
-              const type = payload.eventType as string;
-              const newMessage = payload.new as MessageView;
+                const { data } = await supabaseClientBrowser.rpc(
+                  "get_unread_messages",
+                  {
+                    message_view_id_input: newMessage.id,
+                    user_id_input: userId,
+                  }
+                );
 
-              if (type === "INSERT") {
-                if (user.id !== newMessage.userId) {
-                  const { data } = await supabaseClientBrowser.rpc(
-                    "get_unread_messages",
-                    {
-                      message_view_id_input: newMessage.id,
-                      user_id_input: userId,
-                    }
-                  );
+                if (data?.[0]) {
+                  const { message_view_id, message, sender, chat } = data[0];
 
-                  if (data?.[0]) {
-                    const { message_view_id, message, sender, chat } = data[0];
-
-                    if (chat.id !== id) {
-                      const newNotif = {
-                        id: message_view_id,
-                        view: false,
-                        messageId: message.id,
-                        senderId: sender.id,
-                        message: {
-                          ...message,
-                          sentAt: new Date(),
-                          sender,
-                        },
+                  // ✅ Ne notifier que si ce n'est pas le chat actuel
+                  if (chat.id !== id) {
+                    const newNotif = {
+                      id: message_view_id,
+                      view: false,
+                      messageId: message.id,
+                      senderId: sender.id,
+                      message: {
+                        ...message,
+                        sentAt: new Date(),
                         sender,
-                      };
+                      },
+                      sender,
+                    };
 
-                      handleNewNotification(newNotif, userId);
-                    }
+                    handleNewNotification(newNotif, userId);
                   }
                 }
+              } catch (error) {
+                console.error("Erreur traitement notification:", error);
               }
             }
           )
-          .subscribe();
+          .subscribe((status) => {
+            if (status === 'SUBSCRIBED') {
+              console.log('✅ Subscription notifications active');
+            } else if (status === 'CHANNEL_ERROR') {
+              console.error('❌ Erreur subscription notifications',status);
+            }
+          });
       } catch (error) {
         console.error("Erreur setupSubscription:", error);
       }
@@ -164,14 +203,28 @@ export const Header = ({
 
     setupSubscription();
 
-    // cleanup pour éviter les doublons
+    // ✅ Cleanup amélioré
     return () => {
-      if (channel) {
-        supabaseClientBrowser.removeChannel(channel);
-        channel = null;
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+        debounceRef.current = null;
+      }
+      
+      if (channelRef.current) {
+        supabaseClientBrowser.removeChannel(channelRef.current);
+        channelRef.current = null;
       }
     };
-  }, [id, user.id, userId, handleNewNotification]);
+  }, [userId, user.id, id, handleNewNotification]); // ✅ Dépendances stables
+
+  // ✅ Cleanup au démontage du composant
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-30 w-full border-b border-border/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
@@ -194,7 +247,7 @@ export const Header = ({
           <div className="min-w-0 flex-1">
             <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground truncate">
               <span className="hidden sm:inline">Bonjour, </span>
-              {userName}
+              {userInfo.userName}
               <span className="sm:hidden">👋 </span>
               <span className="hidden sm:inline"> 👋</span>
             </h1>
@@ -376,11 +429,11 @@ export const Header = ({
                 className="relative h-8 w-8 sm:h-9 sm:w-9 rounded-full p-0"
               >
                 <Avatar className="h-8 w-8 sm:h-9 sm:w-9 border border-slate-200">
-                  <AvatarImage src={profile} alt={userName} />
+                  <AvatarImage src={userInfo.profile} alt={userInfo.userName} />
                   <AvatarFallback className="bg-blue-500 text-white text-xs sm:text-sm">
-                    {userName
+                    {userInfo.userName
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: any[]) => n[0])
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
@@ -393,10 +446,10 @@ export const Header = ({
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none text-slate-800 truncate">
-                    {userName}
+                    {userInfo.userName}
                   </p>
                   <p className="text-xs leading-none text-slate-500 truncate">
-                    {userEmail}
+                    {userInfo.userEmail}
                   </p>
                 </div>
               </DropdownMenuLabel>

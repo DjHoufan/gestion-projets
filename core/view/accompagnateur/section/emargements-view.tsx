@@ -383,7 +383,7 @@ export function EmargementsView() {
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
                   <ImageIcon className="h-5 w-5 text-orange-600" />
-                  Photo CNI
+                  Reçu de paiement
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -391,7 +391,7 @@ export function EmargementsView() {
                   <div className="space-y-3">
                     <img
                       src={emargement.PhotoCni || "/placeholder.svg"}
-                      alt="Photo CNI"
+                      alt="Reçu de paiement"
                       className="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
                     />
                     <Button

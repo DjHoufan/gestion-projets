@@ -7,6 +7,7 @@ import { QueryKeyString } from "@/core/lib/constants";
 import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "@/core/components/global/custom-toast";
+import { useMyData } from "@/core/hooks/store";
 
 // === Type Inference Emargement ===
 type PostResponse = InferResponseType<
@@ -112,6 +113,7 @@ export const useGetOneEmargement = (id: string) => {
 export const useCreateEmargement = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PostResponse, Error, PostRequest>({
     mutationFn: async ({ json }: PostRequest) => {
@@ -125,7 +127,26 @@ export const useCreateEmargement = () => {
 
       return await response.json();
     },
-    onSuccess: () => {
+    onSuccess: ({data}) => {
+      queryClient.setQueryData<any>(
+        ["accompanist", data?.usersId!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            emargements: [...((oldData?.emargements as any[]) ?? []), data],
+          };
+        }
+      );
+
+      updateFields({
+        emargements: [
+          //@ts-ignore
+          ...(user?.emargements || []),
+          //@ts-ignore
+          data,
+        ],
+      });
+
       toast.success({
         message: "Les données de la map  a été enregistré avec succès",
       });
@@ -215,9 +236,3 @@ export const useDeleteEmargement = () => {
     },
   });
 };
-
-
-
-
-
-
