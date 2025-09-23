@@ -194,7 +194,6 @@ export function EmargementsView() {
             >
               <Edit className="h-3 w-3" />
             </Button>
-             
           </div>
         );
       },
@@ -553,7 +552,18 @@ export function EmargementsView() {
             <p className="text-gray-500 mb-4">
               Commencez par créer votre premier émargement.
             </p>
-            <Button className="bg-emerald-600 hover:bg-emerald-700">
+            <Button
+              onClick={() =>
+                open(
+                  <EmargementForm
+                    open={true}
+                    onOpenChangeAction={close}
+                    userId={user.id}
+                  />
+                )
+              }
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
               Créer un Émargement
             </Button>
           </CardContent>
