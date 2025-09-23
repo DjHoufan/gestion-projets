@@ -127,7 +127,7 @@ export const useCreateEmargement = () => {
 
       return await response.json();
     },
-    onSuccess: ({data}) => {
+    onSuccess: ({ data }) => {
       queryClient.setQueryData<any>(
         ["accompanist", data?.usersId!],
         (oldData: any) => {
@@ -169,6 +169,7 @@ export const useCreateEmargement = () => {
 export const useUpdateEmargement = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
+  const { data: user, updateFields } = useMyData();
 
   return useMutation<PatchResponse, Error, PatchRequest>({
     mutationFn: async ({ json, param }) => {
@@ -185,7 +186,25 @@ export const useUpdateEmargement = () => {
 
       return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
+      queryClient.setQueryData<any>(
+        ["accompanist", data?.usersId!],
+        (oldData: any) => {
+          return {
+            ...(oldData ?? {}),
+            emargements: [...((oldData?.emargements as any[]) ?? []), data],
+          };
+        }
+      );
+
+      updateFields({
+        emargements: [
+          //@ts-ignore
+          ...(user?.emargements || []),
+          //@ts-ignore
+          data,
+        ],
+      });
       toast.success({
         message: "Les données de la map a été modifié avec succès",
       });
