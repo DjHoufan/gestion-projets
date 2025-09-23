@@ -85,7 +85,7 @@ const app = new Hono()
     zValidator("json", EmargementSchema),
     sessionMiddleware,
     async (c) => {
-      const response = handleDatatUpsert<Emargement>(
+      const response = await handleDatatUpsert<Emargement>(
         c,
         c.req.param("emId"),
         "em"
