@@ -119,7 +119,7 @@ export function EmargementForm({
                 name="PhotoCni"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>URL Photo CNI *</FormLabel>
+                    <FormLabel>Facture *</FormLabel>
                     <FormControl>
                       <ImageUpload
                         value={field.value ? field.value : ""}
