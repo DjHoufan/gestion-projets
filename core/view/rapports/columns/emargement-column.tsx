@@ -14,8 +14,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/core/components/ui/avatar";
+import { EmargementShow } from "@/core/view/rapports/card/emargement-show";
 
- 
 export const EmargementColumns = (
   permission: CrudPermissions
 ): ColumnDef<EmargementDetail>[] => [
@@ -109,6 +109,7 @@ export const EmargementColumns = (
         details={row.original}
         FormComponent={EmargementForm}
         DeleteHookAction={useDeleteEmargement}
+        DetailComponent={EmargementShow}
         getDeleteParamAction={(details) => ({ param: { emId: details.id } })}
         entityName="l'émargement"
         idField="id"

@@ -61,7 +61,7 @@ export const Header = ({
   const id = useChatId(); // ✅ Sélecteur optimisé
   const channelRef = useRef<RealtimeChannel | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // ✅ Mémoriser les métadonnées utilisateur
   const { access = [], type } = useMemo(() => {
     return user?.user_metadata || {};
@@ -76,11 +76,14 @@ export const Header = ({
   const { mutate: Logout, isPending } = useLogout();
 
   // ✅ Mémoriser les données utilisateur
-  const userInfo = useMemo(() => ({
-    userName: user.user_metadata.name,
-    userEmail: user.email,
-    profile: user.user_metadata.profile,
-  }), [user.user_metadata.name, user.email, user.user_metadata.profile]);
+  const userInfo = useMemo(
+    () => ({
+      userName: user.user_metadata.name,
+      userEmail: user.email,
+      profile: user.user_metadata.profile,
+    }),
+    [user.user_metadata.name, user.email, user.user_metadata.profile]
+  );
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -90,13 +93,16 @@ export const Header = ({
   const { mutate: updateAllMyView } = useUpdateAllMyMessageView(userId);
 
   // ✅ Mémoriser la fonction markAsRead
-  const markAsRead = useCallback((notificationId: string) => {
-    updatView({
-      param: {
-        mvId: notificationId,
-      },
-    });
-  }, [updatView]);
+  const markAsRead = useCallback(
+    (notificationId: string) => {
+      updatView({
+        param: {
+          mvId: notificationId,
+        },
+      });
+    },
+    [updatView]
+  );
 
   // ✅ Mémoriser markAllAsRead
   const markAllAsRead = useCallback(() => {
@@ -104,24 +110,27 @@ export const Header = ({
   }, [updateAllMyView]);
 
   // ✅ Mémoriser et optimiser handleNewNotification
-  const handleNewNotification = useCallback((newNotif: notifType, userId: string) => {
-    // ✅ Debounce pour éviter les notifications spam
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-    
-    debounceRef.current = setTimeout(() => {
-      queryClient.setQueryData([userId], (oldData: MessageViewDetail[]) => {
-        if (!oldData) return [newNotif];
-        
-        // ✅ Éviter les doublons
-        const exists = oldData.some(item => item.id === newNotif.id);
-        if (exists) return oldData;
-        
-        return [newNotif, ...oldData];
-      });
-    }, 100); // Debounce de 100ms
-  }, [queryClient]);
+  const handleNewNotification = useCallback(
+    (newNotif: notifType, userId: string) => {
+      // ✅ Debounce pour éviter les notifications spam
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+
+      debounceRef.current = setTimeout(() => {
+        queryClient.setQueryData([userId], (oldData: MessageViewDetail[]) => {
+          if (!oldData) return [newNotif];
+
+          // ✅ Éviter les doublons
+          const exists = oldData.some((item) => item.id === newNotif.id);
+          if (exists) return oldData;
+
+          return [newNotif, ...oldData];
+        });
+      }, 100); // Debounce de 100ms
+    },
+    [queryClient]
+  );
 
   // ✅ useEffect optimisé avec cleanup amélioré
   useEffect(() => {
@@ -137,7 +146,7 @@ export const Header = ({
 
         // ✅ Channel avec nom unique pour éviter les conflits
         const channelName = `notifications_${userId}_${Date.now()}`;
-        
+
         channelRef.current = supabaseClientBrowser
           .channel(channelName)
           .on(
@@ -151,7 +160,7 @@ export const Header = ({
             async (payload) => {
               try {
                 const newMessage = payload.new as MessageView;
-                
+
                 // ✅ Vérification supplémentaire côté client
                 if (user.id === newMessage.userId) return;
 
@@ -185,19 +194,13 @@ export const Header = ({
                   }
                 }
               } catch (error) {
-                console.error("Erreur traitement notification:", error);
+                
               }
             }
           )
-          .subscribe((status) => {
-            if (status === 'SUBSCRIBED') {
-              console.log('✅ Subscription notifications active');
-            } else if (status === 'CHANNEL_ERROR') {
-              console.error('❌ Erreur subscription notifications',status);
-            }
-          });
+          .subscribe();
       } catch (error) {
-        console.error("Erreur setupSubscription:", error);
+         
       }
     };
 
@@ -209,7 +212,7 @@ export const Header = ({
         clearTimeout(debounceRef.current);
         debounceRef.current = null;
       }
-      
+
       if (channelRef.current) {
         supabaseClientBrowser.removeChannel(channelRef.current);
         channelRef.current = null;

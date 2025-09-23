@@ -194,14 +194,7 @@ export function EmargementsView() {
             >
               <Edit className="h-3 w-3" />
             </Button>
-            {!emargement.signature && (
-              <Button
-                size="sm"
-                className="bg-emerald-600 hover:bg-emerald-700 h-8 text-xs px-2"
-              >
-                Signer
-              </Button>
-            )}
+             
           </div>
         );
       },
