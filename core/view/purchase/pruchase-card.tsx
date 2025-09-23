@@ -29,15 +29,36 @@ import { PurchaseItems } from "@prisma/client";
 
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Trash2 } from "lucide-react";
+import { Download, Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/core/components/ui/dialog";
 
 export const PurchaseCard = ({ id }: { id: string }) => {
   const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
 
   const purchase = usePurchases().getById(id)!;
 
-  console.log({purchase});
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const [previewTitle, setPreviewTitle] = useState<string>("")
+
+  
+  const downloadImage = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url)
+      const blob = await response.blob()
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = downloadUrl
+      link.download = filename
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(downloadUrl)
+    } catch (error) {
+      console.error("Erreur lors du téléchargement:", error)
+    }
+  }
+
   
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [purchaseItem, setPurchaseItem] = useState<PurchaseItems | null>(null);
@@ -63,6 +84,34 @@ export const PurchaseCard = ({ id }: { id: string }) => {
         loading={loading}
         title={`${purchaseItem?.name} `}
       />
+
+      
+      <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>{previewTitle}</DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center">
+            {previewImage && (
+              <img
+                src={previewImage || "/placeholder.svg"}
+                alt={previewTitle}
+                className="max-w-full max-h-[70vh] object-contain rounded-lg"
+                crossOrigin="anonymous"
+              />
+            )}
+          </div>
+          <div className="flex justify-center gap-2 mt-4">
+            <Button
+              onClick={() => downloadImage(previewImage!, `${previewTitle}.png`)}
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Télécharger
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent className=" sm:w-[550px] p-5 sm:max-w-none">
           <SheetHeader>
