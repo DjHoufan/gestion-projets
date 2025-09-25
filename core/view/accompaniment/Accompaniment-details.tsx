@@ -622,7 +622,7 @@ export const AccompanimentDetails = ({
                     onClick={() =>
                       open(
                         <CustomModal size="md:max-w-[1000px]">
-                          <PurchaseForm Id={data.id}   />
+                          <PurchaseForm Id={data.id} />
                         </CustomModal>
                       )
                     }
@@ -689,10 +689,12 @@ export const AccompanimentDetails = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  Localisations GPS
+                  Partagez des vidéos ou des photos
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600 mt-1">
-                  Points de géolocalisation avec cartes interactives
+                  Mettez ici les différents médias liés à ce groupe. Prenez des
+                  photos lors des visites, enregistrez des vidéos des sessions
+                  de rencontre, etc.
                 </p>
               </div>
               {canAdd && (
