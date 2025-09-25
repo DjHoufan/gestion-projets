@@ -692,9 +692,7 @@ export const AccompanimentDetails = ({
                   Partagez des vidéos ou des photos
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600 mt-1">
-                  Mettez ici les différents médias liés à ce groupe. Prenez des
-                  photos lors des visites, enregistrez des vidéos des sessions
-                  de rencontre, etc.
+                  Prenez des  photos lors des visites, enregistrez des vidéos des sessions de rencontre, etc.
                 </p>
               </div>
               {canAdd && (
