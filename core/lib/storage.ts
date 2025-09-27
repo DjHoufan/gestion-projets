@@ -69,11 +69,25 @@ export const filesUpload = async (files: FormData) => {
   return { success: results, error: false };
 };
 
-export const uploadImage = async (file: FormData, folder: string) => {
+export const uploadImage = async (formData: FormData, folder: string) => {
   const supabase = await createActionServerCookies();
+
+  const file = formData.get("image") as File | null;
+  if (!file) {
+    return { success: null, error: { message: "Aucun fichier sélectionné" } };
+  }
+
+  const ext = file.name.split(".").pop() || "png";
+  const fileName = `${Date.now()}_${Math.random()
+    .toString(36)
+    .substring(2)}.${ext}`;
+
   const { data, error } = await supabase.storage
     .from(folder)
-    .upload(`${Date.now()}_${folder}.png`, file);
+    .upload(fileName, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
 
   return { success: data, error };
 };

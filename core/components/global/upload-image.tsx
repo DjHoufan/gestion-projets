@@ -45,29 +45,42 @@ const ImageUploadComponent = ({
 
     const formData = new FormData();
     formData.append("image", file);
+    formData.append("folder", folder);
 
     startTransition(async () => {
-      const data = await uploadImage(formData, folder);
-
-      if (data?.success) {
-        toast.success({ message: "Image téléchargée avec succès." });
-        const finalUrl = `${UrlPath}/${folder}/${data.success.path}`;
-        onChange(finalUrl);
-        setPreview(finalUrl);
-      } else {
-        toast.error({
-          message: `Échec du téléchargement: ${data?.error?.message || ""}`,
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
         });
+
+        const { success, error } = await res.json();
+
+        if (success) {
+          toast.success({ message: "Image téléchargée avec succès." });
+          const finalUrl = `${UrlPath}/${folder}/${success.path}`;
+          onChange(finalUrl);
+          setPreview(finalUrl);
+        } else {
+          toast.error({
+            message: `Échec du téléchargement: ${error?.message || ""}`,
+          });
+        }
+      } catch (err) {
+        toast.error({ message: "Erreur réseau lors du téléchargement." });
       }
     });
   }, [file, folder, onChange]);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const droppedFile = e.dataTransfer.files?.[0];
-    if (droppedFile) handleFileChange(droppedFile);
-  }, [handleFileChange]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      const droppedFile = e.dataTransfer.files?.[0];
+      if (droppedFile) handleFileChange(droppedFile);
+    },
+    [handleFileChange]
+  );
 
   const handleDelete = useCallback(() => {
     setFile(undefined);
@@ -75,65 +88,83 @@ const ImageUploadComponent = ({
     onChange("");
   }, [onChange]);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) handleFileChange(e.target.files[0]);
-  }, [handleFileChange]);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files?.[0]) handleFileChange(e.target.files[0]);
+    },
+    [handleFileChange]
+  );
 
   // ✅ Composants mémorisés avec useCallback
-  const renderUploadButton = useCallback(() => (
-    <Button
-      onClick={handleUpload}
-      disabled={isPending}
-      size="sm"
-      type="button"
-      className="bg-emerald-600 hover:bg-emerald-700 text-white"
-    >
-      {isPending ? (
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-      ) : (
-        <CloudUpload className="mr-2 h-4 w-4" />
-      )}
-      Télécharger
-    </Button>
-  ), [handleUpload, isPending]);
+  const renderUploadButton = useCallback(
+    () => (
+      <Button
+        onClick={handleUpload}
+        disabled={isPending}
+        size="sm"
+        type="button"
+        className="bg-emerald-600 hover:bg-emerald-700 text-white"
+      >
+        {isPending ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <CloudUpload className="mr-2 h-4 w-4" />
+        )}
+        Télécharger
+      </Button>
+    ),
+    [handleUpload, isPending]
+  );
 
-  const renderImagePreview = useCallback(() => (
-    <div className="relative group">
-      <div className="relative overflow-hidden rounded-lg border-4 transition-all h-[250px] w-[300px] border-slate-100">
-        <Image
-          fill
-          alt="Aperçu de l'image"
-          src={preview || "/placeholder.svg?height=250&width=300"}
-          className="object-cover"
-        />
-        {!isPending && !view && (
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100">
-            <Button
-              variant="destructive"
-              size="icon"
-              className="h-10 w-10 rounded-full"
-              onClick={handleDelete}
-              disabled={isPending}
-            >
-              <Trash className="h-5 w-5" />
-            </Button>
-          </div>
-        )}
-        {/* Bouton en haut à gauche de l'image */}
-        {!view && value.length <= 1 && buttonPosition === "top-left" && (
-          <div className="absolute top-2 left-2 z-10">
-            {renderUploadButton()}
-          </div>
-        )}
-        {/* Bouton en haut à droite de l'image */}
-        {!view && value.length <= 1 && buttonPosition === "top-right" && (
-          <div className="absolute top-2 right-2 z-10">
-            {renderUploadButton()}
-          </div>
-        )}
+  const renderImagePreview = useCallback(
+    () => (
+      <div className="relative group">
+        <div className="relative overflow-hidden rounded-lg border-4 transition-all h-[250px] w-[300px] border-slate-100">
+          <Image
+            fill
+            sizes="300px"
+            alt="Aperçu de l'image"
+            src={preview || "/placeholder.svg?height=250&width=300"}
+            className="object-cover"
+          />
+          {!isPending && !view && (
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100">
+              <Button
+                variant="destructive"
+                size="icon"
+                className="h-10 w-10 rounded-full"
+                onClick={handleDelete}
+                disabled={isPending}
+              >
+                <Trash className="h-5 w-5" />
+              </Button>
+            </div>
+          )}
+          {/* Bouton en haut à gauche de l'image */}
+          {!view && value.length <= 1 && buttonPosition === "top-left" && (
+            <div className="absolute top-2 left-2 z-10">
+              {renderUploadButton()}
+            </div>
+          )}
+          {/* Bouton en haut à droite de l'image */}
+          {!view && value.length <= 1 && buttonPosition === "top-right" && (
+            <div className="absolute top-2 right-2 z-10">
+              {renderUploadButton()}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  ), [preview, isPending, view, value, buttonPosition, handleDelete, renderUploadButton]);
+    ),
+    [
+      preview,
+      isPending,
+      view,
+      value,
+      buttonPosition,
+      handleDelete,
+      renderUploadButton,
+    ]
+  );
 
   return (
     <div className="w-full">
