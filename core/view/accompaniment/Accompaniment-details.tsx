@@ -99,11 +99,20 @@ export const AccompanimentDetails = ({
     if (data.map) maps.setData(data.map);
   }, [data]);
 
-  const totalSum = useMemo(() => {
-    return (
-      purchases.data.reduce((sum, purchase) => sum + purchase.total, 0) ?? 0
-    );
-  }, [purchases.data]);
+  const { totalSum, remainingBudget, usedPercentage } = useMemo(() => {
+    const total =
+      purchases.data?.reduce((sum, purchase) => sum + purchase.total, 0) ?? 0;
+    const budget = data?.budget ?? 0;
+
+    const remaining = budget - total;
+    const used = budget > 0 ? ((budget - remaining) / budget) * 100 : 0;
+
+    return {
+      totalSum: total,
+      remainingBudget: remaining,
+      usedPercentage: used,
+    };
+  }, [purchases.data, data?.budget]);
 
   const handleMapClick = (lat: number, lng: number) => {
     const updatedMap = {
@@ -207,18 +216,25 @@ export const AccompanimentDetails = ({
           <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div className="flex-1 min-w-0">
-                  <p className="text-emerald-100 text-xs sm:text-sm font-medium mb-1">
-                    Budget Alloué
-                  </p>
-                  <p className="text-xl sm:text-2xl font-bold text-white truncate">
-                    {formatCurrency(data?.budget!)}
-                  </p>
-                  <p className="text-xs text-emerald-200 mt-1 flex items-center">
-                    <TrendingUp className="w-3 h-3 mr-1 flex-shrink-0" />
-                    <span className="truncate">Budget disponible</span>
-                  </p>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs text-emerald-200 uppercase tracking-wide mb-1">
+                      Budget Alloué
+                    </p>
+                    <p className="text-lg font-bold text-white">
+                      {formatCurrency(data.budget)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-emerald-200 uppercase tracking-wide mb-1">
+                      Restant
+                    </p>
+                    <p className="text-lg font-bold text-white">
+                      {formatCurrency(remainingBudget)}
+                    </p>
+                  </div>
                 </div>
+
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm ml-2 flex-shrink-0">
                   <h2 className="text-xs sm:text-sm font-bold">Fdj</h2>
                 </div>
