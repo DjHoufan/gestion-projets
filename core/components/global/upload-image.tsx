@@ -49,12 +49,8 @@ const ImageUploadComponent = ({
 
     startTransition(async () => {
       try {
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const { success, error } = await res.json();
+        const data = await uploadImage(formData, folder);
+        const { success, error } = data;
 
         if (success) {
           toast.success({ message: "Image téléchargée avec succès." });
