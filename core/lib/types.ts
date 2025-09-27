@@ -80,6 +80,7 @@ export type Accompaniments = Accompaniment & {
   st: string;
   users: Omit<UserDetail, "cv"> | null;
   members: Member[];
+  file: Files | null;
 };
 
 export type OneAccompaniment = Accompaniment & {

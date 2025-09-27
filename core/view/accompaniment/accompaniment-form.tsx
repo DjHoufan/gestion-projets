@@ -52,7 +52,6 @@ import { Spinner } from "@/core/components/ui/spinner";
 import { useMemo, useState } from "react";
 import { useGetPojet } from "@/core/hooks/use-projet";
 import { UploadMultiFilesMinimal } from "@/core/components/global/multi-uploads";
-import { ScrollArea } from "@/core/components/ui/scroll-area";
 
 export const AccompanimentForm = ({ details }: FormProps<Accompaniments>) => {
   const [porjectId, setPorjectId] = useState<string>("");
@@ -80,6 +79,7 @@ export const AccompanimentForm = ({ details }: FormProps<Accompaniments>) => {
       budget: details?.budget || 0,
       usersid: details?.usersid || "",
       projectId: details?.projectId || "",
+      file: details?.file! || null,
     },
   });
 

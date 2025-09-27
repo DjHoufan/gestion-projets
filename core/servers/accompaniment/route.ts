@@ -30,6 +30,7 @@ const app = new Hono()
         project: true,
         users: true,
         members: true,
+        file: true,
       },
       orderBy: {
         createdAt: "asc",

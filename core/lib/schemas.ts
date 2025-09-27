@@ -203,9 +203,7 @@ export const AccompanimentSchema = z.object({
       required_error: "Le budget est obligatoire",
       invalid_type_error: "Le budget doit être un nombre",
     })
-    .int("Le budget doit être un entier")
-    .positive("Le budget doit être positif")
-    .min(100, "Le budget minimum est de 100"),
+    .int("Le budget doit être un entier"),
   usersid: z
     .string({
       required_error: "L'ID utilisateur est obligatoire",
