@@ -135,59 +135,72 @@ export const AccompanimentDetails = ({
           <h2 className="text-xl font-bold first-letter:text-primary">
             {data.name}
           </h2>
-          <Button
-            onClick={() =>
-              open(
-                <CustomModal>
-                  {data.file.type === "application/pdf" ? (
-                    <iframe
-                      src={data.file.url ?? ""}
-                      width="100%"
-                      height="550px"
-                      style={{ border: "none" }}
-                    >
-                      <a
-                        href={data.file.url ?? "#"}
-                        target="_blank"
-                        rel="noreferrer"
+          <div className="flex justify-center itemces-center gap-3">
+            <Button
+              onClick={() =>
+                open(
+                  <CustomModal>
+                    {data.file.type === "application/pdf" ? (
+                      <iframe
+                        src={data.file.url ?? ""}
+                        width="100%"
+                        height="550px"
+                        style={{ border: "none" }}
                       >
-                        Ouvrir le PDF
-                      </a>
-                    </iframe>
-                  ) : (
-                    <iframe
-                      src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                        data.file.url ?? ""
-                      )}`}
-                      width="100%"
-                      height="550px"
-                    >
-                      This is an embedded
-                      <a
-                        target="_blank"
-                        href={data.file.url ?? "#"}
-                        rel="noreferrer"
+                        <a
+                          href={data.file.url ?? "#"}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Ouvrir le PDF
+                        </a>
+                      </iframe>
+                    ) : (
+                      <iframe
+                        src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                          data.file.url ?? ""
+                        )}`}
+                        width="100%"
+                        height="550px"
                       >
-                        Microsoft Office
-                      </a>{" "}
-                      document, powered by
-                      <a
-                        target="_blank"
-                        href="https://office.com/webapps"
-                        rel="noreferrer"
-                      >
-                        Office
-                      </a>
-                      .
-                    </iframe>
-                  )}
-                </CustomModal>
-              )
-            }
-          >
-            <FaRegFileWord />
-            Consulter le plan d'affaires
-          </Button>
+                        This is an embedded
+                        <a
+                          target="_blank"
+                          href={data.file.url ?? "#"}
+                          rel="noreferrer"
+                        >
+                          Microsoft Office
+                        </a>{" "}
+                        document, powered by
+                        <a
+                          target="_blank"
+                          href="https://office.com/webapps"
+                          rel="noreferrer"
+                        >
+                          Office
+                        </a>
+                        .
+                      </iframe>
+                    )}
+                  </CustomModal>
+                )
+              }
+            >
+              <FaRegFileWord />
+              Consulter le plan d'affaires
+            </Button>
+            <Button>
+              <a
+                href={data.file.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className=" flex justify-center items-center gap-2"
+              >
+                Télécharger
+                <Download className="h-4 w-4" />
+              </a>
+            </Button>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Budget - Vert */}
@@ -692,7 +705,8 @@ export const AccompanimentDetails = ({
                   Partagez des vidéos ou des photos
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600 mt-1">
-                  Prenez des  photos lors des visites, enregistrez des vidéos des sessions de rencontre, etc.
+                  Prenez des photos lors des visites, enregistrez des vidéos des
+                  sessions de rencontre, etc.
                 </p>
               </div>
               {canAdd && (
