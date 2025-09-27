@@ -54,7 +54,7 @@ import { useGetPojet } from "@/core/hooks/use-projet";
 import { UploadMultiFilesMinimal } from "@/core/components/global/multi-uploads";
 
 export const AccompanimentForm = ({ details }: FormProps<Accompaniments>) => {
-  const [porjectId, setPorjectId] = useState<string>("");
+  const [porjectId, setPorjectId] = useState<string>(details?.projectId || "");
   const excludeIds = useMemo(
     () => details?.members?.map((member) => member.id) || [],
     [details?.members]
@@ -64,7 +64,7 @@ export const AccompanimentForm = ({ details }: FormProps<Accompaniments>) => {
   const { mutate: update, isPending: uloading } = useUpdateAccompaniment();
 
   const { data: members, isPending: loadingMembers } =
-    useGetMembersWithoutGroup(porjectId, excludeIds);
+    useGetMembersWithoutGroup(details?.projectId || porjectId, excludeIds);
   const { data: accompanist, isPending: loadingAccompanist } =
     useGetAccompanist();
   const { data: projets, isPending: projetLoading } = useGetPojet();
@@ -117,9 +117,7 @@ export const AccompanimentForm = ({ details }: FormProps<Accompaniments>) => {
   };
 
   return (
-    <div
-      className=" max-h-[80vh] "
-    >
+    <div className=" max-h-[80vh] ">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           {/* Section Informations Générales */}
