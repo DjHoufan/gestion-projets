@@ -77,7 +77,8 @@ export const uploadImage = async (formData: FormData, folder: string) => {
     return { success: null, error: { message: "Aucun fichier sélectionné" } };
   }
 
-  const ext = file.name.split(".").pop() || "png";
+  // On garde l'extension originale du fichier
+  const ext = file.name.split(".").pop();
   const fileName = `${Date.now()}_${Math.random()
     .toString(36)
     .substring(2)}.${ext}`;
