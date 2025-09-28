@@ -147,8 +147,51 @@ export const useGetOneAccompaniment = (id: string) => {
           startDate: new Date(data.project.startDate),
           endDate: new Date(data.project.endDate),
         },
+        conflits: data.conflits.map((item) => ({
+          ...item,
+          users: {
+            ...item.users,
+            dob: new Date(item.users.dob),
+            createdAt: new Date(item.users.createdAt),
+            updatedAt: new Date(item.users.updatedAt),
+          },
+
+          createdAt: new Date(item.createdAt),
+          updatedAt: new Date(item.updatedAt),
+        })),
+        rencontre: data.rencontre.map((item) => ({
+          ...item,
+          visit: {
+            ...item.visit,
+
+            date: new Date(item.visit.date),
+          },
+
+          users: {
+            ...item.users,
+            dob: new Date(item.users.dob),
+            createdAt: new Date(item.users.createdAt),
+            updatedAt: new Date(item.users.updatedAt),
+          },
+
+          signatures: item.signatures.map((s) => ({
+            ...s,
+            date: new Date(s.date),
+
+            member: {
+              ...s.member,
+              dob: new Date(s.member.dob),
+              createdAt: new Date(s.member.createdAt),
+              updatedAt: new Date(s.member.updatedAt),
+            },
+          })),
+        })),
         members: data.members.map((member) => ({
           ...member,
+          emargements: member.emargements.map((e) => ({
+            ...e,
+            date: new Date(e.date),
+          })),
           statut: member.leave ? "oui" : "non",
           createdAt: new Date(member.createdAt),
           updatedAt: new Date(member.updatedAt),
@@ -207,7 +250,6 @@ export const useGetMyAccompaniments = (id: string, admin: string) => {
       const response = await client.api.accompaniment.my[":id"][":admin"].$get({
         param: { id: id, admin: admin },
       });
- 
 
       if (!response.ok) {
         throw new Error(

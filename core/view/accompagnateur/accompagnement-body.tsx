@@ -2,7 +2,7 @@
 
 import {  useState } from "react";
 import { ACSidebar } from "@/core/view/accompagnateur/layout/AC-sidebar";
-import { MainContent } from "@/core/view/accompagnateur/layout/Main-content";
+import { MainContent } from "@/core/view/accompagnateur/layout/AC-content";
 import { RolePermission } from "@/core/lib/types";
 import { useGetOnTeam } from "@/core/hooks/use-teams";
 import { Spinner } from "@/core/components/ui/spinner";

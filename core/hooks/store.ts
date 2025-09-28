@@ -3,6 +3,7 @@ import {
   MemberDetail,
   Plannings,
   PurchaseDetail,
+  RapportDetail,
 } from "@/core/lib/types";
 import { UpdatedData } from "@/core/lib/user";
 import { Files, Visits } from "@prisma/client";
@@ -78,6 +79,7 @@ const createUseItemHook = <T extends { id: string }>() =>
 export const usePurchases = createUseItemsHook<PurchaseDetail>();
 export const useClasseMembers = createUseItemsHook<MemberDetail>();
 export const useMedia = createUseItemsHook<Files>();
+ 
 export const useMaps = createUseItemHook<MapDetail>();
 export const useMyData = createUseItemHook<UpdatedData>();
 

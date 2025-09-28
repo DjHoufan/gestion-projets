@@ -57,6 +57,7 @@ export type Permissions = {
   canReset: boolean;
   canDetails: boolean;
   canView: boolean;
+  rapportView: boolean;
 };
 
 export type CrudPermissions = {
@@ -339,4 +340,12 @@ export interface DashboardStats {
     improvement: number;
     totalPlanned: number;
   };
+}
+
+export interface RapportDetail {
+  members: (Member & {
+    emargements: Emargement[];
+  })[];
+  rencontre: Omit<RencontreDetail, "users" | "accompaniment">[];
+  conflits: Omit<ConflitDetail, "accompaniment" | "users">[];
 }

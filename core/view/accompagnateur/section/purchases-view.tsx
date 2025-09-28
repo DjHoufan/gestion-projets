@@ -173,7 +173,7 @@ export function PurchasesView() {
               className="h-8 w-8 p-0 bg-transparent"
               onClick={() =>
                 open(
-                  <CustomModal>
+                  <CustomModal size="md:max-w-[1000px]">
                     <PurchaseForm details={purchase} />
                   </CustomModal>
                 )

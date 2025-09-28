@@ -82,11 +82,31 @@ const app = new Hono()
         members: {
           include: {
             leave: true,
+            emargements: true,
           },
         },
         purchases: {
           include: {
             purchaseItems: true,
+          },
+        },
+        rencontre: {
+          include: {
+            files: true,
+            signatures: {
+              include: {
+                member: true,
+              },
+            },
+            visit: true,
+            users: true,
+          },
+        },
+        conflits: {
+          include: {
+            files: true,
+            partieImpliques: true,
+            users: true,
           },
         },
         users: true,

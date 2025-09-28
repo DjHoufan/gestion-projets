@@ -30,7 +30,6 @@ import {
   Calendar,
   Package,
   MoreVertical,
-  TrendingUp,
   Activity,
   Download,
   Building,
@@ -72,12 +71,13 @@ import LeafletMap from "@/core/view/maps/leaflet-map";
 import { FaRegFileWord } from "react-icons/fa";
 import MediaForm from "@/core/view/accompaniment/Media-form";
 import { MediaGallery } from "@/core/view/accompaniment/media-card";
+import RapportSection from "@/core/view/accompaniment/rapport-section";
 
 export const AccompanimentDetails = ({
   Id,
   permission,
 }: IdType & PermissionProps) => {
-  const { canAdd, canModify, canDelete } = useMemo(() => {
+  const { canAdd, canModify, canDelete, rapportView } = useMemo(() => {
     return definePermissions(permission, "accompagnements");
   }, [permission]);
 
@@ -99,18 +99,16 @@ export const AccompanimentDetails = ({
     if (data.map) maps.setData(data.map);
   }, [data]);
 
-  const { totalSum, remainingBudget, usedPercentage } = useMemo(() => {
+  const { totalSum, remainingBudget } = useMemo(() => {
     const total =
       purchases.data?.reduce((sum, purchase) => sum + purchase.total, 0) ?? 0;
     const budget = data?.budget ?? 0;
 
     const remaining = budget - total;
-    const used = budget > 0 ? ((budget - remaining) / budget) * 100 : 0;
 
     return {
       totalSum: total,
       remainingBudget: remaining,
-      usedPercentage: used,
     };
   }, [purchases.data, data?.budget]);
 
@@ -359,6 +357,14 @@ export const AccompanimentDetails = ({
               >
                 <span className="hidden sm:inline">Média</span>
               </TabsTrigger>
+              {rapportView && (
+                <TabsTrigger
+                  value="rapport"
+                  className="data-[state=active]:bg-red-600 data-[state=active]:text-white rounded font-medium py-2 sm:py-4 px-2 sm:px-3 text-xs sm:text-sm whitespace-nowrap"
+                >
+                  <span className="hidden sm:inline">Rapport</span>
+                </TabsTrigger>
+              )}
             </TabsList>
           </div>
 
@@ -714,6 +720,8 @@ export const AccompanimentDetails = ({
               />
             </div>
           </TabsContent>
+
+          {/* media Tab - Responsive Header */}
           <TabsContent value="media" className="space-y-4 sm:space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
@@ -748,6 +756,18 @@ export const AccompanimentDetails = ({
               <MediaGallery canDelete={canDelete} />
             </div>
           </TabsContent>
+          {/* rapport Tab - Responsive Header */}
+          {rapportView && (
+            <TabsContent value="rapport" className="space-y-4 sm:space-y-6">
+              <RapportSection
+                mockData={{
+                  conflits: data.conflits ?? [],
+                  members: data.members ?? [],
+                  rencontre: data.rencontre ?? [],
+                }}
+              />
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>

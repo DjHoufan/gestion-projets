@@ -296,6 +296,9 @@ export function definePermissions(
 
   const isAdmin = ["admin", "accompanist", "trainer"].includes(rp.type);
 
+ 
+  
+
   const basePermissions = {
     canAdd: canAdd || isAdmin,
     canModify: canModify || isAdmin,
@@ -303,6 +306,7 @@ export function definePermissions(
     canReset: canReset || isAdmin,
     canDetails: canDetails || isAdmin,
     canView: canView || isAdmin,
+    rapportView: rp.type === "accompanist" ? false : true,
   };
 
   if (pathname === "accompagnements" && rp.type === "accompanist") {
