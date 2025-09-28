@@ -250,7 +250,7 @@ export default function RapportSection({
                               <Eye className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-2xl border-purple-500/20">
+                          <DialogContent className="!max-w-3xl border-purple-500/20">
                             <DialogHeader>
                               <DialogTitle>Détails des Émargements</DialogTitle>
                             </DialogHeader>
@@ -453,7 +453,7 @@ export default function RapportSection({
                               <Eye className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-3xl border-cyan-500/20">
+                          <DialogContent className="!max-w-3xl border-cyan-500/20">
                             <DialogHeader>
                               <DialogTitle>Détails de la Rencontre</DialogTitle>
                             </DialogHeader>
@@ -723,7 +723,7 @@ export default function RapportSection({
                               <Eye className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="!max-w-2xl border-orange-500/20">
+                          <DialogContent className="!max-w-3xl border-orange-500/20">
                             <DialogHeader>
                               <DialogTitle>Détails du Conflit</DialogTitle>
                             </DialogHeader>
