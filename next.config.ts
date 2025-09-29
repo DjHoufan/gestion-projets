@@ -1,20 +1,24 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig: NextConfig & { allowedDevOrigins?: string[] } = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "plus.unsplash.com",
-        pathname: "/**", // Allow all paths
+        pathname: "/**",
       },
-
       {
         protocol: "https",
         hostname: "mrsjolhfnqzmuekkhzde.supabase.co",
-        pathname: "/**", // Allow all paths
+        pathname: "/**",
       },
     ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5gb",
+    },
   },
 };
 

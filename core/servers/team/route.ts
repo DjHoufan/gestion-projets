@@ -13,8 +13,9 @@ import { sessionMiddleware } from "@/core/lib/session-middleware";
 import { db } from "@/core/lib/db";
 import { User } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/core/supabase/client";
-import { profile } from "console";
+ 
 import { unstable_cache } from "next/cache";
+ 
 
 const getData = (id: string, body: User) => ({
   ...body,

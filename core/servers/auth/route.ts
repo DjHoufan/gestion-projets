@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { deleteCookie, setCookie } from "hono/cookie";
+import { deleteCookie } from "hono/cookie";
 
 import { zValidator } from "@hono/zod-validator";
 
@@ -8,7 +8,6 @@ import {
   ResetPasswordSchema,
   SendResetPasswordSchema,
 } from "@/core/lib/schemas";
-
 import { sessionMiddleware } from "@/core/lib/session-middleware";
 import { createActionServerCookies } from "@/core/supabase/server";
 
@@ -21,6 +20,7 @@ const app = new Hono()
     return c.json({ data: user });
   })
   .post("/login", zValidator("json", AuthSchema), async (c) => {
+
     const { email, password } = c.req.valid("json");
 
     const result = await login({ email, password });
