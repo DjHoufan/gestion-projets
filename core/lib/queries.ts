@@ -626,6 +626,15 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
     ),
   };
 
+ 
+
+  // ⚡️ D'abord on supprime les signatures existantes si l'ID existe
+  if (data.id) {
+    await db.signature.deleteMany({
+      where: { rencontreId: data.id },
+    });
+  }
+
   const res = await db.rencontre.upsert({
     where: { id: data.id },
     update: {
@@ -633,18 +642,19 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
       order: newData.order.map((item) => item.value),
       decisions: newData.decisions.map((item) => item.value),
       actions: newData.actions.map((item) => item.value),
+
+      // 🔹 On recrée toutes les signatures après deleteMany
       signatures: {
-        deleteMany: {},
         create: newData.signatures.map((sig) => ({
           date: sig.date,
+          present: sig.present,
           member: { connect: { id: sig.memberId } },
         })),
       },
+
+      // 🔹 On remplace les fichiers existants par les nouveaux
       files: {
-        deleteMany: {},
-        connect: newData.files?.map((f) => ({
-          id: f.id,
-        })),
+        set: newData.files?.map((f) => ({ id: f.id })),
       },
     },
     create: {
@@ -660,9 +670,7 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
         })),
       },
       files: {
-        connect: newData.files?.map((f) => ({
-          id: f.id,
-        })),
+        connect: newData.files?.map((f) => ({ id: f.id })),
       },
     },
     include: {
@@ -675,6 +683,9 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
       },
     },
   });
+
+   
+
   return res;
 };
 

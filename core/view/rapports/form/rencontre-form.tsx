@@ -145,6 +145,7 @@ export function RencontreForm({
       signatures: details?.signatures || [],
       accompanimentId: details?.accompanimentId || "",
       usersId: details?.usersId || userId || "",
+      files: details?.files || [],
     },
   });
 

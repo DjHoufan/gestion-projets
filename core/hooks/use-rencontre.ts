@@ -216,17 +216,23 @@ export const useUpdateRencontre = () => {
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      queryClient.setQueryData<any>(
-        ["accompanist", data?.usersId!],
-        (oldData: any) => {
-          return {
-            ...(oldData ?? {}),
-            rencontres: [...((oldData?.rencontres as any[]) ?? []), data],
-          };
-        }
-      );
-
       if (data) {
+
+      
+        queryClient.setQueryData<any>(
+          ["accompanist", data?.usersId!],
+          (oldData: any) => {
+            const rencontres = oldData?.rencontres ?? [];
+
+            return {
+              ...(oldData ?? {}),
+              rencontres: rencontres.some((r: any) => r.id === data.id)
+                ? rencontres.map((r: any) => (r.id === data.id ? data : r))
+                : [...rencontres, data],
+            };
+          }
+        );
+
         updateFields({
           rencontres: (() => {
             const rencontres = user?.rencontres ?? [];
