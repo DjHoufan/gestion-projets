@@ -272,7 +272,7 @@ model MessageView {
   userId    String @db.Uuid
 
   message Message @relation(fields: [messageId], references: [id])
-  user    Users   @relation(fields: [userId], references: [id])
+  user    Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime
   updatedAt DateTime @updatedAt
@@ -303,9 +303,8 @@ model Planning {
   accompaniments Accompaniment[]
   visit          Visits[]
 
-  usersId   String      @db.Uuid
-  users     Users       @relation(fields: [usersId], references: [id])
- 
+  usersId String @db.Uuid
+  users   Users  @relation(fields: [usersId], references: [id])
 }
 
 model Maps {
@@ -327,7 +326,7 @@ model PurchaseItems {
   name     String
   price    String
   image    String
-  facture    String @default("d")
+  facture  String @default("d")
   quantity Int
 
   date DateTime
@@ -426,9 +425,8 @@ model Rencontre {
   visitId String @db.Uuid
   visit   Visits @relation(fields: [visitId], references: [id])
 
-  usersId    String    @db.Uuid
-  users      Users     @relation(fields: [usersId], references: [id])
- 
+  usersId String @db.Uuid
+  users   Users  @relation(fields: [usersId], references: [id])
 }
 
 model Upload {

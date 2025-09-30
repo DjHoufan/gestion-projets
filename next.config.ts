@@ -16,10 +16,12 @@ const nextConfig: NextConfig & { allowedDevOrigins?: string[] } = {
     ],
   },
   experimental: {
+   
     serverActions: {
-      bodySizeLimit: "5gb",
+      bodySizeLimit: "5gb", 
     },
   },
+ 
 };
 
 export default nextConfig;

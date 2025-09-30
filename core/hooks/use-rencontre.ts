@@ -226,14 +226,17 @@ export const useUpdateRencontre = () => {
         }
       );
 
-      updateFields({
-        rencontres: [
-          //@ts-ignore
-          ...(user?.rencontres || []),
-          //@ts-ignore
-          data,
-        ],
-      });
+      if (data) {
+        updateFields({
+          rencontres: (() => {
+            const rencontres = user?.rencontres ?? [];
+
+            return rencontres.some((r: any) => r.id === data.id)
+              ? rencontres.map((r: any) => (r.id === data.id ? data : r))
+              : [...rencontres, data];
+          })(),
+        });
+      }
 
       close();
 

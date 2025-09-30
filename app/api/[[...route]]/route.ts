@@ -34,7 +34,7 @@ const routes = app
   .route("/trainer", trainer)
   .route("/leave", leave)
   .route("/stats", stats)
-  .route("/classe", classe)
+  .route("/classe", classe);
 
 export const GET = handle(routes);
 export const POST = handle(routes);
