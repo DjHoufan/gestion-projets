@@ -454,10 +454,10 @@ export const ProjectDetail = ({ Id }: IdType) => {
                 </span>
               </div>
               <p className="text-emerald-100 font-medium text-sm">
-                Accompagnateur
+               AGR crées
               </p>
               <p className="text-xs text-emerald-200 mt-1">
-                Accompagnateur actifs
+                Accompagnaments actifs
               </p>
             </div>
 
@@ -466,7 +466,7 @@ export const ProjectDetail = ({ Id }: IdType) => {
                 <Users className="h-8 w-8 text-purple-100" />
                 <span className="text-2xl font-bold">{allMembers.length}</span>
               </div>
-              <p className="text-purple-100 font-medium text-sm">Membres</p>
+              <p className="text-purple-100 font-medium text-sm">Bénéficiaires</p>
               <p className="text-xs text-purple-200 mt-1">
                 Participants totaux
               </p>
