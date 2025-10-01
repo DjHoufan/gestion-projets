@@ -37,7 +37,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     description: "Tableau de bord principal",
   },
   {
-    title: "Projets & Formations",
+    title: "Formations & Projets",
     url: "/projects",
     icon: BookOpen,
     description: "Gestion des formations",
