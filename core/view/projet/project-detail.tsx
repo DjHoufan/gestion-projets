@@ -454,10 +454,10 @@ export const ProjectDetail = ({ Id }: IdType) => {
                 </span>
               </div>
               <p className="text-emerald-100 font-medium text-sm">
-               AGR crées
+                Accompagnateur
               </p>
               <p className="text-xs text-emerald-200 mt-1">
-                Accompagnaments actifs
+                Accompagnateur actifs
               </p>
             </div>
 
@@ -466,7 +466,9 @@ export const ProjectDetail = ({ Id }: IdType) => {
                 <Users className="h-8 w-8 text-purple-100" />
                 <span className="text-2xl font-bold">{allMembers.length}</span>
               </div>
-              <p className="text-purple-100 font-medium text-sm">Bénéficiaires</p>
+              <p className="text-purple-100 font-medium text-sm">
+                Bénéficiaires
+              </p>
               <p className="text-xs text-purple-200 mt-1">
                 Participants totaux
               </p>
@@ -528,9 +530,7 @@ export const ProjectDetail = ({ Id }: IdType) => {
           <div className="p-6 border-b border-gray-100">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                  Groupes d'accompagnement
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">AGR</h2>
                 <p className="text-gray-500">
                   {filteredGroups.length} groupe(s) disponible(s)
                 </p>
