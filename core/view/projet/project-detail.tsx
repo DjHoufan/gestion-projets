@@ -447,7 +447,7 @@ export const ProjectDetail = ({ Id }: IdType) => {
                 <IdCardLanyard className="h-8 w-8 text-emerald-100" />
                 <span className="text-2xl font-bold">
                   {projectData ? (
-                    allAccompanists.length
+                   33
                   ) : (
                     <Spinner variant="ellipsis" />
                   )}
