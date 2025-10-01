@@ -369,7 +369,7 @@ export default function RapportSection({
                                                 }
                                               >
                                                 <Download className="h-3 w-3 mr-1" />
-                                                Télécharger CNI
+                                                Télécharger Facture
                                               </Button>
                                             )}
                                           </div>
