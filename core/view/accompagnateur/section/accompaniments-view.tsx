@@ -76,8 +76,8 @@ export function AccompanimentsView() {
       size: 200,
     },
     {
-      id: "project",
-      header: "Projet",
+      id: "Cohorte",
+      header: "Cohorte",
       cell: ({ row }: any) => {
         const accompaniment = row.original;
         return (
