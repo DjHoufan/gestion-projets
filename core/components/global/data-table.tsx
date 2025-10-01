@@ -153,13 +153,15 @@ export function DataTable<T extends { id: string }>({
 
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      // Application des filtres dynamiques
+      // Filtres dynamiques
       if (filters) {
         for (const f of filters) {
           const val = activeFilters[f.field];
           if (val) {
             const values = getNestedValues(item, f.field);
-            if (!values.some((v) => String(v) === val)) {
+            if (
+              !values.some((v) => String(v).toLowerCase() === val.toLowerCase())
+            ) {
               return false;
             }
           }
@@ -170,6 +172,7 @@ export function DataTable<T extends { id: string }>({
       if (!searchQuery) return true;
       const searchLower = searchQuery.toLowerCase();
 
+      // Vérifie sur le champ principal
       const mainFieldValues = getNestedValues(item, searchField);
       if (
         mainFieldValues.some((val) =>
@@ -181,6 +184,7 @@ export function DataTable<T extends { id: string }>({
         return true;
       }
 
+      // Vérifie sur les champs additionnels
       return additionalSearchFields.some((field) => {
         const values = getNestedValues(item, field);
         return values.some((val) =>

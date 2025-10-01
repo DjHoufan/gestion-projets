@@ -18,7 +18,11 @@ const Rencontre = ({ permission }: Props) => {
       columns={RencontreColumns(permission)}
       searchPlaceholder="Rechercher par nom ou date..."
       searchField="name"
-      additionalSearchFields={["phone", "email", "status"]}
+      additionalSearchFields={[
+        "users.name",
+        "accompaniment.name",
+        "signatures.member.name",
+      ]}
       canAdd={false}
       pageSize={10}
       isPending={rloading}

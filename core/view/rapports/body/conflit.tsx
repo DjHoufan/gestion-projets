@@ -20,7 +20,7 @@ const Conflit = ({permission}:Props) => {
       columns={ConflitColumns(permission)}
       searchPlaceholder="Rechercher par nom ou date..."
       searchField="name"
-      additionalSearchFields={["phone", "email", "status"]}
+      additionalSearchFields={["users.name","accompaniment.name"]}
       canAdd={false}
       pageSize={10}
       isPending={cloading}

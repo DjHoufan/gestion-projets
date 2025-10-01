@@ -18,7 +18,7 @@ const Emargement = ({ permission }: Props) => {
       columns={EmargementColumns(permission)}
       searchPlaceholder="Rechercher par nom ou date..."
       searchField="name"
-      additionalSearchFields={["phone", "email", "status"]}
+      additionalSearchFields={["users.name", "member.name"]}
       canAdd={false}
       pageSize={10}
       isPending={eloading}
