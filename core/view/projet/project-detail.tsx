@@ -437,9 +437,9 @@ export const ProjectDetail = ({ Id }: IdType) => {
                   </div>
                 </div>
               </div>
-              <p className="text-emerald-100 font-medium text-sm">Groupes</p>
+              <p className="text-emerald-100 font-medium text-sm">AGR</p>
               <p className="text-xs text-emerald-200 mt-1">
-                Accompagnements actifs
+                agr actifs
               </p>
             </div>
             <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-xl p-6 text-white">
