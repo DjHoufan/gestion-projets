@@ -329,7 +329,7 @@ export default function RapportSection({
                                                 </p>
                                                 <p className="text-sm text-muted-foreground">
                                                   Montant: {emargement.montant}{" "}
-                                                  €
+                                                  Fdj
                                                 </p>
                                               </div>
                                               <Badge
