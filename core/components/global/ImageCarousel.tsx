@@ -63,7 +63,7 @@ const ImageCarousel = memo(({
   }
 
   return (
-    <Card className="p-0 border-2 border-slate-200 bg-white shadow-2xl overflow-hidden">
+    <Card className="p-0 gap-0 border-2 border-slate-200 bg-white shadow-2xl overflow-hidden">
       <CardHeader className="p-5 border-b border-slate-200 bg-gradient-to-r from-emerald-50 to-teal-50">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ const ImageCarousel = memo(({
               {title}
             </CardTitle>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             {showCounter && (
               <div className="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-semibold">
                 {currentSlide + 1} / {images.length}
