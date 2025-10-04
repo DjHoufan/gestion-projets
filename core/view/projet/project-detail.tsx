@@ -6,8 +6,6 @@ import {
   Phone,
   Mail,
   Users,
-  Plus,
-  Download,
   Search,
   MoreHorizontal,
   TrendingUp,
@@ -48,6 +46,7 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import {
   calculateProgress,
+  calculerAge,
   formatCurrency,
   formatDate,
   getRemainingDays,
@@ -65,14 +64,129 @@ import CustomModal from "@/core/components/wrappeds/custom-modal";
 import LeaveForm from "@/core/view/leave/leave-form";
 import { DataTable } from "@/core/components/global/data-table";
 import { format } from "date-fns";
+import ImageCarousel from "@/core/components/global/ImageCarousel";
+import { Status, StatusIndicator } from "@/core/components/ui/status";
 
 type oneUserDetail = Omit<UserDetail, "cv"> & {
   groupName: string;
 };
 
+type Gallery = {
+  name: string;
+  images: string[];
+};
+
+const galleries: Record<string, Gallery> = {
+  "723c9406-bb69-411a-865b-7f1901b273aa": {
+    name: "Cohorte 1",
+    images: [
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A0316.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A0317.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A0320.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A5486.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A5513.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A5521.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A5557.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A9050.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A9100.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A9149.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A9187.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A9188.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A9196.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A9204.JPG",
+    ],
+  },
+  "7481784a-d14a-49b3-9368-06b8f439836c": {
+    name: "Cohorte 2",
+    images: [
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c2/3M4A8583.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c2/3M4A8586.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c2/3M4A8587.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c2/3M4A8634.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c2/3M4A8644.JPG",
+    ],
+  },
+  "70e34388-7b0d-4189-981d-dfe7232dc723": {
+    name: "Cohorte 3",
+    images: [
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c3/3M4A0021.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c3/3M4A0032.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c3/3M4A0034.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c3/3M4A0035.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c3/3M4A0040.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c3/3M4A0055.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c3/3M4A0065.JPG",
+    ],
+  },
+  "a73ab586-3997-485e-86d4-0a0c683fda9b": {
+    name: "Cohorte 4",
+    images: [
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c4/3M4A9024.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c4/3M4A9032.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c4/3M4A9036.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c4/3M4A9040.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c4/3M4A9042.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c4/3M4A9077.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c4/3M4A9084.JPG",
+    ],
+  },
+  "26759d60-6a6a-4096-936c-cee2b6428d5f": {
+    name: "Cohorte 5",
+    images: [
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c5/3M4A8788.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c5/3M4A8792.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c5/3M4A8793.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c5/3M4A8804.JPG",
+      "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c5/3M4A8844.JPG",
+    ],
+  },
+};
+
 export const ProjectDetail = ({ Id }: IdType) => {
   const { open } = useModal();
   const { data: projectData, isPending } = useGetOneProjet(Id);
+
+  const { totalUsersCount } = useMemo(() => {
+    if (!projectData) {
+      return {
+        totalUsersCount: 0,
+      };
+    }
+
+    const allUsers = [
+      ...projectData.accompaniments.map((acc) => acc.users?.id),
+    ].filter(Boolean);
+
+    const uniqueUsers = new Set(allUsers);
+
+    return {
+      totalUsersCount: uniqueUsers.size,
+    };
+  }, [projectData]);
+
+  const { uniqueUsers } = useMemo(() => {
+    if (!projectData) {
+      return {
+        uniqueUsers: [],
+      };
+    }
+
+    const allUsers = projectData.accompaniments
+      .map((acc) => acc.users) // <-- récupère directement l'objet user
+      .filter(Boolean); // <-- enlève les valeurs null/undefined
+
+    // Supprimer les doublons en se basant sur l'id
+    const usersMap = new Map();
+    for (const user of allUsers) {
+      if (!usersMap.has(user?.id!)) {
+        usersMap.set(user?.id!, user);
+      }
+    }
+
+    return {
+      uniqueUsers: Array.from(usersMap.values()),
+    };
+  }, [projectData]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [groupSearchTerm, setGroupSearchTerm] = useState("");
@@ -359,9 +473,118 @@ export const ProjectDetail = ({ Id }: IdType) => {
     return [single, multiple];
   }, [projectData?.accompaniments]);
 
+  const Userscolumns = [
+    {
+      id: "user",
+      header: "Utilisateur",
+      cell: ({ row }: any) => {
+        const user = row.original;
+        return (
+          <div className="flex items-center gap-3">
+            <Avatar className="h-8 w-8 border border-primary-200">
+              <AvatarImage src={user.profile || "/placeholder.svg"} />
+              <AvatarFallback className="bg-gradient-to-br from-primary-400 to-primary-600 text-white">
+                {user.name
+                  .split(" ")
+                  .map((n: string) => n[0])
+                  .join("")}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="font-medium text-primary-900">{user.name}</span>
+              <span className="text-xs text-primary-600">{user.email}</span>
+            </div>
+          </div>
+        );
+      },
+      size: 250,
+    },
+    {
+      id: "phone",
+      header: "Téléphone",
+      accessorKey: "phone",
+      cell: ({ row }: any) => <span>{row.original.phone}</span>,
+      size: 150,
+    },
+    {
+      id: "address",
+      header: "Adresse",
+      accessorKey: "address",
+      cell: ({ row }: any) => <span>{row.original.address}</span>,
+      size: 200,
+    },
+    {
+      id: "age",
+      header: "Âge",
+      cell: ({ row }: any) => <span>{calculerAge(row.original.dob)} ans</span>,
+      size: 100,
+    },
+    {
+      id: "gender",
+      header: "Genre",
+      cell: ({ row }: any) => {
+        const gender = row.original.gender;
+        const genderMap = {
+          homme: {
+            label: "Homme",
+            class: "bg-primary-100 text-primary-800 border-primary-200",
+          },
+          femme: {
+            label: "Femme",
+            class: "bg-secondary-100 text-secondary-800 border-secondary-200",
+          },
+        };
+
+        const genderConfig = genderMap[gender as keyof typeof genderMap] || {
+          label: gender,
+          class: "bg-gray-100 text-gray-800 border-gray-200",
+        };
+
+        return (
+          <Badge
+            variant="outline"
+            className={`${genderConfig.class} font-medium capitalize`}
+          >
+            {genderConfig.label}
+          </Badge>
+        );
+      },
+      size: 120,
+    },
+    {
+      id: "status",
+      header: "Statut",
+      cell: ({ row }: any) => {
+        const status = row.original.status;
+
+        return status === "enabled" ? (
+          <Status status="online">
+            <StatusIndicator />
+            Actif
+          </Status>
+        ) : (
+          <Status status="offline">
+            <StatusIndicator />
+            Désactivé
+          </Status>
+        );
+      },
+      size: 120,
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+      <ImageCarousel
+        images={galleries[Id].images}
+        title="Album Photo - Programme de Formation"
+        description={`${galleries[Id].name} - Programme de Formation`}
+        autoPlayInterval={4000}
+        height="700px"
+        showCounter={true}
+        showProgressBar={true}
+      />
+      <div className=" mx-auto space-y-8 mt-5">
         {/* Header Section */}
         <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-emerald-900 rounded-2xl shadow-lg border border-gray-200 p-8 text-white">
           <div className="flex items-center justify-between mb-6">
@@ -438,16 +661,14 @@ export const ProjectDetail = ({ Id }: IdType) => {
                 </div>
               </div>
               <p className="text-emerald-100 font-medium text-sm">AGR</p>
-              <p className="text-xs text-emerald-200 mt-1">
-                agr actifs
-              </p>
+              <p className="text-xs text-emerald-200 mt-1">agr actifs</p>
             </div>
             <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-xl p-6 text-white">
               <div className="flex items-center justify-between mb-3">
                 <IdCardLanyard className="h-8 w-8 text-emerald-100" />
                 <span className="text-2xl font-bold">
                   {projectData ? (
-                   33
+                    totalUsersCount
                   ) : (
                     <Spinner variant="ellipsis" />
                   )}
@@ -466,7 +687,9 @@ export const ProjectDetail = ({ Id }: IdType) => {
                 <Users className="h-8 w-8 text-purple-100" />
                 <span className="text-2xl font-bold">{allMembers.length}</span>
               </div>
-              <p className="text-purple-100 font-medium text-sm">Bénéficiaires</p>
+              <p className="text-purple-100 font-medium text-sm">
+                Bénéficiaires
+              </p>
               <p className="text-xs text-purple-200 mt-1">
                 Participants totaux
               </p>
@@ -716,136 +939,18 @@ export const ProjectDetail = ({ Id }: IdType) => {
           isPending={isPending}
         />
 
-        {/* Accompanists Table */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-          <div className="p-6 border-b border-gray-100">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                  Accompagnateurs
-                </h2>
-                <p className="text-gray-500">
-                  {searchTerm
-                    ? `${filteredAccompanists.length} accompagnateur(s) trouvé(s)`
-                    : `${allAccompanists.length} accompagnateurs au total`}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            {projectData ? (
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-gray-50">
-                    <TableHead className="font-semibold text-gray-900">
-                      Accompagnateur
-                    </TableHead>
-                    <TableHead className="font-semibold text-gray-900">
-                      Contact
-                    </TableHead>
-                    <TableHead className="font-semibold text-gray-900">
-                      Groupe
-                    </TableHead>
-                    <TableHead className="font-semibold text-gray-900">
-                      Genre
-                    </TableHead>
-                    <TableHead className="font-semibold text-gray-900">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(searchTerm ? filteredAccompanists : allAccompanists).map(
-                    (accompanist, index) => (
-                      <TableRow
-                        key={index}
-                        className="hover:bg-gray-50 transition-colors"
-                      >
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10">
-                              <AvatarImage
-                                src={accompanist.profile || "/placeholder.svg"}
-                              />
-                              <AvatarFallback className="bg-slate-100 text-slate-700 font-semibold">
-                                {accompanist.name
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium text-gray-900">
-                                {accompanist.name}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {accompanist.address}
-                              </p>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2 text-sm">
-                              <Mail className="h-3 w-3 text-gray-400" />
-                              <span className="text-gray-600 truncate max-w-[180px]">
-                                {accompanist.email}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <Phone className="h-3 w-3 text-gray-400" />
-                              <span className="text-gray-600">
-                                {accompanist.phone}
-                              </span>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <span className="font-medium text-gray-700">
-                            {accompanist.groupName}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="text-xs">
-                            {accompanist.gender}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
-                                <Eye className="h-4 w-4 mr-2" />
-                                Voir profil
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Edit className="h-4 w-4 mr-2" />
-                                Modifier
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600">
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Supprimer
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            ) : (
-              <div className="w-full  flex justify-center items-center">
-                <Spinner variant="bars" className="text-primary" size={50} />
-              </div>
-            )}
-          </div>
-        </div>
+        <DataTable<UserDetail>
+          title="Accompagnateurs"
+          description={`${uniqueUsers.length}  accompagnateurs au total`}
+          data={uniqueUsers}
+          columns={Userscolumns}
+          searchPlaceholder="Rechercher par nom ou date..."
+          searchField="name"
+          additionalSearchFields={["phone", "email", "status"]}
+          canAdd={false}
+          pageSize={10}
+          isPending={isPending}
+        />
       </div>
     </div>
   );
