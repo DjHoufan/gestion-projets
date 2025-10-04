@@ -151,9 +151,11 @@ export const UploadMultiFilesMinimal = ({
             prevFiles.filter((file) => file.id !== index)
           );
         } else if (data?.error) {
+          console.log("----->",data);
+
           toast.error({
             message:
-              "Une erreur est survenue lors de la suppression du document.",
+              "Une erreur est survenue lors de la suppression du document. akis",
           });
         }
       });

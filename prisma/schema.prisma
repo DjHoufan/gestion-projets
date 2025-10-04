@@ -158,8 +158,8 @@ model Accompaniment {
 
   members Member[]
 
-  fileId String @db.Uuid
-  file   Files  @relation("AccompanimentFile", fields: [fileId], references: [id])
+  fileId String? @db.Uuid
+  file   Files?  @relation("AccompanimentFile", fields: [fileId], references: [id])
 
   media Files[] @relation("AccompanimentMedia")
 

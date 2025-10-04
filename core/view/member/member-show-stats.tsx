@@ -20,6 +20,7 @@ import {
   Calendar,
   ChevronsUpDown,
   Check,
+  BarChart3,
 } from "lucide-react";
 import { MemberDetail } from "@/core/lib/types";
 import {
@@ -37,14 +38,275 @@ import {
   CommandList,
 } from "@/core/components/ui/command";
 import { cn } from "@/core/lib/utils";
+import type { ApexOptions } from "apexcharts";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-type m = MemberDetail & {
+ type mDetails = MemberDetail & {
+  accompaniment: {
+    name: string;
+  } | null;
   statut: string;
 };
 
-export const DataAnalytics = ({ typedData }: { typedData: m[] }) => {
+const COLOR_PALETTE = [
+  "#0ea5e9",
+  "#8b5cf6",
+  "#f59e0b",
+  "#10b981",
+  "#ef4444",
+  "#ec4899",
+  "#14b8a6",
+  "#06b6d4",
+  "#a855f7",
+  "#f97316",
+  "#22c55e",
+  "#f43f5e",
+  "#d946ef",
+  "#0891b2",
+  "#6366f1",
+  "#eab308",
+  "#16a34a",
+  "#dc2626",
+  "#c026d3",
+  "#0284c7",
+  "#818cf8",
+  "#facc15",
+  "#15803d",
+  "#b91c1c",
+  "#a21caf",
+  "#0369a1",
+  "#4f46e5",
+  "#fde047",
+  "#059669",
+  "#991b1b",
+  "#86198f",
+  "#075985",
+  "#3b82f6",
+  "#fef08a",
+  "#047857",
+  "#7f1d1d",
+  "#701a75",
+  "#0c4a6e",
+  "#2563eb",
+  "#fef9c3",
+  "#065f46",
+  "#450a0a",
+  "#581c87",
+  "#082f49",
+  "#1d4ed8",
+  "#fefce8",
+  "#064e3b",
+  "#1e3a8a",
+  "#fef3c7",
+];
+
+
+export function useUniqueAccompanimentCount(
+  data: mDetails[] | undefined
+): number {
+  return useMemo(() => {
+    if (!data || !Array.isArray(data)) return 0;
+
+    const uniqueIds = new Set<string>();
+
+    data.forEach((item: mDetails) => {
+      if (
+        item.accompanimentId &&
+        item.accompanimentId !== "null" &&
+        item.accompanimentId !== "N/A" &&
+        item.accompanimentId.trim() !== ""
+      ) {
+        uniqueIds.add(item.accompanimentId);
+      }
+    });
+
+    return uniqueIds.size;
+  }, [data]);
+}
+
+
+
+export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
+     const totalAcc = useUniqueAccompanimentCount(typedData);
+
+
+  const attestationData = useMemo(() => {
+    const attestationCounts: Record<string, number> = {};
+
+    typedData.forEach((item) => {
+      const attestation = item.attestation || "N/A";
+      attestationCounts[attestation] =
+        (attestationCounts[attestation] || 0) + 1;
+    });
+
+    return {
+      labels: Object.keys(attestationCounts),
+      series: Object.values(attestationCounts),
+    };
+  }, []);
+
+  const disabilityData = useMemo(() => {
+    let pasDeHandicap = 0;
+    let avecHandicap = 0;
+
+    typedData.forEach((item) => {
+      if (item.disability === "Pas de Handicap") {
+        pasDeHandicap++;
+      } else {
+        avecHandicap++;
+      }
+    });
+
+    const total = pasDeHandicap + avecHandicap;
+    const pasDeHandicapPercent = total > 0 ? (pasDeHandicap / total) * 100 : 0;
+    const avecHandicapPercent = total > 0 ? (avecHandicap / total) * 100 : 0;
+
+    return {
+      categories: ["Sans Handicap", "Avec Handicap"],
+      series: [pasDeHandicapPercent, avecHandicapPercent],
+      counts: [pasDeHandicap, avecHandicap],
+    };
+  }, []);
+
+  // Disability Chart Options (Bar Chart with Percentages)
+  const disabilityChartOptions: ApexOptions = {
+    chart: {
+      type: "bar",
+      fontFamily: "inherit",
+      toolbar: {
+        show: false,
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "50%",
+        borderRadius: 8,
+        dataLabels: {
+          position: "top",
+        },
+      },
+    },
+    dataLabels: {
+      enabled: true,
+      offsetY: -20,
+      formatter: (val: number) => `${val.toFixed(1)}%`,
+      style: {
+        fontSize: "14px",
+        fontWeight: "bold",
+        colors: ["#304758"],
+      },
+    },
+    xaxis: {
+      categories: disabilityData.categories,
+      labels: {
+        style: {
+          fontSize: "14px",
+          fontWeight: 600,
+        },
+      },
+    },
+    yaxis: {
+      title: {
+        text: "Pourcentage (%)",
+        style: {
+          fontSize: "14px",
+          fontWeight: 600,
+        },
+      },
+      labels: {
+        formatter: (val: number) => `${val.toFixed(0)}%`,
+      },
+      max: 100,
+    },
+    tooltip: {
+      y: {
+        formatter: (val: number, opts: any) => {
+          const count = disabilityData.counts[opts.dataPointIndex];
+          return `${val.toFixed(1)}% (${count} personnes)`;
+        },
+      },
+    },
+    colors: ["#10b981", "#ef4444"],
+    fill: {
+      type: "gradient",
+      gradient: {
+        shade: "light",
+        type: "vertical",
+        shadeIntensity: 0.5,
+        gradientToColors: ["#34d399", "#f87171"],
+        opacityFrom: 0.85,
+        opacityTo: 0.85,
+      },
+    },
+  };
+
+  // Attestation Bar Chart Options
+  const attestationBarChartOptions: ApexOptions = {
+    chart: {
+      type: "bar",
+      fontFamily: "inherit",
+      toolbar: {
+        show: true,
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        borderRadius: 8,
+        distributed: true,
+        dataLabels: {
+          position: "top",
+        },
+      },
+    },
+    dataLabels: {
+      enabled: true,
+      offsetX: 30,
+      style: {
+        fontSize: "12px",
+        fontWeight: "bold",
+        colors: ["#fff"],
+      },
+    },
+    xaxis: {
+      categories: attestationData.labels,
+      title: {
+        text: "Nombre de bénéficiaires",
+        style: {
+          fontSize: "14px",
+          fontWeight: 600,
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          fontSize: "12px",
+        },
+      },
+    },
+    colors: COLOR_PALETTE,
+    fill: {
+      type: "solid",
+      opacity: 0.9,
+    },
+    legend: {
+      show: false,
+    },
+    grid: {
+      borderColor: "#e5e7eb",
+    },
+  };
+
+  const disabilityChartSeries = [
+    {
+      name: "Pourcentage",
+      data: disabilityData.series,
+    },
+  ];
+
   const [selectedProject, setSelectedProject] =
     useState<string>("Tous les projets");
 
@@ -724,10 +986,26 @@ export const DataAnalytics = ({ typedData }: { typedData: m[] }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">
-                  Total Projets
+                  Total de Cohorte
                 </p>
                 <p className="text-3xl font-bold text-orange-600">
                   {Object.keys(projectTotals).length}
+                </p>
+              </div>
+              <FolderOpen className="h-8 w-8 text-orange-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Total AGR
+                </p>
+                <p className="text-3xl font-bold text-orange-600">
+                  {totalAcc}
                 </p>
               </div>
               <FolderOpen className="h-8 w-8 text-orange-600" />
@@ -794,6 +1072,25 @@ export const DataAnalytics = ({ typedData }: { typedData: m[] }) => {
         </Card>
       </div>
 
+      <Card className="border-slate-200 bg-white shadow-xl">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-slate-900">
+            <BarChart3 className="h-6 w-6 text-green-600" />
+            Situation de Handicap
+          </CardTitle>
+          <p className="text-sm text-slate-600">
+            Comparaison des bénéficiaires
+          </p>
+        </CardHeader>
+        <CardContent>
+          <Chart
+            options={disabilityChartOptions}
+            series={disabilityChartSeries}
+            type="bar"
+            height={400}
+          />
+        </CardContent>
+      </Card>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

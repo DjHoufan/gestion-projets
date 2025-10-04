@@ -27,6 +27,11 @@ const app = new Hono()
     const data = await db.member.findMany({
       include: {
         leave: true,
+        accompaniment: {
+          select: {
+            name: true,
+          },
+        },
         project: {
           select: {
             id: true,

@@ -165,7 +165,8 @@ export const useUpdateProjet = () => {
     },
     onSuccess: () => {
       toast.success({ message: "Le project a été modifié avec succès" });
-      queryClient.invalidateQueries({ queryKey: [QueryKeyString.projet] });
+        queryClient.invalidateQueries({ queryKey: [QueryKeyString.projet] });
+
       close();
     },
     onError: (err) => {

@@ -51,8 +51,11 @@ import {
   TabsTrigger,
 } from "@/core/components/ui/tabs";
 import { DataAnalytics } from "@/core/view/member/member-show-stats";
- 
+
 import { definePermissions } from "@/core/lib/utils";
+
+
+
 
 export const MemberBody = ({ permission }: PermissionProps) => {
   const { canAdd, canModify, canDelete, canDetails } = useMemo(() => {

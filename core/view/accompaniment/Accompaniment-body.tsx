@@ -12,32 +12,22 @@ import {
 import { Badge } from "@/core/components/ui/badge";
 
 import {
-  PlusIcon,
   UsersIcon,
   MapPinIcon,
   PhoneIcon,
   TrendingUpIcon,
   CalendarIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   SparklesIcon,
   TrashIcon,
   EditIcon,
   NotepadTextIcon,
-  FilterIcon,
   Banknote,
-  MoreVerticalIcon,
   LucideIcon,
   LinkIcon,
   ChevronsLeftRightEllipsis,
   UserSquare,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/core/components/ui/dropdown-menu";
+
 import {
   useDeletAccompaniment,
   useGetAccompaniments,
@@ -48,17 +38,40 @@ import { AccompanimentForm } from "@/core/view/accompaniment/accompaniment-form"
 import { Accompaniments, PermissionProps } from "@/core/lib/types";
 import { DeleteConfirmation } from "@/core/components/global/delete-confirmation";
 import { Spinner } from "@/core/components/ui/spinner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/core/components/ui/select";
+
 import { useRouter } from "next/navigation";
 import { definePermissions } from "@/core/lib/utils";
 import { Project } from "@prisma/client";
 import { DataTable } from "@/core/components/global/data-table";
+
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/core/components/ui/chart";
+import {
+  Bar,
+  BarChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+import { Users, TrendingUp, CheckCircle2, UserCheck } from "lucide-react";
+
+const chartData = [
+  {
+    name: "C1",
+    value: 17.44,
+    label: "94/539",
+    percentage: "17.44%",
+    fill: "#10b981",
+  },
+  { name: "C2", value: 0, label: "0/539", percentage: "0%", fill: "#34d399" },
+  { name: "C3", value: 0, label: "0/539", percentage: "0%", fill: "#6ee7b7" },
+  { name: "C4", value: 0, label: "0/539", percentage: "0%", fill: "#a7f3d0" },
+  { name: "C5", value: 0, label: "0/539", percentage: "0%", fill: "#d1fae5" },
+];
 
 type AccompagnementProps = Accompaniments & {
   project: Project;
@@ -330,17 +343,19 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
 
       <div className="min-h-screen bg-gray-50">
         {/* Header responsive */}
-        <div className="shadow-sm border-b bg-gradient-to-br from-emerald-100 to-orange-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-              <div className="min-w-0">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                  Gestion des Accompagnements
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+          <div className="mx-auto max-w-7xl space-y-6 mb-5">
+            <div className="flex justify-between items-center">
+              <div className="space-y-2">
+                <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-[linear-gradient(180deg,#064e3b_0%,#065f46_45%,#047857_100%)]">
+                  Tableau de Bord AGR
                 </h1>
-                <p className="mt-2 text-sm sm:text-base text-gray-600">
-                  Gérez et suivez tous vos accompagnements en un seul endroit
+                <p className="text-emerald-700">
+                  Statistiques et suivi des activités
                 </p>
               </div>
+
               {canAdd && (
                 <Button
                   onClick={() =>
@@ -357,37 +372,227 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 </Button>
               )}
             </div>
-          </div>
-        </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-          {/* Statistiques responsives */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
-            <StatsCard
-              title="Total Accompagnements"
-              value={data?.length!}
-              description="+2 depuis le mois dernier"
-              icon={UsersIcon}
-              isPending={isPending}
-            />
-            <StatsCard
-              title="En Cours"
-              value={activeCount}
-              description="Accompagnements actifs"
-              icon={TrendingUpIcon}
-              isPending={isPending}
-              className="text-emerald-600"
-            />
-            <StatsCard
-              title="Terminés"
-              value={completedCount}
-              description="Accompagnements finalisés"
-              icon={CalendarIcon}
-              isPending={isPending}
-              className="text-blue-600"
-            />
-          </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-purple-900">
+                    Nombre d'AGR
+                  </CardTitle>
+                  <Users className="h-5 w-5 text-purple-600" />
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-6xl font-black text-purple-700">539</div>
+                  <p className="text-sm font-semibold text-purple-600">
+                    Total des AGR
+                  </p>
+                </CardContent>
+              </Card>
 
+              <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-orange-900">
+                    AGR Démarrés
+                  </CardTitle>
+                  <TrendingUp className="h-5 w-5 text-orange-600" />
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="text-3xl font-bold text-orange-700">299</div>
+                  <div className="pt-2 border-t border-orange-200">
+                    <p className="text-xs text-orange-600 mb-1">de 539 AGR</p>
+                    <div className="text-4xl font-black text-orange-700">
+                      55.47%
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-blue-900">
+                    AGR Suivis
+                  </CardTitle>
+                  <CheckCircle2 className="h-5 w-5 text-blue-600" />
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="text-3xl font-bold text-blue-700">94</div>
+                  <div className="pt-2 border-t border-blue-200">
+                    <p className="text-xs text-blue-600 mb-1">de 539 AGR</p>
+                    <div className="text-4xl font-black text-blue-700">
+                      17.44%
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-pink-200 bg-gradient-to-br from-pink-50 to-pink-100 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-pink-900">
+                    Projets
+                  </CardTitle>
+                  <UserCheck className="h-5 w-5 text-pink-600" />
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-6xl font-black text-pink-700">776</div>
+                  <p className="text-sm font-semibold text-pink-600">
+                    Accompagnement
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card
+                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
+                style={{
+                  background:
+                    "linear-gradient(180deg, #064e3b 0%, #065f46 45%, #047857 100%)",
+                }}
+              >
+                <CardHeader className="border-b border-emerald-400/20 pb-4">
+                  <CardTitle className="text-2xl font-bold text-white">
+                    Équipe d'Accompagnement
+                  </CardTitle>
+                  <CardDescription className="text-emerald-100">
+                    Ressources humaines déployées
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="grid gap-4">
+                    {/* Accompagnateurs */}
+                    <div className="bg-emerald-800/40 backdrop-blur-sm rounded-xl p-4 border border-emerald-400/20 hover:border-emerald-400/40 transition-all">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-semibold text-emerald-100">
+                          Accompagnateurs
+                        </span>
+                        <div className="px-3 py-1 bg-emerald-500 rounded-full">
+                          <span className="text-xs font-bold text-white">
+                            90.4%
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-end gap-3">
+                        <span className="text-5xl font-black text-white">
+                          104
+                        </span>
+                        <span className="text-emerald-200 text-sm mb-2">
+                          agents
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Superviseurs */}
+                    <div className="bg-emerald-800/40 backdrop-blur-sm rounded-xl p-4 border border-emerald-400/20 hover:border-emerald-400/40 transition-all">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-semibold text-emerald-100">
+                          Superviseurs
+                        </span>
+                        <div className="px-3 py-1 bg-emerald-500 rounded-full">
+                          <span className="text-xs font-bold text-white">
+                            9.6%
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-end gap-3">
+                        <span className="text-5xl font-black text-white">
+                          11
+                        </span>
+                        <span className="text-emerald-200 text-sm mb-2">
+                          agents
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Total */}
+                    <div className="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl p-5 shadow-xl border border-emerald-400/30">
+                      <div className="text-center space-y-2">
+                        <p className="text-emerald-100 text-sm font-medium uppercase tracking-wide">
+                          Total Équipe
+                        </p>
+                        <p className="text-6xl font-black text-white">115</p>
+                        <p className="text-emerald-200 text-xs">
+                          Professionnels mobilisés
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card
+                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow"
+                style={{
+                  background:
+                    "linear-gradient(180deg, #064e3b 0%, #065f46 45%, #047857 100%)",
+                }}
+              >
+                <CardHeader>
+                  <CardTitle className="text-white">
+                    Répartition par Cohorte
+                  </CardTitle>
+                  <CardDescription className="text-emerald-100">
+                    Pourcentage de suivi (sur 539)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer
+                    config={{
+                      value: {
+                        label: "Pourcentage",
+                        color: "hsl(160, 84%, 39%)",
+                      },
+                    }}
+                    className="h-[250px]"
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={chartData}>
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          stroke="rgba(255, 255, 255, 0.1)"
+                        />
+                        <XAxis
+                          dataKey="name"
+                          stroke="#ffffff"
+                          tick={{ fill: "#ffffff" }}
+                        />
+                        <YAxis
+                          stroke="#ffffff"
+                          tick={{ fill: "#ffffff" }}
+                          label={{
+                            value: "%",
+                            angle: -90,
+                            position: "insideLeft",
+                            fill: "#ffffff",
+                          }}
+                        />
+                        <ChartTooltip
+                          content={<ChartTooltipContent />}
+                          cursor={{ fill: "rgba(255, 255, 255, 0.1)" }}
+                        />
+                        <Bar
+                          dataKey="value"
+                          radius={[8, 8, 0, 0]}
+                          maxBarSize={60}
+                          fill="#10b981"
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+                  <div className="mt-4 grid grid-cols-5 gap-2 text-center">
+                    {chartData.map((item) => (
+                      <div key={item.name} className="space-y-1">
+                        <p className="text-xs font-medium text-emerald-100">
+                          {item.name}
+                        </p>
+                        <p className="text-lg font-bold text-white">
+                          {item.percentage}
+                        </p>
+                        <p className="text-xs text-emerald-200">{item.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
           {/* Liste des accompagnements */}
           <Card className="shadow-sm">
             <CardContent className="px-4 sm:px-6">

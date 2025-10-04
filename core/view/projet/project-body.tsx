@@ -8,12 +8,19 @@ import {
   List,
   MoreHorizontal,
   Edit,
-  Calendar,
   Trash,
   GanttChart,
   Eye,
   FolderKanban,
   X,
+  Users,
+  UserX,
+  Calendar,
+  GraduationCap,
+  MapPin,
+  Briefcase,
+  Clock,
+  TrendingUp,
 } from "lucide-react";
 
 import { StatsCards } from "@/core/view/projet/stats-cards";
@@ -51,17 +58,18 @@ import {
   createExcelExporter,
   DataTable,
 } from "@/core/components/global/data-table";
-import {
-  CrudPermissions,
-  PermissionProps,
-  ProjectDetail,
-} from "@/core/lib/types";
+import { PermissionProps, ProjectDetail } from "@/core/lib/types";
 import { DeleteConfirmation } from "../../components/global/delete-confirmation";
 import { GranttView } from "@/core/view/projet/gantt-view";
 import { useRouter } from "next/navigation";
 import { useSelectProject } from "@/core/hooks/store";
-import { Card, CardContent } from "@/core/components/ui/card";
 import SearchSelect from "@/core/components/global/search_select";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/core/components/ui/card";
 
 export const ProjectBody = ({ permission }: PermissionProps) => {
   const { canAdd, canModify, canDelete, canDetails } = useMemo(() => {
@@ -170,6 +178,21 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
       },
     },
   ];
+
+  const stats = {
+    totalBeneficiaires: 1000,
+    abandons: 36,
+    tauxAbandon: 3.6,
+    dureeJours: 141,
+    dureeJoursOuvrables: Math.floor(141 * (5 / 7)), // Jours ouvrables (hors vendredi et samedi)
+    nombreClasses: 37,
+    nombreFormateurs: 46,
+    communeBalballa: 71,
+    communeRasdika: 29,
+    totalAGR: 541,
+    enAttenteAccompagnement: 775,
+    tauxRetention: 96.4,
+  };
 
   const exportProjects = createExcelExporter(
     {
@@ -315,7 +338,256 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
         </div>
 
         {/* Stats Cards */}
-        <StatsCards projects={projects ?? []} isPending={isPending} />
+
+        <div className="mx-auto max-w-7xl space-y-6">
+           
+          {/* Main Stats Grid */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {/* Total Bénéficiaires */}
+            <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-blue-900">
+                  Total des Bénéficiaires
+                </CardTitle>
+                <Users className="h-5 w-5 text-blue-600" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="text-4xl font-bold text-blue-700">
+                  {stats.totalBeneficiaires.toLocaleString()}
+                </div>
+                <p className="text-sm font-semibold text-blue-600">
+                  Participants au programme
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Abandons */}
+            <Card className="border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-amber-900">
+                  Taux d'Abandon
+                </CardTitle>
+                <UserX className="h-5 w-5 text-amber-600" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="text-4xl font-bold text-amber-700">
+                  {stats.tauxAbandon}%
+                </div>
+                <p className="text-sm font-semibold text-amber-600">
+                  {stats.abandons} abandons
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Durée */}
+            <Card className="border-cyan-200 bg-gradient-to-br from-cyan-50 to-cyan-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-cyan-900">
+                  Durée Totale
+                </CardTitle>
+                <Calendar className="h-5 w-5 text-cyan-600" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="text-4xl font-bold text-cyan-700">
+                  {stats.dureeJoursOuvrables}
+                </div>
+                <p className="text-sm font-semibold text-cyan-600">
+                  Jours ouvrables
+                </p>
+                <p className="text-xs text-cyan-500">
+                  ({stats.dureeJours} jours calendaires)
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Classes */}
+            <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-violet-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-violet-900">
+                  Nombre de Classes
+                </CardTitle>
+                <GraduationCap className="h-5 w-5 text-violet-600" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="text-4xl font-bold text-violet-700">
+                  {stats.nombreClasses}
+                </div>
+                <p className="text-sm font-semibold text-violet-600">
+                  Classes actives
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Secondary Stats */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* Formateurs */}
+            <Card className="border-teal-200 bg-gradient-to-br from-teal-50 to-teal-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-teal-900">
+                  Nombre de Formateurs
+                </CardTitle>
+                <Users className="h-5 w-5 text-teal-600" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="text-4xl font-bold text-teal-700">
+                  {stats.nombreFormateurs}
+                </div>
+                <p className="text-sm font-semibold text-teal-600">
+                  Formateurs qualifiés
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Total AGR */}
+            <Card className="border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-rose-900">
+                  Total AGR
+                </CardTitle>
+                <Briefcase className="h-5 w-5 text-rose-600" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="text-4xl font-bold text-rose-700">
+                  {stats.totalAGR}
+                </div>
+                <p className="text-sm font-semibold text-rose-600">
+                  Activités génératrices de revenus
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Taux de Rétention */}
+            <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-emerald-900">
+                  Taux de Rétention
+                </CardTitle>
+                <TrendingUp className="h-5 w-5 text-emerald-600" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="text-4xl font-bold text-emerald-700">
+                  {stats.tauxRetention}%
+                </div>
+                <p className="text-sm font-semibold text-emerald-600">
+                  Excellent taux de maintien
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Geographic Distribution & Waiting */}
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Distribution Géographique */}
+            <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-purple-900">
+                  <MapPin className="h-5 w-5 text-purple-600" />
+                  Distribution Géographique
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-purple-800">
+                      Commune Balballa
+                    </span>
+                    <span className="text-sm font-bold text-purple-700">
+                      {stats.communeBalballa}%
+                    </span>
+                  </div>
+                  <div className="h-3 w-full overflow-hidden rounded-full bg-purple-200">
+                    <div
+                      className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
+                      style={{ width: `${stats.communeBalballa}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-orange-800">
+                      Commune Rasdika
+                    </span>
+                    <span className="text-sm font-bold text-orange-700">
+                      {stats.communeRasdika}%
+                    </span>
+                  </div>
+                  <div className="h-3 w-full overflow-hidden rounded-full bg-orange-200">
+                    <div
+                      className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+                      style={{ width: `${stats.communeRasdika}%` }}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Accompagnement */}
+            <Card className="border-indigo-200 bg-gradient-to-br from-indigo-50 to-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-indigo-900">
+                  <Clock className="h-5 w-5 text-indigo-600" />
+                  Accompagnement des Bénéficiaires
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/60 rounded-xl p-4 border border-indigo-200">
+                    <div className="flex flex-col items-center">
+                      <p className="text-xs font-medium text-indigo-600 mb-2">
+                        En Attente
+                      </p>
+                      <p className="text-3xl font-bold text-indigo-700">
+                        {stats.enAttenteAccompagnement}
+                      </p>
+                      <p className="text-xs text-indigo-500 mt-1">
+                        Bénéficiaires
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white/60 rounded-xl p-4 border border-indigo-200">
+                    <div className="flex flex-col items-center">
+                      <p className="text-xs font-medium text-indigo-600 mb-2">
+                        Accompagnés
+                      </p>
+                      <p className="text-3xl font-bold text-indigo-700">
+                        {stats.totalAGR}
+                      </p>
+                      <p className="text-xs text-indigo-500 mt-1">AGR actifs</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-medium text-indigo-700">
+                      Taux d'accompagnement
+                    </span>
+                    <span className="text-xs font-bold text-indigo-700">
+                      {(
+                        (stats.totalAGR / stats.totalBeneficiaires) *
+                        100
+                      ).toFixed(1)}
+                      %
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-indigo-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all duration-500"
+                      style={{
+                        width: `${(
+                          (stats.totalAGR / stats.totalBeneficiaires) *
+                          100
+                        ).toFixed(1)}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+     
+        </div>
 
         {/* Projects Section */}
         <div className="space-y-6">

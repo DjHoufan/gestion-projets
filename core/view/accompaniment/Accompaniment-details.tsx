@@ -41,6 +41,7 @@ import {
   Languages,
   UserX,
   UserCheck,
+ 
 } from "lucide-react";
 import { IdType, PermissionProps } from "@/core/lib/types";
 import { useGetOneAccompaniment } from "@/core/hooks/use-accompaniment";
@@ -72,6 +73,7 @@ import { FaRegFileWord } from "react-icons/fa";
 import MediaForm from "@/core/view/accompaniment/Media-form";
 import { MediaGallery } from "@/core/view/accompaniment/media-card";
 import RapportSection from "@/core/view/accompaniment/rapport-section";
+
 
 export const AccompanimentDetails = ({
   Id,
@@ -147,7 +149,7 @@ export const AccompanimentDetails = ({
               onClick={() =>
                 open(
                   <CustomModal>
-                    {data.file.type === "application/pdf" ? (
+                    {data.file?.type === "application/pdf" ? (
                       <iframe
                         src={data.file.url ?? ""}
                         width="100%"
@@ -165,7 +167,7 @@ export const AccompanimentDetails = ({
                     ) : (
                       <iframe
                         src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                          data.file.url ?? ""
+                          data.file!.url ?? ""
                         )}`}
                         width="100%"
                         height="550px"
@@ -173,7 +175,7 @@ export const AccompanimentDetails = ({
                         This is an embedded
                         <a
                           target="_blank"
-                          href={data.file.url ?? "#"}
+                          href={data.file!.url ?? "#"}
                           rel="noreferrer"
                         >
                           Microsoft Office
@@ -198,7 +200,7 @@ export const AccompanimentDetails = ({
             </Button>
             <Button>
               <a
-                href={data.file.url}
+                href={data.file!.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className=" flex justify-center items-center gap-2"
