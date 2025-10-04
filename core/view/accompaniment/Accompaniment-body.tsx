@@ -344,8 +344,8 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
       <div className="min-h-screen bg-gray-50">
         {/* Header responsive */}
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-          <div className="mx-auto max-w-7xl space-y-6 mb-5">
+        <div className=" px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+          <div className=" space-y-6 mb-5">
             <div className="flex justify-between items-center">
               <div className="space-y-2">
                 <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-[linear-gradient(180deg,#064e3b_0%,#065f46_45%,#047857_100%)]">
