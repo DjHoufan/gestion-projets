@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback} from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/core/components/ui/card"
-import { Sparkles, Users, TrendingUp, UserX, DollarSign, Briefcase, ChevronLeft, ChevronRight, Eye, LucideIcon } from "lucide-react"
+import { Sparkles, Users, TrendingUp, UserX, DollarSign, Briefcase, ChevronLeft, ChevronRight,   LucideIcon } from "lucide-react"
 
 interface StatItem {
   title: string
@@ -134,7 +134,7 @@ const Main = () => {
                     Tableau de Bord Intelligent
                   </h2>
                   <p className="text-lg opacity-90 max-w-2xl">
-                    Piloter l'accompagnement des jeunes bénéficiaires avec des
+                    Piloter l&apos;accompagnement des jeunes bénéficiaires avec des
                     outils avancés et en temps réel
                   </p>
                 </div>
