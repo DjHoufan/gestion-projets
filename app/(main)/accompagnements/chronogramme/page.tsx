@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+
 import {
   Card,
   CardContent,
@@ -18,63 +18,7 @@ interface Cohorte {
   bgColor: string;
   borderColor: string;
 }
-
-const COHORTES: Cohorte[] = [
-  {
-    id: "c1",
-    name: "Cohorte 1",
-    startDate: new Date("2024-11-28"),
-    endDate: new Date("2024-12-25"),
-    color: "text-blue-600",
-    bgColor: "bg-blue-500",
-    borderColor: "border-blue-200",
-  },
-  {
-    id: "c2",
-    name: "Cohorte 2",
-    startDate: new Date("2025-04-07"),
-    endDate: new Date("2025-05-06"),
-    color: "text-green-600",
-    bgColor: "bg-green-500",
-    borderColor: "border-green-200",
-  },
-  {
-    id: "c3",
-    name: "Cohorte 3",
-    startDate: new Date("2025-04-10"),
-    endDate: new Date("2025-05-12"),
-    color: "text-purple-600",
-    bgColor: "bg-purple-500",
-    borderColor: "border-purple-200",
-  },
-  {
-    id: "c4",
-    name: "Cohorte 4",
-    startDate: new Date("2025-05-25"),
-    endDate: new Date("2025-06-19"),
-    color: "text-orange-600",
-    bgColor: "bg-orange-500",
-    borderColor: "border-orange-200",
-  },
-  {
-    id: "c5",
-    name: "Cohorte 5",
-    startDate: new Date("2025-06-02"),
-    endDate: new Date("2025-06-30"),
-    color: "text-pink-600",
-    bgColor: "bg-pink-500",
-    borderColor: "border-pink-200",
-  },
-  {
-    id: "accompagnement",
-    name: "Accompagnement",
-    startDate: new Date("2025-04-01"),
-    endDate: new Date("2025-06-30"),
-    color: "text-cyan-600",
-    bgColor: "bg-cyan-500",
-    borderColor: "border-cyan-200",
-  },
-];
+ 
 
 interface Activity {
   id: string;
