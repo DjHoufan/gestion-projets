@@ -419,62 +419,59 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
             </Card>
 
             {/* Total AGR */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                Option 2 : Design avec badges compacts
-              </h2>
-              <div className="max-w-md">
-                <Card className="border-rose-200 bg-white shadow-lg hover:shadow-2xl transition-all duration-300 group relative overflow-hidden">
-                  {/* Bordure animée */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ padding: "2px" }}
-                  >
-                    <div className="absolute inset-[2px] bg-white rounded-lg" />
+
+            <div className="max-w-md">
+              <Card className="border-rose-200 bg-white shadow-lg hover:shadow-2xl transition-all duration-300 group relative overflow-hidden">
+                {/* Bordure animée */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ padding: "2px" }}
+                >
+                  <div className="absolute inset-[2px] bg-white rounded-lg" />
+                </div>
+
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+                  <CardTitle className="text-sm font-bold text-rose-900 uppercase tracking-wide">
+                    Total AGR
+                  </CardTitle>
+                  <div className="rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 p-2.5 shadow-md group-hover:scale-110 transition-transform">
+                    <Briefcase className="h-5 w-5 text-white" />
+                  </div>
+                </CardHeader>
+
+                <CardContent className="space-y-4 relative z-10">
+                  <div className="text-5xl font-black text-rose-600 drop-shadow-sm">
+                    {stats.totalAGR}
                   </div>
 
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-                    <CardTitle className="text-sm font-bold text-rose-900 uppercase tracking-wide">
-                      Total AGR
-                    </CardTitle>
-                    <div className="rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 p-2.5 shadow-md group-hover:scale-110 transition-transform">
-                      <Briefcase className="h-5 w-5 text-white" />
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="space-y-4 relative z-10">
-                    <div className="text-5xl font-black text-rose-600 drop-shadow-sm">
-                      {stats.totalAGR}
-                    </div>
-
-                    {/* Badges compacts */}
-                    <div className="flex gap-2">
-                      <div className="flex-1 bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg p-3 border border-rose-300">
-                        <div className="text-xs text-rose-700 font-medium mb-1">
-                          Individuels
-                        </div>
-                        <div className="text-2xl font-bold text-rose-900">
-                          281
-                        </div>
+                  {/* Badges compacts */}
+                  <div className="flex gap-2">
+                    <div className="flex-1 bg-gradient-to-br from-rose-100 to-rose-200 rounded-lg p-3 border border-rose-300">
+                      <div className="text-xs text-rose-700 font-medium mb-1">
+                        Individuels
                       </div>
-
-                      <div className="flex-1 bg-gradient-to-br from-pink-100 to-pink-200 rounded-lg p-3 border border-pink-300">
-                        <div className="text-xs text-pink-700 font-medium mb-1">
-                          Collectifs
-                        </div>
-                        <div className="text-2xl font-bold text-pink-900">
-                          260
-                        </div>
+                      <div className="text-2xl font-bold text-rose-900">
+                        281
                       </div>
                     </div>
 
-                    <p className="text-xs font-semibold text-rose-600 text-center py-2 bg-rose-50 rounded-md">
-                      💼 Activités génératrices de revenus
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
+                    <div className="flex-1 bg-gradient-to-br from-pink-100 to-pink-200 rounded-lg p-3 border border-pink-300">
+                      <div className="text-xs text-pink-700 font-medium mb-1">
+                        Collectifs
+                      </div>
+                      <div className="text-2xl font-bold text-pink-900">
+                        260
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-xs font-semibold text-rose-600 text-center py-2 bg-rose-50 rounded-md">
+                    💼 Activités génératrices de revenus
+                  </p>
+                </CardContent>
+              </Card>
             </div>
+
             {/* Taux de Rétention */}
             <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
