@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect, useCallback, memo } from "react"
-import Image from "next/image"
 import { ChevronLeft, ChevronRight, Camera, Play, Pause } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/core/components/ui/card"
 
@@ -27,7 +26,7 @@ const ImageCarousel = memo(({
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAutoPlay, setIsAutoPlay] = useState(true)
 
-  // Auto-play carousel - memoized dependencies
+  // Auto-play carousel
   useEffect(() => {
     if (!isAutoPlay || images.length === 0) return
 
@@ -38,7 +37,6 @@ const ImageCarousel = memo(({
     return () => clearInterval(timer)
   }, [isAutoPlay, images.length, autoPlayInterval])
 
-  // Memoized navigation functions
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % images.length)
   }, [images.length])
@@ -51,7 +49,6 @@ const ImageCarousel = memo(({
     setIsAutoPlay((prev) => !prev)
   }, [])
 
-  // Prevent rendering if no images
   if (!images || images.length === 0) {
     return (
       <Card className="border-2 border-slate-200 bg-white shadow-2xl">
@@ -89,20 +86,18 @@ const ImageCarousel = memo(({
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-0">
-        {/* Carousel Container */}
         <div className="relative group">
-          {/* Main Image Display */}
+          {/* Carousel Container */}
           <div className="relative overflow-hidden bg-slate-900" style={{ height }}>
-            <div 
+            <div
               className="flex transition-transform duration-700 ease-out h-full"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {images.map((image, index) => {
-                // Only render current, previous and next images for performance
-                const isVisible = 
-                  index === currentSlide || 
+                const isVisible =
+                  index === currentSlide ||
                   index === (currentSlide - 1 + images.length) % images.length ||
                   index === (currentSlide + 1) % images.length
 
@@ -113,19 +108,18 @@ const ImageCarousel = memo(({
                   >
                     {isVisible && (
                       <>
-                        <Image
+                        <img
                           src={image}
                           alt={`Photo ${index + 1} - ${description}`}
-                          fill
-                          className="object-contain"
-                          priority={index === 0}
-                          quality={90}
-                          sizes="(max-width: 1280px) 100vw, 1280px"
+                          loading={index === 0 ? "eager" : "lazy"}
+                          decoding="async"
+                          className="w-full h-full object-contain"
+                          style={{ display: "block" }}
                         />
-                        
+
                         {/* Gradient Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
-                        
+
                         {/* Image Info Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
                           <div className="flex items-end justify-between">
