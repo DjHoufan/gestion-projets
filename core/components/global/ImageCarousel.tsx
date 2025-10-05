@@ -143,7 +143,7 @@ const ImageCarousel = memo(
                             loading={index === 0 ? "eager" : "lazy"}
                             decoding="async"
                             fetchPriority={index === 0 ? "high" : "low"}
-                            className="w-full h-full object-contain"
+                            className="w-full h-full object-cover"
                             style={{ display: "block" }}
                           />
 
