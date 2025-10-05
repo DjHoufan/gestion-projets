@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/core/components/ui/card"
-import { Calendar, Clock } from "lucide-react"
+import { Calendar } from "lucide-react"
 
 interface Cohorte {
   id: string
@@ -113,57 +113,14 @@ const ACTIVITIES: Activity[] = [
 ]
 
 const Main2 = () => {
-  // Calculer la plage de dates globale
-  const { minDate, maxDate, totalDays } = useMemo(() => {
-    const allDates = COHORTES.flatMap((c) => [c.startDate, c.endDate])
-    const min = new Date(Math.min(...allDates.map((d) => d.getTime())))
-    const max = new Date(Math.max(...allDates.map((d) => d.getTime())))
-    
-    // Ajouter une marge
-    min.setDate(min.getDate() - 7)
-    max.setDate(max.getDate() + 7)
-    
-    const days = Math.ceil((max.getTime() - min.getTime()) / (1000 * 60 * 60 * 24))
-    return { minDate: min, maxDate: max, totalDays: days }
-  }, [])
-
-  // Générer les mois pour l'axe X
-  const monthsAxis = useMemo(() => {
-    const months: { label: string; width: number }[] = []
-    const current = new Date(minDate)
-    
-    while (current <= maxDate) {
-      const month = current.toLocaleDateString("fr-FR", { month: "short", year: "numeric" })
-      const daysInMonth = new Date(current.getFullYear(), current.getMonth() + 1, 0).getDate()
-      const width = (daysInMonth / totalDays) * 100
-      
-      months.push({ label: month, width })
-      current.setMonth(current.getMonth() + 1)
-    }
-    
-    return months
-  }, [minDate, maxDate, totalDays])
-
-  // Calculer la position et la largeur de chaque cohorte
-  const getBarPosition = (cohorte: Cohorte) => {
-    const startOffset = (cohorte.startDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24)
-    const duration = (cohorte.endDate.getTime() - cohorte.startDate.getTime()) / (1000 * 60 * 60 * 24)
-    
-    const left = (startOffset / totalDays) * 100
-    const width = (duration / totalDays) * 100
-    
-    return { left: `${left}%`, width: `${width}%` }
-  }
+ 
+ 
+  
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })
   }
-
-  const getDuration = (start: Date, end: Date) => {
-    const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-    return `${days} jours`
-  }
-
+ 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-slate-50 via-white to-slate-100">
       
