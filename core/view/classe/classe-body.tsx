@@ -108,7 +108,7 @@ const stats = [
   },
   {
     title: "Nombre de Mentors",
-    value: "35",
+    value: "5",
     icon: UsersRound,
     description: "Mentors dédiés",
     colorBorder: "border-rose-200",
