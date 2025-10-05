@@ -193,15 +193,11 @@ export const Header = ({
                     handleNewNotification(newNotif, userId);
                   }
                 }
-              } catch (error) {
-                
-              }
+              } catch (error) {}
             }
           )
           .subscribe();
-      } catch (error) {
-         
-      }
+      } catch (error) {}
     };
 
     setupSubscription();
@@ -254,8 +250,15 @@ export const Header = ({
               <span className="sm:hidden">👋 </span>
               <span className="hidden sm:inline"> 👋</span>
             </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block truncate">
-              Bienvenu dans la plate-forme de suivi du programme de renforcement des capacités  de 1000 jeunes filles du projet PARVBG
+            <p className="text-xs sm:text-sm text-gray-600 mb-2 max-w-3xl mx-auto leading-relaxed">
+              Bienvenu dans la plate-forme de suivi du{" "}
+              <span className="font-bold bg-gradient-to-r from-teal-600 to-teal-800 bg-clip-text text-transparent">
+                Programme
+              </span>{" "}
+              de renforcement des capacités de 1000 jeunes filles du projet{" "}
+              <span className="font-bold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent">
+                PARVBG
+              </span>
             </p>
           </div>
         </div>
