@@ -1,21 +1,31 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback} from "react"
-import { Card, CardContent} from "@/core/components/ui/card"
-import { Sparkles, Users, TrendingUp, UserX, DollarSign, Briefcase, ChevronLeft, ChevronRight,   LucideIcon } from "lucide-react"
+import { useState, useEffect, useCallback } from "react";
+import { Card, CardContent } from "@/core/components/ui/card";
+import {
+  Sparkles,
+  Users,
+  TrendingUp,
+  UserX,
+  DollarSign,
+  Briefcase,
+  ChevronLeft,
+  ChevronRight,
+  LucideIcon,
+} from "lucide-react";
 
 interface StatItem {
-  title: string
-  value: string
-  icon: LucideIcon
-  description: string
-  colorBorder: string
-  colorBg: string
-  colorTitle: string
-  colorIconBg: string
-  colorIcon: string
-  colorValue: string
-  colorDesc: string
+  title: string;
+  value: string;
+  icon: LucideIcon;
+  description: string;
+  colorBorder: string;
+  colorBg: string;
+  colorTitle: string;
+  colorIconBg: string;
+  colorIcon: string;
+  colorValue: string;
+  colorDesc: string;
 }
 
 // Images statiques - en dehors du composant pour éviter re-création
@@ -24,95 +34,116 @@ const CAROUSEL_IMAGES = [
   "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A0317.JPG",
   "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A0320.JPG",
   "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/c1/3M4A5486.JPG",
-] as const
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.50_d38fe5c4.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.52_aa0daf7e.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.57_0cde8947.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.57_17d19e06.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.57_45351e75.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_0400221d.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_0cca0e3a.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_1d7e3a11.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_47785c42.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_4f0b8322.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_96091a00.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_d24458b7.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_e6fcc4d1.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_eb59ede6.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_f3e18e01.jpg",
+  "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/cohorte/main/WhatsApp%20Image%202025-10-05%20at%2020.08.59_fd544804.jpg",
+] as const;
 
 // Stats statiques - en dehors du composant
 const STATS_DATA: StatItem[] = [
-    {
-      title: "Bénéficiaires",
-      value: "1,000",
-      icon: Users,
-      description: "Jeunes filles",
-      colorBorder: "border-blue-200",
-      colorBg: "bg-gradient-to-br from-blue-50 to-blue-100",
-      colorTitle: "text-blue-900",
-      colorIconBg: "bg-blue-100",
-      colorIcon: "text-blue-600",
-      colorValue: "text-blue-700",
-      colorDesc: "text-blue-600",
-    },
-    {
-      title: "AGR Créées",
-      value: "541",
-      icon: TrendingUp,
-      description: "Activités génératrices",
-      colorBorder: "border-orange-200",
-      colorBg: "bg-gradient-to-br from-orange-50 to-orange-100",
-      colorTitle: "text-orange-900",
-      colorIconBg: "bg-orange-100",
-      colorIcon: "text-orange-600",
-      colorValue: "text-orange-700",
-      colorDesc: "text-orange-600",
-    },
-    {
-      title: "Taux d'Abandon",
-      value: "3.6%",
-      icon: UserX,
-      description: "Très faible abandon",
-      colorBorder: "border-red-200",
-      colorBg: "bg-gradient-to-br from-red-50 to-red-100",
-      colorTitle: "text-red-900",
-      colorIconBg: "bg-red-100",
-      colorIcon: "text-red-600",
-      colorValue: "text-red-700",
-      colorDesc: "text-red-600",
-    },
-    {
-      title: "Impact Économique",
-      value: "$965K",
-      icon: DollarSign,
-      description: "Injecté dans l'économie",
-      colorBorder: "border-green-200",
-      colorBg: "bg-gradient-to-br from-green-50 to-green-100",
-      colorTitle: "text-green-900",
-      colorIconBg: "bg-green-100",
-      colorIcon: "text-green-600",
-      colorValue: "text-green-700",
-      colorDesc: "text-green-600",
-    },
-    {
-      title: "Emplois Créés",
-      value: "173+",
-      icon: Briefcase,
-      description: "Nouveaux emplois",
-      colorBorder: "border-purple-200",
-      colorBg: "bg-gradient-to-br from-purple-50 to-purple-100",
-      colorTitle: "text-purple-900",
-      colorIconBg: "bg-purple-100",
-      colorIcon: "text-purple-600",
-      colorValue: "text-purple-700",
-      colorDesc: "text-purple-600",
-    },
-]
+  {
+    title: "Bénéficiaires",
+    value: "1,000",
+    icon: Users,
+    description: "Jeunes filles",
+    colorBorder: "border-blue-200",
+    colorBg: "bg-gradient-to-br from-blue-50 to-blue-100",
+    colorTitle: "text-blue-900",
+    colorIconBg: "bg-blue-100",
+    colorIcon: "text-blue-600",
+    colorValue: "text-blue-700",
+    colorDesc: "text-blue-600",
+  },
+  {
+    title: "AGR Créées",
+    value: "541",
+    icon: TrendingUp,
+    description: "Activités génératrices",
+    colorBorder: "border-orange-200",
+    colorBg: "bg-gradient-to-br from-orange-50 to-orange-100",
+    colorTitle: "text-orange-900",
+    colorIconBg: "bg-orange-100",
+    colorIcon: "text-orange-600",
+    colorValue: "text-orange-700",
+    colorDesc: "text-orange-600",
+  },
+  {
+    title: "Taux d'Abandon",
+    value: "3.6%",
+    icon: UserX,
+    description: "Très faible abandon",
+    colorBorder: "border-red-200",
+    colorBg: "bg-gradient-to-br from-red-50 to-red-100",
+    colorTitle: "text-red-900",
+    colorIconBg: "bg-red-100",
+    colorIcon: "text-red-600",
+    colorValue: "text-red-700",
+    colorDesc: "text-red-600",
+  },
+  {
+    title: "Impact Économique",
+    value: "$965K",
+    icon: DollarSign,
+    description: "Injecté dans l'économie",
+    colorBorder: "border-green-200",
+    colorBg: "bg-gradient-to-br from-green-50 to-green-100",
+    colorTitle: "text-green-900",
+    colorIconBg: "bg-green-100",
+    colorIcon: "text-green-600",
+    colorValue: "text-green-700",
+    colorDesc: "text-green-600",
+  },
+  {
+    title: "Emplois Créés",
+    value: "173+",
+    icon: Briefcase,
+    description: "Nouveaux emplois",
+    colorBorder: "border-purple-200",
+    colorBg: "bg-gradient-to-br from-purple-50 to-purple-100",
+    colorTitle: "text-purple-900",
+    colorIconBg: "bg-purple-100",
+    colorIcon: "text-purple-600",
+    colorValue: "text-purple-700",
+    colorDesc: "text-purple-600",
+  },
+];
 
 const Main = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   // Auto-rotate images avec useCallback pour éviter re-création
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentImageIndex((prev: number) => (prev + 1) % CAROUSEL_IMAGES.length)
-    }, 3000)
-    return () => clearInterval(timer)
-  }, [])
+      setCurrentImageIndex(
+        (prev: number) => (prev + 1) % CAROUSEL_IMAGES.length
+      );
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
   const nextImage = useCallback(() => {
-    setCurrentImageIndex((prev: number) => (prev + 1) % CAROUSEL_IMAGES.length)
-  }, [])
+    setCurrentImageIndex((prev: number) => (prev + 1) % CAROUSEL_IMAGES.length);
+  }, []);
 
   const prevImage = useCallback(() => {
-    setCurrentImageIndex((prev: number) => (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length)
-  }, [])
+    setCurrentImageIndex(
+      (prev: number) =>
+        (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length
+    );
+  }, []);
 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-slate-50 via-white to-slate-100">
@@ -134,8 +165,8 @@ const Main = () => {
                     Tableau de Bord Intelligent
                   </h2>
                   <p className="text-lg opacity-90 max-w-2xl">
-                    Piloter l&apos;accompagnement des jeunes bénéficiaires avec des
-                    outils avancés et en temps réel
+                    Piloter l&apos;accompagnement des jeunes bénéficiaires avec
+                    des outils avancés et en temps réel
                   </p>
                 </div>
               </div>
@@ -152,7 +183,10 @@ const Main = () => {
               <div className="w-[450px] h-[450px] rounded-full bg-gradient-to-br from-blue-50/30 to-purple-50/30 blur-3xl animate-pulse" />
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <div className="w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-teal-50/40 to-orange-50/40 blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
+              <div
+                className="w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-teal-50/40 to-orange-50/40 blur-2xl animate-pulse"
+                style={{ animationDelay: "1s" }}
+              />
             </div>
 
             {/* Centre - Bénéficiaires - Design Glassmorphism */}
@@ -160,57 +194,75 @@ const Main = () => {
               <div className="relative w-60 h-60 rounded-full bg-gradient-to-br from-blue-500/90 via-blue-600/90 to-indigo-700/90 backdrop-blur-xl shadow-2xl flex flex-col items-center justify-center">
                 {/* Effet de brillance */}
                 <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 to-transparent" />
-                
+
                 <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-3">
                   <div className="rounded-full bg-white/30 backdrop-blur-md p-4 shadow-lg">
                     <Users className="h-12 w-12 text-white drop-shadow-lg" />
                   </div>
-                  <p className="text-sm font-bold text-white/90 uppercase tracking-widest">Bénéficiaires</p>
-                  <div className="text-5xl font-black text-white drop-shadow-xl">1,000</div>
-                  <p className="text-xs text-white/70 font-medium">Jeunes filles</p>
+                  <p className="text-sm font-bold text-white/90 uppercase tracking-widest">
+                    Bénéficiaires
+                  </p>
+                  <div className="text-5xl font-black text-white drop-shadow-xl">
+                    1,000
+                  </div>
+                  <p className="text-xs text-white/70 font-medium">
+                    Jeunes filles
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* Les 4 autres cards - Design Glassmorphism */}
-            {STATS_DATA.filter((_, i) => i !== 0).map((stat: StatItem, index: number) => {
-              const Icon = stat.icon
-              const angle = (index * 360 / 4) - 50
-              const radius = 230
-              const x = Math.round(Math.cos((angle * Math.PI) / 180) * radius * 100) / 100
-              const y = Math.round(Math.sin((angle * Math.PI) / 180) * radius * 100) / 100
-              
-              // Couleurs de fond par index
-              const gradients = [
-                'from-orange-400/80 via-orange-500/80 to-orange-600/80',
-                'from-red-400/80 via-red-500/80 to-red-600/80',
-                'from-green-400/80 via-green-500/80 to-green-600/80',
-                'from-purple-400/80 via-purple-500/80 to-purple-600/80'
-              ]
-              
-              return (
-                <div
-                  key={index}
-                  className="absolute top-1/2 left-1/2"
-                  style={{
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                  }}
-                >
-                  <div className={`relative w-48 h-48 rounded-full bg-gradient-to-br ${gradients[index]} backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col items-center justify-center group`}>
-                    {/* Effet de brillance */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-2 p-4">
-                      <div className="rounded-full bg-white/30 backdrop-blur-md p-3 shadow-lg">
-                        <Icon className="h-7 w-7 text-white drop-shadow-lg" />
+            {STATS_DATA.filter((_, i) => i !== 0).map(
+              (stat: StatItem, index: number) => {
+                const Icon = stat.icon;
+                const angle = (index * 360) / 4 - 50;
+                const radius = 230;
+                const x =
+                  Math.round(Math.cos((angle * Math.PI) / 180) * radius * 100) /
+                  100;
+                const y =
+                  Math.round(Math.sin((angle * Math.PI) / 180) * radius * 100) /
+                  100;
+
+                // Couleurs de fond par index
+                const gradients = [
+                  "from-orange-400/80 via-orange-500/80 to-orange-600/80",
+                  "from-red-400/80 via-red-500/80 to-red-600/80",
+                  "from-green-400/80 via-green-500/80 to-green-600/80",
+                  "from-purple-400/80 via-purple-500/80 to-purple-600/80",
+                ];
+
+                return (
+                  <div
+                    key={index}
+                    className="absolute top-1/2 left-1/2"
+                    style={{
+                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                    }}
+                  >
+                    <div
+                      className={`relative w-48 h-48 rounded-full bg-gradient-to-br ${gradients[index]} backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col items-center justify-center group`}
+                    >
+                      {/* Effet de brillance */}
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                      <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-2 p-4">
+                        <div className="rounded-full bg-white/30 backdrop-blur-md p-3 shadow-lg">
+                          <Icon className="h-7 w-7 text-white drop-shadow-lg" />
+                        </div>
+                        <p className="text-[11px] font-bold text-white/90 uppercase tracking-wider">
+                          {stat.title}
+                        </p>
+                        <div className="text-3xl font-black text-white drop-shadow-xl">
+                          {stat.value}
+                        </div>
                       </div>
-                      <p className="text-[11px] font-bold text-white/90 uppercase tracking-wider">{stat.title}</p>
-                      <div className="text-3xl font-black text-white drop-shadow-xl">{stat.value}</div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                );
+              }
+            )}
           </div>
 
           {/* Custom Carousel Section */}
@@ -236,7 +288,7 @@ const Main = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   </div>
                 ))}
-                
+
                 {/* Navigation Buttons */}
                 <button
                   onClick={prevImage}
@@ -251,16 +303,20 @@ const Main = () => {
                   <ChevronRight className="h-6 w-6" />
                 </button>
               </div>
-              
+
               {/* Barre colorée en bas */}
               <div className="relative bg-gradient-to-r from-teal-500 via-teal-600 to-orange-500 p-6">
                 <div className="flex items-center justify-between text-white">
                   <div>
-                    <p className="text-sm font-medium opacity-90 mb-1">HOUFAN</p>
+                    <p className="text-sm font-medium opacity-90 mb-1">
+                      HOUFAN
+                    </p>
                     <h3 className="text-2xl font-bold">Galerie du Programme</h3>
                   </div>
                   <div className="flex flex-col items-end gap-3">
-                    <p className="text-lg font-semibold">Photo {currentImageIndex + 1} sur {CAROUSEL_IMAGES.length}</p>
+                    <p className="text-lg font-semibold">
+                      Photo {currentImageIndex + 1} sur {CAROUSEL_IMAGES.length}
+                    </p>
                     <div className="flex gap-2">
                       {CAROUSEL_IMAGES.map((_: string, dotIndex: number) => (
                         <button
@@ -286,8 +342,14 @@ const Main = () => {
           {/* Motifs décoratifs animés */}
           <div className="absolute inset-0 overflow-hidden opacity-30">
             <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-gradient-to-br from-blue-200 to-teal-200 blur-2xl animate-pulse" />
-            <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-gradient-to-br from-orange-200 to-pink-200 blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-br from-purple-100 to-blue-100 blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+            <div
+              className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-gradient-to-br from-orange-200 to-pink-200 blur-2xl animate-pulse"
+              style={{ animationDelay: "1s" }}
+            />
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-br from-purple-100 to-blue-100 blur-3xl animate-pulse"
+              style={{ animationDelay: "2s" }}
+            />
           </div>
 
           <div className="relative z-10">
@@ -297,28 +359,54 @@ const Main = () => {
                 Nos Partenaires
               </h3>
             </div>
-            
-            
+
             {/* Grille de logos avec animations variées */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center justify-items-center">
               {[
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/mff_3.png", name: "MFF" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/MENFOP.png", name: "MENFOP" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/Minister%20sante.jpg", name: "Ministère de la santé" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/UNFD.jpg", name: "UNFD" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/121520894_3255625244548272_4630722496783989797_n%20(1).jpg", name: "Japon" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/la-banque-mondiale-logo.png", name: "Banque Mondiale" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/CPEC.jpg", name: "CPEC" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/CLE.png", name: "CLE" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/club%20des%20jeunes%20entrepreneurs.jpg", name: "Club des jeunes entrepreneurs" },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/mff_3.png",
+                  name: "MFF",
+                },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/MENFOP.png",
+                  name: "MENFOP",
+                },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/Minister%20sante.jpg",
+                  name: "Ministère de la santé",
+                },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/UNFD.jpg",
+                  name: "UNFD",
+                },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/121520894_3255625244548272_4630722496783989797_n%20(1).jpg",
+                  name: "Japon",
+                },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/la-banque-mondiale-logo.png",
+                  name: "Banque Mondiale",
+                },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/CPEC.jpg",
+                  name: "CPEC",
+                },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/CLE.png",
+                  name: "CLE",
+                },
+                {
+                  url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/club%20des%20jeunes%20entrepreneurs.jpg",
+                  name: "Club des jeunes entrepreneurs",
+                },
               ].map((partner, index) => (
                 <div
                   key={index}
                   className="group relative"
                   style={{
-                    animation: 'bounceIn 0.8s ease-out forwards',
+                    animation: "bounceIn 0.8s ease-out forwards",
                     animationDelay: `${index * 0.08}s`,
-                    opacity: 0
+                    opacity: 0,
                   }}
                 >
                   {/* Card avec effet 3D */}
@@ -327,10 +415,10 @@ const Main = () => {
                     <div className="absolute inset-0 rounded-2xl overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 group-hover:animate-shine" />
                     </div>
-                    
+
                     {/* Cercle coloré d'arrière-plan qui apparaît au hover */}
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400/0 via-teal-400/0 to-orange-400/0 group-hover:from-blue-400/10 group-hover:via-teal-400/10 group-hover:to-orange-400/10 transition-all duration-500" />
-                    
+
                     {/* Logo - Taille fixe pour tous */}
                     <div className="relative w-32 h-32 flex items-center justify-center">
                       <img
@@ -371,7 +459,7 @@ const Main = () => {
               transform: scale(1) translateY(0);
             }
           }
-          
+
           @keyframes shine {
             0% {
               transform: translateX(-100%);
@@ -383,7 +471,7 @@ const Main = () => {
         `}</style>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Main
+export default Main;
