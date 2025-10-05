@@ -9,15 +9,7 @@ import {
 } from "@/core/components/ui/card";
 import { Calendar } from "lucide-react";
 
-interface Cohorte {
-  id: string;
-  name: string;
-  startDate: Date;
-  endDate: Date;
-  color: string;
-  bgColor: string;
-  borderColor: string;
-}
+
  
 
 interface Activity {
