@@ -903,9 +903,9 @@ export default function LeafletMap({
       <span style="background: ${
         accompaniment.status === true ? "#dcfce7" : "#fee2e2"
       }; color: ${
-            accompaniment.status === true ? "#2256DD" : "#dc2626"
+            accompaniment.status === true ? "#2256DD" : "#2256DD"
           }; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 600;">
-        ${accompaniment.status === true ? "⚠ Terminé" : "✓ En cours"}
+        ${accompaniment.status === true ? "⚠ Terminé" : "En cours"}
       </span>
       <span style="color: #64748b; font-size: 13px; font-weight: 500;">
         ${budget.toLocaleString("fr-FR")} Fdj
