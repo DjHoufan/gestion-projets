@@ -356,24 +356,35 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 </p>
               </div>
 
-              {canAdd && (
-                <Button
-                  onClick={() =>
+              <div className="flex justify-between items-center gap-5">
+                {canAdd && (
+                  <Button
+                   onClick={() =>
                     open(
                       <CustomModal>
                         <AccompanimentForm />
                       </CustomModal>
                     )
                   }
+                    className="bg-emerald-600 hover:bg-emerald-700 shadow-lg flex-shrink-0 w-full sm:w-auto"
+                  >
+                    <SparklesIcon className="h-4 w-4 mr-2" />
+                    <span className="sm:inline">Nouvel Accompagnement</span>
+                  </Button>
+                )}
+                <Button
+                    onClick={() => router.push("accompagnements/chronogramme")}
+
+                  
                   className="bg-emerald-600 hover:bg-emerald-700 shadow-lg flex-shrink-0 w-full sm:w-auto"
                 >
                   <SparklesIcon className="h-4 w-4 mr-2" />
-                  <span className="sm:inline">Nouvel Accompagnement</span>
+                  <span className="sm:inline">Suivi Cohorte 1</span>
                 </Button>
-              )}
+              </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-3">
               <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-purple-900">
@@ -424,8 +435,6 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   </div>
                 </CardContent>
               </Card>
-
-             
             </div>
             <div className="grid gap-6 md:grid-cols-2">
               <Card

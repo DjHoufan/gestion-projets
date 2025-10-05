@@ -70,6 +70,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/core/components/ui/card";
+import Main2 from "@/core/view/projet/new-gant";
 
 export const ProjectBody = ({ permission }: PermissionProps) => {
   const { canAdd, canModify, canDelete, canDetails } = useMemo(() => {
@@ -378,8 +379,6 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
               </CardContent>
             </Card>
 
-   
-
             {/* Classes */}
             <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-violet-100 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -522,7 +521,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
               canDetails={canDetails}
             />
           ) : viewMode === "gantt" ? (
-            <GranttView projects={projects ?? []} />
+            <Main2 />
           ) : (
             <DataTable<ProjectDetail>
               data={filteredProjects}

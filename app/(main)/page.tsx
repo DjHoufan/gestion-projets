@@ -82,7 +82,7 @@ const STATS_DATA: StatItem[] = [
     },
     {
       title: "Emplois Créés",
-      value: "200+",
+      value: "173+",
       icon: Briefcase,
       description: "Nouveaux emplois",
       colorBorder: "border-purple-200",
