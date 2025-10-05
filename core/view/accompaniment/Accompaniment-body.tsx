@@ -63,14 +63,14 @@ const chartData = [
   {
     name: "C1",
     value: 17.44,
-    label: "94/539",
+    label: "94/541",
     percentage: "17.44%",
     fill: "#10b981",
   },
-  { name: "C2", value: 0, label: "0/539", percentage: "0%", fill: "#34d399" },
-  { name: "C3", value: 0, label: "0/539", percentage: "0%", fill: "#6ee7b7" },
-  { name: "C4", value: 0, label: "0/539", percentage: "0%", fill: "#a7f3d0" },
-  { name: "C5", value: 0, label: "0/539", percentage: "0%", fill: "#d1fae5" },
+  { name: "C2", value: 0, label: "0/541", percentage: "0%", fill: "#34d399" },
+  { name: "C3", value: 0, label: "0/541", percentage: "0%", fill: "#6ee7b7" },
+  { name: "C4", value: 0, label: "0/541", percentage: "0%", fill: "#a7f3d0" },
+  { name: "C5", value: 0, label: "0/541", percentage: "0%", fill: "#d1fae5" },
 ];
 
 type AccompagnementProps = Accompaniments & {
@@ -382,7 +382,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   <Users className="h-5 w-5 text-purple-600" />
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="text-6xl font-black text-purple-700">539</div>
+                  <div className="text-6xl font-black text-purple-700">541</div>
                   <p className="text-sm font-semibold text-purple-600">
                     Total des AGR
                   </p>
@@ -399,7 +399,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 <CardContent className="space-y-3">
                   <div className="text-3xl font-bold text-orange-700">299</div>
                   <div className="pt-2 border-t border-orange-200">
-                    <p className="text-xs text-orange-600 mb-1">de 539 AGR</p>
+                    <p className="text-xs text-orange-600 mb-1">de 541 AGR</p>
                     <div className="text-4xl font-black text-orange-700">
                       55.47%
                     </div>
@@ -417,7 +417,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 <CardContent className="space-y-3">
                   <div className="text-3xl font-bold text-blue-700">94</div>
                   <div className="pt-2 border-t border-blue-200">
-                    <p className="text-xs text-blue-600 mb-1">de 539 AGR</p>
+                    <p className="text-xs text-blue-600 mb-1">de 541 AGR</p>
                     <div className="text-4xl font-black text-blue-700">
                       17.44%
                     </div>
@@ -529,7 +529,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                     Répartition par Cohorte
                   </CardTitle>
                   <CardDescription className="text-emerald-100">
-                    Pourcentage de suivi (sur 539)
+                    Pourcentage de suivi (sur 541)
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
