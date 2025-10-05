@@ -493,29 +493,29 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
                       Commune Balballa
                     </span>
                     <span className="text-sm font-bold text-purple-700">
-                      {stats.communeBalballa}%
+                      71%
                     </span>
                   </div>
                   <div className="h-3 w-full overflow-hidden rounded-full bg-purple-200">
                     <div
                       className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
-                      style={{ width: `${stats.communeBalballa}%` }}
+                      style={{ width: `71%` }}
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-orange-800">
-                      Commune Rasdika
+                      Commune Boulaos
                     </span>
                     <span className="text-sm font-bold text-orange-700">
-                      {stats.communeRasdika}%
+                      29%
                     </span>
                   </div>
                   <div className="h-3 w-full overflow-hidden rounded-full bg-orange-200">
                     <div
                       className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
-                      style={{ width: `${stats.communeRasdika}%` }}
+                      style={{ width: `29%` }}
                     />
                   </div>
                 </div>
