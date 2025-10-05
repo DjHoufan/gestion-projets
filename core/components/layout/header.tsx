@@ -255,7 +255,7 @@ export const Header = ({
               <span className="hidden sm:inline"> 👋</span>
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block truncate">
-              Voici un aperçu de votre plateforme aujourd'hui
+              Bienvenu dans la plate-forme de suivi du programme de renforcement des capacités  de 1000 jeunes filles du projet PARVBG
             </p>
           </div>
         </div>
