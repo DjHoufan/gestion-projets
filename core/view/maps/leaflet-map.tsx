@@ -901,9 +901,9 @@ export default function LeafletMap({
     </h3>
     <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
       <span style="background: ${
-        accompaniment.status === true ? "#dcfce7" : "#fee2e2"
+        accompaniment.status === true ? "#2256DD" : "#2256DD"
       }; color: ${
-            accompaniment.status === true ? "#2256DD" : "#2256DD"
+            accompaniment.status === true ? "#166534" : "#dc2626"
           }; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 600;">
         ${accompaniment.status === true ? "⚠ Terminé" : "En cours"}
       </span>
