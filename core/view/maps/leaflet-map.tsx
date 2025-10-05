@@ -794,9 +794,9 @@ export default function LeafletMap({
         // Style basé sur le statut du groupe (status = false = terminé = rouge)
         if (accompaniment.status === false) {
           return {
-            bg: "#FEE2E2",
-            border: "#EF4444",
-            text: "#DC2626",
+            bg: "#B1BDDB",
+            border: "#2256DD",
+            text: "#163993",
             icon: MapPin,
           };
         }
@@ -903,7 +903,7 @@ export default function LeafletMap({
       <span style="background: ${
         accompaniment.status === true ? "#2256DD" : "#2256DD"
       }; color: ${
-            accompaniment.status === true ? "#166534" : "#dc2626"
+            accompaniment.status === true ? "#FFF" : "#FFF"
           }; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 600;">
         ${accompaniment.status === true ? "⚠ Terminé" : "En cours"}
       </span>
