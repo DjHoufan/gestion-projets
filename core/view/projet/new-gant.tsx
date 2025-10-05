@@ -236,35 +236,8 @@ const Main2 = () => {
           </CardContent>
         </Card>
 
-        {/* Stats Grid */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card className="border-teal-200 bg-gradient-to-br from-teal-50 to-teal-100">
-            <CardContent className="p-6">
-              <div className="text-sm font-medium text-teal-900 mb-2">Total Cohortes</div>
-              <div className="text-3xl font-bold text-teal-600">{COHORTES.length}</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100">
-            <CardContent className="p-6">
-              <div className="text-sm font-medium text-blue-900 mb-2">Période Totale</div>
-              <div className="text-3xl font-bold text-blue-600">{totalDays} jours</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100">
-            <CardContent className="p-6">
-              <div className="text-sm font-medium text-purple-900 mb-2">Durée Moyenne</div>
-              <div className="text-3xl font-bold text-purple-600">
-                {Math.round(
-                  COHORTES.reduce((acc, c) => 
-                    acc + (c.endDate.getTime() - c.startDate.getTime()) / (1000 * 60 * 60 * 24), 0
-                  ) / COHORTES.length
-                )} jours
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+     
+    
       </div>
     </div>
   )
