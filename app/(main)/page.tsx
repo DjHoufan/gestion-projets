@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback} from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/core/components/ui/card"
+import { Card, CardContent} from "@/core/components/ui/card"
 import { Sparkles, Users, TrendingUp, UserX, DollarSign, Briefcase, ChevronLeft, ChevronRight,   LucideIcon } from "lucide-react"
 
 interface StatItem {
