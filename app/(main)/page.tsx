@@ -298,19 +298,19 @@ const Main = () => {
               </h3>
             </div>
             
+            
             {/* Grille de logos avec animations variées */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center justify-items-center">
               {[
+                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/mff_3.png", name: "MFF" },
+                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/MENFOP.png", name: "MENFOP" },
+                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/Minister%20sante.jpg", name: "Ministère de la santé" },
+                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/UNFD.jpg", name: "UNFD" },
+                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/121520894_3255625244548272_4630722496783989797_n%20(1).jpg", name: "Japon" },
+                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/la-banque-mondiale-logo.png", name: "Banque Mondiale" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/CPEC.jpg", name: "CPEC" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/CLE.png", name: "CLE" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/club%20des%20jeunes%20entrepreneurs.jpg", name: "Club des jeunes entrepreneurs" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/Minister%20sante.jpg", name: "Ministère de la santé" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/la-banque-mondiale-logo.png", name: "Banque Mondiale" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/Flag_of_Japan.svg.png", name: "Japon" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/121520894_3255625244548272_4630722496783989797_n%20(1).jpg", name: "Fonds japonais" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/mff_3.png", name: "MFF" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/MENFOP.png", name: "MENFOP" },
-                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/UNFD.jpg", name: "UNFD" },
               ].map((partner, index) => (
                 <div
                   key={index}
