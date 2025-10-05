@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback} from "react"
-import { Card, CardContent} from "@/core/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/core/components/ui/card"
 import { Sparkles, Users, TrendingUp, UserX, DollarSign, Briefcase, ChevronLeft, ChevronRight,   LucideIcon } from "lucide-react"
 
 interface StatItem {
@@ -307,6 +307,7 @@ const Main = () => {
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/Minister%20sante.jpg", name: "Ministère de la santé" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/la-banque-mondiale-logo.png", name: "Banque Mondiale" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/Flag_of_Japan.svg.png", name: "Japon" },
+                { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/121520894_3255625244548272_4630722496783989797_n%20(1).jpg", name: "Fonds japonais" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/mff_3.png", name: "MFF" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/MENFOP.png", name: "MENFOP" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/UNFD.jpg", name: "UNFD" },
