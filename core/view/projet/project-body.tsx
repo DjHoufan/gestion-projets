@@ -340,7 +340,6 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
         {/* Stats Cards */}
 
         <div className="mx-auto max-w-7xl space-y-6">
-           
           {/* Main Stats Grid */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {/* Total Bénéficiaires */}
@@ -477,116 +476,46 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
           </div>
 
           {/* Geographic Distribution & Waiting */}
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Distribution Géographique */}
-            <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-900">
-                  <MapPin className="h-5 w-5 text-purple-600" />
-                  Distribution Géographique
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-purple-800">
-                      Commune Balballa
-                    </span>
-                    <span className="text-sm font-bold text-purple-700">
-                      71%
-                    </span>
-                  </div>
-                  <div className="h-3 w-full overflow-hidden rounded-full bg-purple-200">
-                    <div
-                      className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
-                      style={{ width: `71%` }}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-orange-800">
-                      Commune Boulaos
-                    </span>
-                    <span className="text-sm font-bold text-orange-700">
-                      29%
-                    </span>
-                  </div>
-                  <div className="h-3 w-full overflow-hidden rounded-full bg-orange-200">
-                    <div
-                      className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
-                      style={{ width: `29%` }}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
 
-            {/* Accompagnement */}
-            <Card className="border-indigo-200 bg-gradient-to-br from-indigo-50 to-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-indigo-900">
-                  <Clock className="h-5 w-5 text-indigo-600" />
-                  Accompagnement des Bénéficiaires
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/60 rounded-xl p-4 border border-indigo-200">
-                    <div className="flex flex-col items-center">
-                      <p className="text-xs font-medium text-indigo-600 mb-2">
-                        En Attente
-                      </p>
-                      <p className="text-3xl font-bold text-indigo-700">
-                        {stats.enAttenteAccompagnement}
-                      </p>
-                      <p className="text-xs text-indigo-500 mt-1">
-                        Bénéficiaires
-                      </p>
-                    </div>
-                  </div>
-                  <div className="bg-white/60 rounded-xl p-4 border border-indigo-200">
-                    <div className="flex flex-col items-center">
-                      <p className="text-xs font-medium text-indigo-600 mb-2">
-                        Accompagnés
-                      </p>
-                      <p className="text-3xl font-bold text-indigo-700">
-                        {stats.totalAGR}
-                      </p>
-                      <p className="text-xs text-indigo-500 mt-1">AGR actifs</p>
-                    </div>
-                  </div>
+          {/* Distribution Géographique */}
+          <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-purple-900">
+                <MapPin className="h-5 w-5 text-purple-600" />
+                Distribution Géographique
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-purple-800">
+                    Commune Balballa
+                  </span>
+                  <span className="text-sm font-bold text-purple-700">71%</span>
                 </div>
-                <div className="pt-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-indigo-700">
-                      Taux d'accompagnement
-                    </span>
-                    <span className="text-xs font-bold text-indigo-700">
-                      {(
-                        (stats.totalAGR / stats.totalBeneficiaires) *
-                        100
-                      ).toFixed(1)}
-                      %
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-indigo-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all duration-500"
-                      style={{
-                        width: `${(
-                          (stats.totalAGR / stats.totalBeneficiaires) *
-                          100
-                        ).toFixed(1)}%`,
-                      }}
-                    />
-                  </div>
+                <div className="h-3 w-full overflow-hidden rounded-full bg-purple-200">
+                  <div
+                    className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
+                    style={{ width: `71%` }}
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-     
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-orange-800">
+                    Commune Boulaos
+                  </span>
+                  <span className="text-sm font-bold text-orange-700">29%</span>
+                </div>
+                <div className="h-3 w-full overflow-hidden rounded-full bg-orange-200">
+                  <div
+                    className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+                    style={{ width: `29%` }}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Projects Section */}
