@@ -43,7 +43,7 @@ const STATS_DATA: StatItem[] = [
     },
     {
       title: "AGR Créées",
-      value: "537",
+      value: "541",
       icon: TrendingUp,
       description: "Activités génératrices",
       colorBorder: "border-orange-200",
