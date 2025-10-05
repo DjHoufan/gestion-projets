@@ -379,7 +379,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   className="bg-emerald-600 hover:bg-emerald-700 shadow-lg flex-shrink-0 w-full sm:w-auto"
                 >
                   <SparklesIcon className="h-4 w-4 mr-2" />
-                  <span className="sm:inline">Suivi Cohorte 1</span>
+                  <span className="sm:inline">Chronogramme</span>
                 </Button>
               </div>
             </div>
