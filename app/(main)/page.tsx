@@ -299,7 +299,7 @@ const Main = () => {
             </div>
             
             {/* Grille de logos avec animations variées */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center justify-items-center">
               {[
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/CPEC.jpg", name: "CPEC" },
                 { url: "https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/logo/CLE.png", name: "CLE" },
