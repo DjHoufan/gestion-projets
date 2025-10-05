@@ -42,7 +42,7 @@ import type { ApexOptions } from "apexcharts";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
- type mDetails = MemberDetail & {
+type mDetails = MemberDetail & {
   accompaniment: {
     name: string;
   } | null;
@@ -101,7 +101,6 @@ const COLOR_PALETTE = [
   "#fef3c7",
 ];
 
-
 export function useUniqueAccompanimentCount(
   data: mDetails[] | undefined
 ): number {
@@ -125,11 +124,7 @@ export function useUniqueAccompanimentCount(
   }, [data]);
 }
 
-
-
 export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
- 
-
   const attestationData = useMemo(() => {
     const attestationCounts: Record<string, number> = {};
 
@@ -328,7 +323,7 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
       somali: 0,
       afar: 0,
       arabe: 0,
-      autres: 0,
+
       combinaisons: 0,
       detailsCombinaisons: {} as Record<string, number>,
     };
@@ -346,8 +341,6 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
         if (lang.includes("somali")) counts.somali++;
         else if (lang.includes("afar")) counts.afar++;
         else if (lang.includes("arabe")) counts.arabe++;
-        else if (lang.includes("autres") || lang.includes("autre"))
-          counts.autres++;
       } else {
         counts.combinaisons++;
         const key = languages.sort().join(", ");
@@ -366,7 +359,7 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
     Somali: languageStats.somali,
     Afar: languageStats.afar,
     Arabe: languageStats.arabe,
-    Autres: languageStats.autres,
+
     Combinaisons: languageStats.combinaisons,
   };
 
@@ -394,7 +387,10 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
   };
 
   const disabilityTotals = filteredData.reduce((acc, item) => {
-    if (item.disability.toLowerCase() !== "pas de handicap" && item.disability.toLowerCase() !== "autre") {
+    if (
+      item.disability.toLowerCase() !== "pas de handicap" &&
+      item.disability.toLowerCase() !== "autre"
+    ) {
       acc[item.disability] = (acc[item.disability] || 0) + 1;
     }
     return acc;
@@ -1000,12 +996,8 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Total AGR
-                </p>
-                <p className="text-3xl font-bold text-indigo-600">
-                  541
-                </p>
+                <p className="text-sm font-medium text-gray-600">Total AGR</p>
+                <p className="text-3xl font-bold text-indigo-600">541</p>
               </div>
               <FolderOpen className="h-8 w-8 text-indigo-600" />
             </div>

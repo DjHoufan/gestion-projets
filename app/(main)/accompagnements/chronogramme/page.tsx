@@ -442,7 +442,7 @@ const Main2 = () => {
           {/* Légende par catégorie */}
           <div className="mt-6 pt-4 border-t">
             <div className="text-sm font-semibold text-gray-700 mb-3">
-              Légende par type d'activité
+              Légende par type d&apos;activité
             </div>
             <div className="flex flex-wrap gap-3">
               <div className="flex items-center gap-2">

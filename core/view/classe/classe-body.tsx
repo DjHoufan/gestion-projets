@@ -59,7 +59,7 @@ import {
 } from "recharts";
 
 const chartData = [
-  { name: "C1", value: 190, fill: "#3b82f6" },
+  { name: "C1", value: 194, fill: "#3b82f6" },
   { name: "C2", value: 223, fill: "#8b5cf6" },
   { name: "C3", value: 205, fill: "#14b8a6" },
   { name: "C4", value: 258, fill: "#f43f5e" },
