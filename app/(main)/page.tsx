@@ -56,7 +56,7 @@ const STATS_DATA: StatItem[] = [
     },
     {
       title: "Taux d'Abandon",
-      value: "3%",
+      value: "3.6%",
       icon: UserX,
       description: "Très faible abandon",
       colorBorder: "border-red-200",

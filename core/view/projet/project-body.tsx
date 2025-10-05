@@ -341,7 +341,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
 
         <div className="mx-auto max-w-7xl space-y-6">
           {/* Main Stats Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Total Bénéficiaires */}
             <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -378,26 +378,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
               </CardContent>
             </Card>
 
-            {/* Durée */}
-            <Card className="border-cyan-200 bg-gradient-to-br from-cyan-50 to-cyan-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-cyan-900">
-                  Durée Totale
-                </CardTitle>
-                <Calendar className="h-5 w-5 text-cyan-600" />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-4xl font-bold text-cyan-700">
-                  {stats.dureeJoursOuvrables}
-                </div>
-                <p className="text-sm font-semibold text-cyan-600">
-                  Jours ouvrables
-                </p>
-                <p className="text-xs text-cyan-500">
-                  ({stats.dureeJours} jours calendaires)
-                </p>
-              </CardContent>
-            </Card>
+   
 
             {/* Classes */}
             <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-violet-100 shadow-lg hover:shadow-xl transition-shadow">
@@ -491,12 +472,12 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
                   <span className="text-sm font-medium text-purple-800">
                     Commune Balballa
                   </span>
-                  <span className="text-sm font-bold text-purple-700">71%</span>
+                  <span className="text-sm font-bold text-purple-700">81%</span>
                 </div>
                 <div className="h-3 w-full overflow-hidden rounded-full bg-purple-200">
                   <div
                     className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
-                    style={{ width: `71%` }}
+                    style={{ width: `81%` }}
                   />
                 </div>
               </div>
@@ -505,12 +486,12 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
                   <span className="text-sm font-medium text-orange-800">
                     Commune Boulaos
                   </span>
-                  <span className="text-sm font-bold text-orange-700">29%</span>
+                  <span className="text-sm font-bold text-orange-700">19%</span>
                 </div>
                 <div className="h-3 w-full overflow-hidden rounded-full bg-orange-200">
                   <div
                     className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
-                    style={{ width: `29%` }}
+                    style={{ width: `19%` }}
                   />
                 </div>
               </div>

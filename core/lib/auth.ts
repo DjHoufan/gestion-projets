@@ -7,6 +7,7 @@ import CryptoJS from "crypto-js";
 import { AuthSchema, AuthSchemaInput } from "@/core/lib/schemas";
 import { db } from "./db";
 import { RolePermission } from "@/core/lib/types";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const setAccessTokenCookie = async (token: RolePermission) => {
   try {
@@ -81,6 +82,7 @@ export const login = async (values: AuthSchemaInput) => {
 };
 
 export const logout = async () => {
+  const queryClient = useQueryClient();
   try {
     const supabase = await createActionServerCookies();
     (await cookies()).set(process.env.AUTH_COOKIE_ACCESS!, "", {
@@ -90,6 +92,7 @@ export const logout = async () => {
       httpOnly: true,
       secure: true, // active en production
     });
+    queryClient.clear();
     return await supabase.auth.signOut();
   } catch (error) {}
 };

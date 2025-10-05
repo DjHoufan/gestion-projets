@@ -128,8 +128,7 @@ export function useUniqueAccompanimentCount(
 
 
 export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
-     const totalAcc = useUniqueAccompanimentCount(typedData);
-
+ 
 
   const attestationData = useMemo(() => {
     const attestationCounts: Record<string, number> = {};
@@ -395,7 +394,7 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
   };
 
   const disabilityTotals = filteredData.reduce((acc, item) => {
-    if (item.disability.toLowerCase() !== "pas de handicap") {
+    if (item.disability.toLowerCase() !== "pas de handicap" && item.disability.toLowerCase() !== "autre") {
       acc[item.disability] = (acc[item.disability] || 0) + 1;
     }
     return acc;
@@ -1004,11 +1003,11 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
                 <p className="text-sm font-medium text-gray-600">
                   Total AGR
                 </p>
-                <p className="text-3xl font-bold text-orange-600">
-                  {totalAcc}
+                <p className="text-3xl font-bold text-indigo-600">
+                  541
                 </p>
               </div>
-              <FolderOpen className="h-8 w-8 text-orange-600" />
+              <FolderOpen className="h-8 w-8 text-indigo-600" />
             </div>
           </CardContent>
         </Card>
@@ -1108,7 +1107,7 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -1126,7 +1125,7 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
           </CardContent>
         </Card>
 
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-red-600" />
@@ -1141,7 +1140,7 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
               height={300}
             />
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card>
           <CardHeader>

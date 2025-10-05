@@ -373,7 +373,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
               )}
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
               <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-purple-900">
@@ -425,20 +425,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 </CardContent>
               </Card>
 
-              <Card className="border-pink-200 bg-gradient-to-br from-pink-50 to-pink-100 shadow-lg hover:shadow-xl transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-pink-900">
-                    Projets
-                  </CardTitle>
-                  <UserCheck className="h-5 w-5 text-pink-600" />
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="text-6xl font-black text-pink-700">776</div>
-                  <p className="text-sm font-semibold text-pink-600">
-                    Accompagnement
-                  </p>
-                </CardContent>
-              </Card>
+             
             </div>
             <div className="grid gap-6 md:grid-cols-2">
               <Card
