@@ -403,10 +403,10 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   <TrendingUp className="h-5 w-5 text-orange-600" />
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="text-3xl font-bold text-orange-700">299</div>
+                  <div className="text-3xl font-bold text-orange-700">277</div>
                   <div className="pt-2 border-t border-orange-200">
                     <div className="text-4xl font-black text-orange-700">
-                      55.47%
+                      51.20%
                     </div>
                   </div>
                 </CardContent>
