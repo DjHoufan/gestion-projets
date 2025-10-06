@@ -359,13 +359,13 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
               <div className="flex justify-between items-center gap-5">
                 {canAdd && (
                   <Button
-                   onClick={() =>
-                    open(
-                      <CustomModal>
-                        <AccompanimentForm />
-                      </CustomModal>
-                    )
-                  }
+                    onClick={() =>
+                      open(
+                        <CustomModal>
+                          <AccompanimentForm />
+                        </CustomModal>
+                      )
+                    }
                     className="bg-emerald-600 hover:bg-emerald-700 shadow-lg flex-shrink-0 w-full sm:w-auto"
                   >
                     <SparklesIcon className="h-4 w-4 mr-2" />
@@ -373,9 +373,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   </Button>
                 )}
                 <Button
-                    onClick={() => router.push("accompagnements/chronogramme")}
-
-                  
+                  onClick={() => router.push("accompagnements/chronogramme")}
                   className="bg-emerald-600 hover:bg-emerald-700 shadow-lg flex-shrink-0 w-full sm:w-auto"
                 >
                   <SparklesIcon className="h-4 w-4 mr-2" />
@@ -392,11 +390,8 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   </CardTitle>
                   <Users className="h-5 w-5 text-purple-600" />
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="flex justify-center items-center">
                   <div className="text-6xl font-black text-purple-700">541</div>
-                  <p className="text-sm font-semibold text-purple-600">
-                    Total des AGR
-                  </p>
                 </CardContent>
               </Card>
 
@@ -410,7 +405,6 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 <CardContent className="space-y-3">
                   <div className="text-3xl font-bold text-orange-700">299</div>
                   <div className="pt-2 border-t border-orange-200">
-                    <p className="text-xs text-orange-600 mb-1">de 541 AGR</p>
                     <div className="text-4xl font-black text-orange-700">
                       55.47%
                     </div>
@@ -428,7 +422,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 <CardContent className="space-y-3">
                   <div className="text-3xl font-bold text-blue-700">94</div>
                   <div className="pt-2 border-t border-blue-200">
-                    <p className="text-xs text-blue-600 mb-1">de 541 AGR</p>
+                    
                     <div className="text-4xl font-black text-blue-700">
                       17.44%
                     </div>
