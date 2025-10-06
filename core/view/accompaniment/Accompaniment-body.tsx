@@ -424,7 +424,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   <div className="pt-2 border-t border-blue-200">
                     
                     <div className="text-4xl font-black text-blue-700">
-                      17.44%
+                      17.38%
                     </div>
                   </div>
                 </CardContent>
