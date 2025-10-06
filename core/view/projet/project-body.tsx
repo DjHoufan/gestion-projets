@@ -356,7 +356,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
                   {stats.totalBeneficiaires.toLocaleString()}
                 </div>
                 <p className="text-sm font-semibold text-blue-600">
-                  Participants au programme
+                 jeunes filles formées
                 </p>
               </CardContent>
             </Card>
@@ -365,7 +365,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
             <Card className="border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-amber-900">
-                  Taux d'Abandon
+                 Taux de retention
                 </CardTitle>
                 <UserX className="h-5 w-5 text-amber-600" />
               </CardHeader>
