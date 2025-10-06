@@ -453,11 +453,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                         <span className="text-sm font-semibold text-emerald-100">
                           Accompagnateurs
                         </span>
-                        <div className="px-3 py-1 bg-emerald-500 rounded-full">
-                          <span className="text-xs font-bold text-white">
-                            90.4%
-                          </span>
-                        </div>
+                        
                       </div>
                       <div className="flex items-end gap-3">
                         <span className="text-5xl font-black text-white">
@@ -475,11 +471,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                         <span className="text-sm font-semibold text-emerald-100">
                           Superviseurs
                         </span>
-                        <div className="px-3 py-1 bg-emerald-500 rounded-full">
-                          <span className="text-xs font-bold text-white">
-                            9.6%
-                          </span>
-                        </div>
+                       
                       </div>
                       <div className="flex items-end gap-3">
                         <span className="text-5xl font-black text-white">
