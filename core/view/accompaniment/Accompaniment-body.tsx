@@ -386,7 +386,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
               <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-purple-900">
-                    Nombre d'AGR
+                    Nombre d’AGR créées
                   </CardTitle>
                   <Users className="h-5 w-5 text-purple-600" />
                 </CardHeader>
@@ -398,7 +398,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
               <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg hover:shadow-xl transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-orange-900">
-                    AGR Démarrés
+                    Nombre d’AGR opérationnelles
                   </CardTitle>
                   <TrendingUp className="h-5 w-5 text-orange-600" />
                 </CardHeader>
@@ -415,14 +415,13 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
               <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg hover:shadow-xl transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-blue-900">
-                    AGR Suivis
+                    Nombre d’AGR suivies
                   </CardTitle>
                   <CheckCircle2 className="h-5 w-5 text-blue-600" />
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="text-3xl font-bold text-blue-700">94</div>
                   <div className="pt-2 border-t border-blue-200">
-                    
                     <div className="text-4xl font-black text-blue-700">
                       17.38%
                     </div>
