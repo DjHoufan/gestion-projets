@@ -94,7 +94,7 @@ const STATS_DATA: StatItem[] = [
     colorDesc: "text-red-600",
   },
   {
-    title: "Impact Économique",
+    title: "injectés dans l’économie locale",
     value: "$965K",
     icon: DollarSign,
     description: "Injecté dans l'économie",
@@ -200,14 +200,12 @@ const Main = () => {
                     <Users className="h-12 w-12 text-white drop-shadow-lg" />
                   </div>
                   <p className="text-sm font-bold text-white/90 uppercase tracking-widest">
-                    Bénéficiaires
+                    Jeunes filles
                   </p>
                   <div className="text-5xl font-black text-white drop-shadow-xl">
                     1,000
                   </div>
-                  <p className="text-xs text-white/70 font-medium">
-                    Jeunes filles
-                  </p>
+                  <p className="text-xs text-white/70 font-medium">formées</p>
                 </div>
               </div>
             </div>
