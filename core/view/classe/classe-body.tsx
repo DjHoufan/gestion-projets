@@ -82,7 +82,7 @@ const stats = [
   },
   {
     title: "Nombre de Classes",
-    value: "37",
+    value: "36",
     icon: GraduationCap,
     description: "Classes actives",
     colorBorder: "border-violet-200",

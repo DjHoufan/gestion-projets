@@ -389,7 +389,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="text-4xl font-bold text-violet-700">
-                  {stats.nombreClasses}
+                   36
                 </div>
                 <p className="text-sm font-semibold text-violet-600">
                   Classes actives
