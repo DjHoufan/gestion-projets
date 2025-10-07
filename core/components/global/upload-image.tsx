@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition, useCallback, memo } from "react";
-import Image from "next/image";
 import { CloudUpload, Trash, Camera, Loader2 } from "lucide-react";
 import { Button } from "@/core/components/ui/button";
 import { cn } from "@/core/lib/utils";
@@ -116,12 +115,12 @@ const ImageUploadComponent = ({
     () => (
       <div className="relative group">
         <div className="relative overflow-hidden rounded-lg border-4 transition-all h-[250px] w-[300px] border-slate-100">
-          <Image
-            fill
+          <img
+    
             sizes="300px"
             alt="Aperçu de l'image"
             src={preview || "/placeholder.svg?height=250&width=300"}
-            className="object-cover"
+            className="object-cover h-[300px] w-[300px]"
           />
           {!isPending && !view && (
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100">
