@@ -365,7 +365,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
             <Card className="border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-amber-900">
-                 Taux de retention
+                 Taux de abandons
                 </CardTitle>
                 <UserX className="h-5 w-5 text-amber-600" />
               </CardHeader>
