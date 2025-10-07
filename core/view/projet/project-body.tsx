@@ -265,7 +265,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
                 className={cn(
                   "rounded-lg px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100",
                   viewMode === "grid" &&
-                    "!bg-emerald-500 !text-white shadow-sm !hover:bg-emerald-600 rounded"
+                  "!bg-emerald-500 !text-white shadow-sm !hover:bg-emerald-600 rounded"
                 )}
               >
                 <LayoutGrid className="h-4 w-4 mr-2" />
@@ -277,7 +277,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
                 className={cn(
                   "rounded-lg px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100",
                   viewMode === "table" &&
-                    "!bg-emerald-500 !text-white shadow-sm !hover:bg-emerald-600 rounded"
+                  "!bg-emerald-500 !text-white shadow-sm !hover:bg-emerald-600 rounded"
                 )}
               >
                 <List className="h-4 w-4 mr-2" />
@@ -290,7 +290,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
                 className={cn(
                   "rounded-lg px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100",
                   viewMode === "gantt" &&
-                    "!bg-emerald-500 !text-white shadow-sm !hover:bg-emerald-600 rounded"
+                  "!bg-emerald-500 !text-white shadow-sm !hover:bg-emerald-600 rounded"
                 )}
               >
                 <GanttChart className="h-4 w-4 mr-2" />
@@ -356,26 +356,65 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
                   {stats.totalBeneficiaires.toLocaleString()}
                 </div>
                 <p className="text-sm font-semibold text-blue-600">
-                 jeunes filles formées
+                  jeunes filles formées
                 </p>
               </CardContent>
             </Card>
 
             {/* Abandons */}
-            <Card className="border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-amber-900">
-                 Taux de abandons
-                </CardTitle>
-                <UserX className="h-5 w-5 text-amber-600" />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-4xl font-bold text-amber-700">
-                  {stats.tauxAbandon}%
+            <Card className="border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] overflow-hidden relative">
+              {/* Effet de fond décoratif */}
+              <div className="absolute top-0 right-0 w-40 h-40 bg-amber-300 rounded-full blur-3xl opacity-20" />
+
+              <CardHeader className="relative z-10 pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-full bg-amber-500 p-3 shadow-lg">
+                    <GraduationCap className="h-6 w-6 text-white" />
+                  </div>
+                  <CardTitle className="text-lg font-bold text-amber-900">
+                    Modules de Formation
+                  </CardTitle>
                 </div>
-                <p className="text-sm font-semibold text-amber-600">
-                  {stats.abandons} abandons
-                </p>
+              </CardHeader>
+
+              <CardContent className="space-y-3 relative z-10">
+                <div className="space-y-3">
+                  {/* Module 1 */}
+                  <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
+                    <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-gray-800">Formation en Entreprenariat & Soft Skills</p>
+                    </div>
+                    <BookOpen className="h-4 w-4 text-amber-500 mt-0.5" />
+                  </div>
+
+                  {/* Module 2 */}
+                  <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
+                    <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-gray-800">Séances de sensibilisation sur les VBG</p>
+                    </div>
+                    <Heart className="h-4 w-4 text-amber-500 mt-0.5" />
+                  </div>
+
+                  {/* Module 3 */}
+                  <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
+                    <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-gray-800">Modules sur la SSR et les droits de la femme</p>
+                    </div>
+                    <Users className="h-4 w-4 text-amber-500 mt-0.5" />
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-amber-300 flex items-center justify-between">
+                  <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">
+                    Programme PARVBG
+                  </p>
+                  <span className="text-xs bg-amber-200 text-amber-900 px-3 py-1 rounded-full font-semibold">
+                    3 Modules
+                  </span>
+                </div>
               </CardContent>
             </Card>
 
@@ -389,7 +428,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="text-4xl font-bold text-violet-700">
-                   36
+                  36
                 </div>
                 <p className="text-sm font-semibold text-violet-600">
                   Classes actives
