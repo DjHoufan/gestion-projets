@@ -148,7 +148,31 @@ export function PurchasesView() {
       ),
       size: 120,
     },
-    
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }: any) => {
+        const purchase = row.original;
+        return (
+          <div className="flex gap-1">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 w-8 p-0 bg-transparent"
+                >
+                  <Eye className="h-3 w-3" />
+                </Button>
+              </DialogTrigger>
+              <PurchaseDetailsModal purchase={purchase} />
+            </Dialog>
+             
+          </div>
+        );
+      },
+      size: 150,
+    },
   ];
 
   const PurchaseDetailsModal = ({ purchase }: { purchase: any }) => {
