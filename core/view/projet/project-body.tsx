@@ -21,6 +21,9 @@ import {
   Briefcase,
   Clock,
   TrendingUp,
+  CheckCircle2,
+  BookOpen,
+  Heart,
 } from "lucide-react";
 
 import { StatsCards } from "@/core/view/projet/stats-cards";
