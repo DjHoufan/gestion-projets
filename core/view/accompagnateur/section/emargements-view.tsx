@@ -534,8 +534,8 @@ export function EmargementsView() {
         searchPlaceholder="Rechercher par nom ou date..."
         searchField="name"
         additionalSearchFields={["phone", "email", "status"]}
-        title="des achats"
-        description="Gérez les informations et les dépenses de vos différents accompagnements"
+        title="des Émargements"
+
         canAdd={false}
         pageSize={10}
         addButtonText="Enregistre un nouveau bénéficiaires"
