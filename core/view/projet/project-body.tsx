@@ -343,126 +343,143 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
 
         {/* Stats Cards */}
 
-        <div className="mx-auto max-w-7xl space-y-6">
-          {/* Main Stats Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* Total Bénéficiaires */}
-            <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-blue-900">
-                  Total des Bénéficiaires
-                </CardTitle>
-                <Users className="h-5 w-5 text-blue-600" />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-4xl font-bold text-blue-700">
-                  {stats.totalBeneficiaires.toLocaleString()}
-                </div>
-                <p className="text-sm font-semibold text-blue-600">
-                  jeunes filles formées
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Abandons */}
-            <Card className="border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] overflow-hidden relative">
-              {/* Effet de fond décoratif */}
-              <div className="absolute top-0 right-0 w-40 h-40 bg-amber-300 rounded-full blur-3xl opacity-20" />
-
-              <CardHeader className="relative z-10 pb-3">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-full bg-amber-500 p-3 shadow-lg">
-                    <GraduationCap className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-lg font-bold text-amber-900">
-                    Modules de Formation
+        
+          <div className="mx-auto max-w-7xl space-y-6">
+            {/* Top Row - Hero Stats 4 colonnes */}
+            <div className="grid gap-6 grid-cols-2 lg:grid-cols-4">
+              {/* Total Bénéficiaires */}
+              <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-blue-900">
+                    Total des Bénéficiaires
                   </CardTitle>
-                </div>
-              </CardHeader>
-
-              <CardContent className="space-y-3 relative z-10">
-                <div className="space-y-3">
-                  {/* Module 1 */}
-                  <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
-                    <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-800">Formation en Entreprenariat & Soft Skills</p>
-                    </div>
-                    <BookOpen className="h-4 w-4 text-amber-500 mt-0.5" />
+                  <Users className="h-5 w-5 text-blue-600" />
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-4xl font-bold text-blue-700">
+                    {stats.totalBeneficiaires.toLocaleString()}
                   </div>
-
-                  {/* Module 2 */}
-                  <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
-                    <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-800">Séances de sensibilisation sur les VBG</p>
-                    </div>
-                    <Heart className="h-4 w-4 text-amber-500 mt-0.5" />
-                  </div>
-
-                  {/* Module 3 */}
-                  <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
-                    <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-800">Modules sur la SSR et les droits de la femme</p>
-                    </div>
-                    <Users className="h-4 w-4 text-amber-500 mt-0.5" />
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-amber-300 flex items-center justify-between">
-                  <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">
-                    Programme PARVBG
+                  <p className="text-sm font-semibold text-blue-600">
+                    jeunes filles formées
                   </p>
-                  <span className="text-xs bg-amber-200 text-amber-900 px-3 py-1 rounded-full font-semibold">
-                    3 Modules
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            {/* Classes */}
-            <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-violet-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-violet-900">
-                  Nombre de Classes
-                </CardTitle>
-                <GraduationCap className="h-5 w-5 text-violet-600" />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-4xl font-bold text-violet-700">
-                  36
-                </div>
-                <p className="text-sm font-semibold text-violet-600">
-                  Classes actives
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+              {/* Classes */}
+              <Card className="border-violet-200 bg-gradient-to-br from-violet-50 to-violet-100 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-violet-900">
+                    Nombre de Classes
+                  </CardTitle>
+                  <GraduationCap className="h-5 w-5 text-violet-600" />
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-4xl font-bold text-violet-700">
+                    36
+                  </div>
+                  <p className="text-sm font-semibold text-violet-600">
+                    Classes actives
+                  </p>
+                </CardContent>
+              </Card>
 
-          {/* Secondary Stats */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* Formateurs */}
-            <Card className="border-teal-200 bg-gradient-to-br from-teal-50 to-teal-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-teal-900">
-                  Nombre de Formateurs
-                </CardTitle>
-                <Users className="h-5 w-5 text-teal-600" />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-4xl font-bold text-teal-700">
-                  {stats.nombreFormateurs}
-                </div>
-                <p className="text-sm font-semibold text-teal-600">
-                  Formateurs qualifiés
-                </p>
-              </CardContent>
-            </Card>
+              {/* Formateurs */}
+              <Card className="border-teal-200 bg-gradient-to-br from-teal-50 to-teal-100 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-teal-900">
+                    Nombre de Formateurs
+                  </CardTitle>
+                  <Users className="h-5 w-5 text-teal-600" />
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-4xl font-bold text-teal-700">
+                    {stats.nombreFormateurs}
+                  </div>
+                  <p className="text-sm font-semibold text-teal-600">
+                    Formateurs qualifiés
+                  </p>
+                </CardContent>
+              </Card>
 
-            {/* Total AGR */}
+              {/* Taux de Rétention */}
+              <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-emerald-900">
+                    Taux de Rétention
+                  </CardTitle>
+                  <TrendingUp className="h-5 w-5 text-emerald-600" />
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-4xl font-bold text-emerald-700">
+                    {stats.tauxRetention}%
+                  </div>
+                  <p className="text-sm font-semibold text-emerald-600">
+                    Excellent taux de maintien
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
 
-            <div className="max-w-md">
+            {/* Middle Row - Modules Formation (2/3) + AGR (1/3) */}
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* Modules de Formation - 2 colonnes */}
+              <Card className="lg:col-span-2 border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] overflow-hidden relative">
+                {/* Effet de fond décoratif */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-amber-300 rounded-full blur-3xl opacity-20" />
+
+                <CardHeader className="relative z-10 pb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-full bg-amber-500 p-3 shadow-lg">
+                      <GraduationCap className="h-6 w-6 text-white" />
+                    </div>
+                    <CardTitle className="text-lg font-bold text-amber-900">
+                      Modules de Formation
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="space-y-3 relative z-10">
+                  <div className="space-y-3">
+                    {/* Module 1 */}
+                    <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
+                      <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-800">Formation en Entreprenariat & Soft Skills</p>
+                      </div>
+                      <BookOpen className="h-4 w-4 text-amber-500 mt-0.5" />
+                    </div>
+
+                    {/* Module 2 */}
+                    <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
+                      <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-800">Séances de sensibilisation sur les VBG</p>
+                      </div>
+                      <Heart className="h-4 w-4 text-amber-500 mt-0.5" />
+                    </div>
+
+                    {/* Module 3 */}
+                    <div className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-amber-200 hover:bg-white transition-colors">
+                      <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-800">Modules sur la SSR et les droits de la femme</p>
+                      </div>
+                      <Users className="h-4 w-4 text-amber-500 mt-0.5" />
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-amber-300 flex items-center justify-between">
+                    <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">
+                      Programme PARVBG
+                    </p>
+                    <span className="text-xs bg-amber-200 text-amber-900 px-3 py-1 rounded-full font-semibold">
+                      3 Modules
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Total AGR - 1 colonne */}
               <Card className="border-rose-200 bg-white shadow-lg hover:shadow-2xl transition-all duration-300 group relative overflow-hidden">
                 {/* Bordure animée */}
                 <div
@@ -514,67 +531,46 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
               </Card>
             </div>
 
-            {/* Taux de Rétention */}
-            <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-emerald-900">
-                  Taux de Rétention
+            {/* Bottom Row - Distribution Géographique Full Width */}
+            <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-purple-900">
+                  <MapPin className="h-5 w-5 text-purple-600" />
+                  Distribution Géographique
                 </CardTitle>
-                <TrendingUp className="h-5 w-5 text-emerald-600" />
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-4xl font-bold text-emerald-700">
-                  {stats.tauxRetention}%
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-purple-800">
+                      Commune Balballa
+                    </span>
+                    <span className="text-sm font-bold text-purple-700">81%</span>
+                  </div>
+                  <div className="h-3 w-full overflow-hidden rounded-full bg-purple-200">
+                    <div
+                      className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
+                      style={{ width: `81%`  }}
+                    />
+                  </div>
                 </div>
-                <p className="text-sm font-semibold text-emerald-600">
-                  Excellent taux de maintien
-                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-orange-800">
+                      Commune Boulaos
+                    </span>
+                    <span className="text-sm font-bold text-orange-700">19%</span>
+                  </div>
+                  <div className="h-3 w-full overflow-hidden rounded-full bg-orange-200">
+                    <div
+                      className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+                      style={{ width: `19%`  }}
+                    />
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
-
-          {/* Geographic Distribution & Waiting */}
-
-          {/* Distribution Géographique */}
-          <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-purple-900">
-                <MapPin className="h-5 w-5 text-purple-600" />
-                Distribution Géographique
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-purple-800">
-                    Commune Balballa
-                  </span>
-                  <span className="text-sm font-bold text-purple-700">81%</span>
-                </div>
-                <div className="h-3 w-full overflow-hidden rounded-full bg-purple-200">
-                  <div
-                    className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
-                    style={{ width: `81%` }}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-orange-800">
-                    Commune Boulaos
-                  </span>
-                  <span className="text-sm font-bold text-orange-700">19%</span>
-                </div>
-                <div className="h-3 w-full overflow-hidden rounded-full bg-orange-200">
-                  <div
-                    className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
-                    style={{ width: `19%` }}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
 
         {/* Projects Section */}
         <div className="space-y-6">
