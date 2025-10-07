@@ -6,7 +6,6 @@ import {
   Sparkles,
   Users,
   TrendingUp,
-  UserX,
   DollarSign,
   Briefcase,
   ChevronLeft,
