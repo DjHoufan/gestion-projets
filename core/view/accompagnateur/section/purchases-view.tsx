@@ -148,44 +148,7 @@ export function PurchasesView() {
       ),
       size: 120,
     },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }: any) => {
-        const purchase = row.original;
-        return (
-          <div className="flex gap-1">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 w-8 p-0 bg-transparent"
-                >
-                  <Eye className="h-3 w-3" />
-                </Button>
-              </DialogTrigger>
-              <PurchaseDetailsModal purchase={purchase} />
-            </Dialog>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 w-8 p-0 bg-transparent"
-              onClick={() =>
-                open(
-                  <CustomModal size="md:max-w-[1000px]">
-                    <PurchaseForm details={purchase} />
-                  </CustomModal>
-                )
-              }
-            >
-              <Edit className="h-3 w-3" />
-            </Button>
-          </div>
-        );
-      },
-      size: 150,
-    },
+    
   ];
 
   const PurchaseDetailsModal = ({ purchase }: { purchase: any }) => {
@@ -550,21 +513,10 @@ export function PurchasesView() {
 
   return (
     <section className="space-y-6 p-6 ">
-      <div className="flex items-center justify-between">
+      
         <h2 className="text-2xl font-bold text-gray-900">Achats</h2>
-        <Button
-          onClick={() =>
-            open(
-              <CustomModal>
-                <PurchaseForm />
-              </CustomModal>
-            )
-          }
-          className="bg-emerald-600 hover:bg-emerald-700"
-        >
-          Nouveau Achat
-        </Button>
-      </div>
+         
+     
 
       {/* Global Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

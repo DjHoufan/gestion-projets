@@ -81,7 +81,7 @@ const STATS_DATA: StatItem[] = [
     colorDesc: "text-orange-600",
   },
   {
-    title: "Taux de retention",
+    title: "Taux de d'abandon",
     value: "3.6%",
     icon: UserX,
     description: "Très faible abandon",
