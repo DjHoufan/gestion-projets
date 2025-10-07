@@ -226,7 +226,7 @@ const Main = () => {
                 // Couleurs de fond par index
                 const gradients = [
                   "from-orange-400/80 via-orange-500/80 to-orange-600/80",
-                  "from-blue-400/80 via-blue-500/80 to-blue-600/80",
+                  "from-fuchsia-400/80 via-fuchsia-500/80 to-fuchsia-600/80",
                   "from-green-400/80 via-green-500/80 to-green-600/80",
                   "from-purple-400/80 via-purple-500/80 to-purple-600/80",
                 ];
