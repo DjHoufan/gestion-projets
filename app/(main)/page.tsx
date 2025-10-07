@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   LucideIcon,
+  Trophy,
 } from "lucide-react";
 
 interface StatItem {
@@ -81,17 +82,17 @@ const STATS_DATA: StatItem[] = [
     colorDesc: "text-orange-600",
   },
   {
-    title: "Taux de d'abandon",
-    value: "3.6%",
-    icon: UserX,
+    title: "Taux de retention",
+    value: "96.4%",
+    icon: Trophy,
     description: "Très faible abandon",
-    colorBorder: "border-red-200",
-    colorBg: "bg-gradient-to-br from-red-50 to-red-100",
-    colorTitle: "text-red-900",
-    colorIconBg: "bg-red-100",
-    colorIcon: "text-red-600",
-    colorValue: "text-red-700",
-    colorDesc: "text-red-600",
+    colorBorder: "border-fuchsia-200",
+    colorBg: "bg-gradient-to-br from-fuchsia-50 to-fuchsia-100",
+    colorTitle: "text-fuchsia-900",
+    colorIconBg: "bg-fuchsia-100",
+    colorIcon: "text-fuchsia-600",
+    colorValue: "text-fuchsia-700",
+    colorDesc: "text-fuchsia-600",
   },
   {
     title: "injectés dans l’économie locale",
