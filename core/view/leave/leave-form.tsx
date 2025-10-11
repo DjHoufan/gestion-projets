@@ -102,7 +102,7 @@ const LeaveForm = ({ details, projectId, cmembers }: Props) => {
                 <FormLabel className="text-emerald-700 font-semibold">
                   Date de congé *
                 </FormLabel>
-                <DatePicker
+               <DatePicker 
                   disabled={isLoading}
                   position="center"
                   value={field.value}

@@ -251,7 +251,7 @@ export const Header = ({
               <span className="hidden sm:inline"> 👋</span>
             </h1>
             <p className="text-xs sm:text-sm text-gray-600 mb-2 max-w-3xl mx-auto leading-relaxed">
-              Bienvenu dans la plate-forme de suivi du{" "}
+               Plate-forme de suivi du{" "}
               <span className="font-bold bg-gradient-to-r from-teal-600 to-teal-800 bg-clip-text text-transparent">
                 Programme
               </span>{" "}
