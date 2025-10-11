@@ -4,7 +4,7 @@ export type Props = {
   params: Promise<{ teamId: string }>;
 };
 
-//akis''11
+
 
 const Team = async ({ params }: Props) => {
   const { teamId } = await params;
