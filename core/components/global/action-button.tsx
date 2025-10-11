@@ -11,8 +11,7 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import { useModal } from "@/core/providers/modal-provider";
 import CustomModal from "@/core/components/wrappeds/custom-modal";
-import { DeleteConfirmation } from "@/core/components/global/delete-confirmation";
-
+ 
 interface ActionButtonProps<T> {
   data: T;
   useDeleteMutation: any; // Utilisez le type approprié pour votre mutation
