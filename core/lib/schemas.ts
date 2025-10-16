@@ -7,7 +7,7 @@ export const StatusEnum = z.enum(["enabled", "disabled"], {
   invalid_type_error: "Le statut doit être 'enabled' ou 'disabled'.",
 });
 
-export const TypeEnum = z.enum(["admin", "employe", "accompanist", "trainer"], {
+export const TypeEnum = z.enum(["admin", "employe", "accompanist", "trainer","superviseur"], {
   required_error: "Le type est requis.",
   invalid_type_error: "Le type doit être 'admin', 'employe' ou 'accompanist'.",
 });

@@ -17,6 +17,7 @@ enum Type {
   employe
   accompanist
   trainer
+  superviseur
 }
 
 model Personnes {
@@ -96,11 +97,22 @@ model Users {
   messageView     MessageView[]
   Classe          Classe[]
 
-  routes String[]
-  access String[]
+ 
+  routes      String[]
+  access      String[]
 
-  createdAt DateTime
-  updatedAt DateTime @updatedAt
+   // Utilisateurs que cet utilisateur supervise
+  supervision Users[]  @relation("UserSupervision")
+  
+  // Utilisateur qui supervise cet utilisateur (chef/superviseur)
+  supervisor  Users?   @relation("UserSupervision", fields: [supervisorId], references: [id])
+  supervisorId String? @db.Uuid
+  
+
+  createdAt     DateTime
+  updatedAt     DateTime @updatedAt
+ 
+ 
 }
 
 model Project {

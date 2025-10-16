@@ -159,20 +159,22 @@ export const EquipeBody = ({ permission }: PermissionProps) => {
 
   const { mutate: send, isPending: loadingReset } = useSendResetPassword();
 
-  const [employes, accompanists, trainers] = useMemo(() => {
-    if (!data) return [[], [], []];
+  const [employes, accompanists, trainers, superviseurs] = useMemo(() => {
+    if (!data) return [[], [], [], []];
 
     const e = [];
     const a = [];
     const t = [];
+    const p = [];
 
     for (const item of data) {
       if (item.type === "employe") e.push(item);
       else if (item.type === "accompanist") a.push(item);
       else if (item.type === "trainer") t.push(item);
+      else if (item.type === "superviseur") p.push(item);
     }
 
-    return [e, a, t];
+    return [e, a, t, p];
   }, [data]);
 
   const columns = [
@@ -526,7 +528,7 @@ export const EquipeBody = ({ permission }: PermissionProps) => {
         <div className="max-w-7xl mx-auto px-6 py-8">
           <Tabs defaultValue="employees" className="w-full ">
             <div className="w-full flex justify-end gap-5">
-              <TabsList className="grid w-full max-w-lg   grid-cols-3  bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-800/50">
+              <TabsList className="grid w-full max-w-2xl   grid-cols-4  bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-800/50">
                 <TabsTrigger
                   value="employees"
                   className=" data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white flex items-center gap-2"
@@ -547,6 +549,13 @@ export const EquipeBody = ({ permission }: PermissionProps) => {
                 >
                   <Contact className="h-4 w-4" />
                   Formateurs
+                </TabsTrigger>
+                <TabsTrigger
+                  value="Superviseur"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fuchsia-500 data-[state=active]:to-fuchsia-600 data-[state=active]:text-white flex items-center gap-2"
+                >
+                  <Contact className="h-4 w-4" />
+                  Superviseur
                 </TabsTrigger>
               </TabsList>
               {canAdd && (
@@ -649,6 +658,37 @@ export const EquipeBody = ({ permission }: PermissionProps) => {
                     canAdd={false}
                     pageSize={10}
                     color="bg-blue-500"
+                    isPending={isPending}
+                    exportFunction={exportEquipe}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="Superviseur">
+              <Card className=" p-0 dark:bg-slate-800/80 backdrop-blur-sm border-fuchsia-200/50 dark:border-fuchsia-800/50 shadow-lg">
+                <CardHeader className=" rounded-t-lg p-5  bg-gradient-to-r from-fuchsia-500/10 to-fuchsia-600/10 border-b border-fuchsia-200/30 dark:border-fuchsia-800/30">
+                  <CardTitle className="  text-2xl text-fuchsia-800 dark:text-fuchsia-200 flex items-center gap-3">
+                    <div className="p-2 bg-fuchsia-100 dark:bg-fuchsia-900/50 rounded-lg">
+                      <Contact className="h-6 w-6 text-fuchsia-600 dark:text-fuchsia-400" />
+                    </div>
+                    List des Superviseurs
+                  </CardTitle>
+                  <CardDescription className="text-fuchsia-700/80 dark:text-fuchsia-300/80">
+                    Gérer les données de vos superviseurs
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DataTable<UserDetail>
+                    header={false}
+                    data={superviseurs}
+                    columns={columns}
+                    searchPlaceholder="Rechercher par nom ou date..."
+                    searchField="name"
+                    additionalSearchFields={["phone", "email", "status"]}
+                    canAdd={false}
+                    pageSize={10}
+                    color="bg-fuchsia-500"
                     isPending={isPending}
                     exportFunction={exportEquipe}
                   />
