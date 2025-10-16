@@ -123,6 +123,7 @@ const useRealtimeNotifications = (userId: string) => {
                     type,
                     createdAt,
                     updatedAt,
+                    supervisorId: null
                   };
 
                   const newNotif: Notification = {
@@ -204,7 +205,7 @@ export function MainContent({
       purchases: <PurchasesView />,
       conflicts: <ConflictsView />,
       emargements: <EmargementsView />,
-      rencontre: <RencontreView  />,
+      rencontre: <RencontreView />,
       detailAccompaniments: (
         <AccompanimentDetails permission={permission} Id={value} />
       ),
