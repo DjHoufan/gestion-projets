@@ -18,6 +18,7 @@ import {
   Purchase,
   PurchaseItems,
   Rencontre,
+  Signalement,
   Signature,
   Upload,
   Users,
@@ -349,3 +350,8 @@ export interface RapportDetail {
   rencontre: Omit<RencontreDetail, "users" | "accompaniment">[];
   conflits: Omit<ConflitDetail, "accompaniment" | "users">[];
 }
+
+export type SignalementDetails = Signalement & {
+  user: Users;
+  groupe: Accompaniment;
+};

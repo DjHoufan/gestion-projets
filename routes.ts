@@ -21,6 +21,12 @@ export const authRoutes: string[] = [
   "/auth/accompanateur",
 ];
 
+export const SupRoutes: string[] = [
+  "/supervision",
+  "/signalements",
+ 
+];
+
 export const AdminRoutes: string[] = ["/parametres"];
 
 export const AccompanistRoutes: string[] = ["/accompagnateur"];

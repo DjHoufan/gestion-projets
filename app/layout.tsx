@@ -26,6 +26,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryProviders>
           <ModalProvider>
+            
             {children}
 
             <Toaster />

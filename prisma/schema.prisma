@@ -97,22 +97,21 @@ model Users {
   messageView     MessageView[]
   Classe          Classe[]
 
- 
-  routes      String[]
-  access      String[]
+  routes String[]
+  access String[]
 
-   // Utilisateurs que cet utilisateur supervise
-  supervision Users[]  @relation("UserSupervision")
-  
+  // Utilisateurs que cet utilisateur supervise
+  supervision Users[] @relation("UserSupervision")
+
   // Utilisateur qui supervise cet utilisateur (chef/superviseur)
-  supervisor  Users?   @relation("UserSupervision", fields: [supervisorId], references: [id])
+  supervisor   Users?  @relation("UserSupervision", fields: [supervisorId], references: [id])
   supervisorId String? @db.Uuid
-  
 
-  createdAt     DateTime
-  updatedAt     DateTime @updatedAt
- 
- 
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+
+  Signalement  Signalement[] @relation("userSignalement")
+  supSignament Signalement[] @relation("supSignalement")
 }
 
 model Project {
@@ -185,8 +184,9 @@ model Accompaniment {
   planningId String?   @db.Uuid
   planning   Planning? @relation(fields: [planningId], references: [id])
 
-  createdAt DateTime
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime
+  updatedAt   DateTime      @updatedAt
+  Signalement Signalement[]
 }
 
 model Classe {
@@ -452,4 +452,25 @@ model Upload {
 
   userId String @db.Uuid
   user   Users  @relation(fields: [userId], references: [id])
+}
+
+model Signalement {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  type String
+
+  statut String @default("En cours")
+
+  date DateTime @default(now())
+
+  description String
+
+  userId String @db.Uuid
+  user   Users  @relation("userSignalement", fields: [userId], references: [id])
+
+  supId String @db.Uuid
+  sup   Users  @relation("supSignalement", fields: [supId], references: [id])
+
+  groupeId String        @db.Uuid
+  groupe   Accompaniment @relation(fields: [groupeId], references: [id])
 }

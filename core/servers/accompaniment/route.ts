@@ -23,6 +23,19 @@ const handleDatatUpsert = async (c: any, id: string) => {
 const app = new Hono()
   .onError((err, c) => {
     return c.json({ error: err }, 400);
+  }).get("/", async (c) => {
+    const data = await db.accompaniment.findMany({
+      include: {
+        project: true,
+        users: true,
+        members: true,
+        file: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return c.json({ data });
   })
   .get("/", async (c) => {
     const data = await db.accompaniment.findMany({

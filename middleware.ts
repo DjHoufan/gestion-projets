@@ -1,6 +1,6 @@
-
 import {
   DEFAULT_LOGIN_REDIRECT,
+  SupRoutes,
   apiAuthPrefix,
   authRoutes,
   publicRoutes,
@@ -11,7 +11,6 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { nextUrl, headers, cookies: reqCookies } = request;
-
   const response = NextResponse.next({ request: { headers } });
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -35,20 +34,14 @@ export async function middleware(request: NextRequest) {
   const token = (await cookies()).get(process.env.AUTH_COOKIE_ACCESS!);
   if (!token) await supabase.auth.signOut();
 
- 
-  
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Route API auth ne nécessite aucune vérification supplémentaire
+  // ✅ API Auth route => skip
   if (isApiAuthRoute) return response;
 
-  // if (isAdminRoute && user?.user_metadata?.role === "user") {
-  //   return NextResponse.redirect(new URL("/dashboard", nextUrl));
-  // }
-
+  // ✅ Auth routes => si connecté, redirige vers page par défaut
   if (isAuthRoute) {
     if (user) {
       return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
@@ -60,28 +53,36 @@ export async function middleware(request: NextRequest) {
     const { pathname } = nextUrl;
     const [, firstPath = ""] = pathname.split("/");
     const { type, access = [] } = user.user_metadata ?? {};
-
- 
-
     const isApiPath = firstPath === "api";
 
-    // Redirection pour les accompagnateurs (type === "accompanist")
-    if (type === "accompanist") {
-      const isAccompanistPath = firstPath === "accompagnateur";
-      if (!isAccompanistPath && !isApiPath) {
-        return NextResponse.redirect(new URL("/accompagnateur", nextUrl));
-      }
-      return response;
+    // 🧭 Redirection pour les accompagnateurs
+    if (
+      type === "accompanist" &&
+      !isApiPath &&
+      firstPath !== "accompagnateur"
+    ) {
+      return NextResponse.redirect(new URL("/accompagnateur", nextUrl));
     }
-    if (type === "trainer") {
-      const isAccompanistPath =
-        firstPath === "formateur" || firstPath === "mon_profile";
-      if (!isAccompanistPath && !isApiPath) {
-        return NextResponse.redirect(new URL("/formateur", nextUrl));
-      }
-      return response;
+
+    // 🧭 Redirection pour les formateurs
+    if (
+      type === "trainer" &&
+      !isApiPath &&
+      firstPath !== "formateur" &&
+      firstPath !== "mon_profile"
+    ) {
+      return NextResponse.redirect(new URL("/formateur", nextUrl));
     }
-    // Redirection pour les utilisateurs "employe" sans accès (hors /dashboard ou /api)
+
+    // 🧭 Restriction stricte pour les superviseurs
+    if (type === "superviseur" && !isApiPath) {
+      const isAllowed = SupRoutes.includes(pathname);
+      if (!isAllowed) {
+        return NextResponse.redirect(new URL("/supervision", nextUrl));
+      }
+    }
+
+    // 🧭 Restriction pour les employés
     const isProtectedPath = firstPath !== "" && !isApiPath;
     const hasNoAccess =
       type === "employe" &&
@@ -95,8 +96,9 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // ✅ Non connecté → accès seulement aux routes publiques
   if (!user && !isPublicRoute) {
-    return Response.redirect(new URL(`/authentification`, nextUrl));
+    return NextResponse.redirect(new URL("/authentification", nextUrl));
   }
 
   return response;
@@ -105,7 +107,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
-
 
 /*
 import {

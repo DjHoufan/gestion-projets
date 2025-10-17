@@ -15,7 +15,7 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import { useCustomeTabs, useMyData } from "@/core/hooks/store";
 import { formatTimeMessage } from "@/core/lib/utils";
-import { User } from "@supabase/supabase-js";
+ 
 import {
   Bell,
   Loader2,

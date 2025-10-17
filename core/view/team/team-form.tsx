@@ -53,6 +53,7 @@ import { DatePicker } from "@/core/components/global/data-picker";
 import { Spinner } from "@/core/components/ui/spinner";
 import { useCreateTeam, useUpdateTeam } from "@/core/hooks/use-teams";
 import { UploadMultiFilesMinimal } from "@/core/components/global/multi-uploads";
+import { TbUserStar } from "react-icons/tb";
 
 const getSteps = (typeSelect: string) => [
   {
@@ -213,8 +214,8 @@ export const EquipeForm = ({ details }: FormProps<UserDetail>) => {
                     isActive
                       ? "bg-white shadow-lg border-2 border-emerald-300"
                       : isCompleted
-                      ? "bg-emerald-100 hover:bg-emerald-150"
-                      : "hover:bg-white/50"
+                        ? "bg-emerald-100 hover:bg-emerald-150"
+                        : "hover:bg-white/50"
                   )}
                 >
                   <div
@@ -223,8 +224,8 @@ export const EquipeForm = ({ details }: FormProps<UserDetail>) => {
                       isActive
                         ? "bg-emerald-500 text-white shadow-lg"
                         : isCompleted
-                        ? "bg-emerald-400 text-white"
-                        : "bg-white text-emerald-500 border-2 border-emerald-200"
+                          ? "bg-emerald-400 text-white"
+                          : "bg-white text-emerald-500 border-2 border-emerald-200"
                     )}
                   >
                     {isCompleted ? (
@@ -241,8 +242,8 @@ export const EquipeForm = ({ details }: FormProps<UserDetail>) => {
                         isActive
                           ? "text-emerald-800"
                           : isCompleted
-                          ? "text-emerald-700"
-                          : "text-emerald-600"
+                            ? "text-emerald-700"
+                            : "text-emerald-600"
                       )}
                     >
                       {step.title}
@@ -511,6 +512,9 @@ export const EquipeForm = ({ details }: FormProps<UserDetail>) => {
                             <SelectItem value="trainer">
                               <Contact /> Formateur/trice
                             </SelectItem>
+                            <SelectItem value="superviseur">
+                              <TbUserStar /> Superviseur
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -595,9 +599,13 @@ export const EquipeForm = ({ details }: FormProps<UserDetail>) => {
                               <span>Formateur</span>
                               <Contact />
                             </div>
-                          ) : (
-                            "Non renseigné"
-                          )}
+                          ) : form.watch("type") === "superviseur" ?
+                            <div className="flex justify-center items-center gap-5">
+                              <span>Superviseur</span>
+                              <TbUserStar />
+                            </div> : (
+                              "Non renseigné"
+                            )}
                         </span>
                       </div>
                     </div>

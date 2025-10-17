@@ -7,10 +7,14 @@ export const StatusEnum = z.enum(["enabled", "disabled"], {
   invalid_type_error: "Le statut doit être 'enabled' ou 'disabled'.",
 });
 
-export const TypeEnum = z.enum(["admin", "employe", "accompanist", "trainer","superviseur"], {
-  required_error: "Le type est requis.",
-  invalid_type_error: "Le type doit être 'admin', 'employe' ou 'accompanist'.",
-});
+export const TypeEnum = z.enum(
+  ["admin", "employe", "accompanist", "trainer", "superviseur"],
+  {
+    required_error: "Le type est requis.",
+    invalid_type_error:
+      "Le type doit être 'admin', 'employe' ou 'accompanist'.",
+  }
+);
 
 const DocumentSchema = z.object({
   id: z.string().uuid(),
@@ -808,3 +812,15 @@ export const ProfileUserSchema = z.object({
 
 export type UserDataInput = z.input<typeof ProfileUserSchema>;
 export type UpdatePasswordFormData = z.infer<typeof updatePasswordSchema>;
+
+export const SignalementSchema = z.object({
+  type: z.string().min(1, "Le type de signalement est requis"),
+  groupeId: z.string().min(1, "Le groupe d'accompagnement est requis"),
+  userId: z.string().min(1, "L'accompagnateur  est requis"),
+  supId: z.string().min(1, "Le superviseur  est requis"),
+  description: z
+    .string()
+    .min(10, "La description doit contenir au moins 10 caractères"),
+});
+
+export type SignalementSchemaInput = z.input<typeof SignalementSchema>;

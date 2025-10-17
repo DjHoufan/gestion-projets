@@ -14,6 +14,7 @@ import {
   Purchase,
   PurchaseItems,
   Rencontre,
+  Signalement,
   Upload,
   Users,
   VisiteTerrain,
@@ -33,6 +34,7 @@ import {
   PurchaseItemSchema,
   PurchaseSchema,
   RencontreSchema,
+  SignalementSchema,
   UploadSchema,
   UserSchema,
   VisiteTerrainSchema,
@@ -626,8 +628,6 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
     ),
   };
 
- 
-
   // ⚡️ D'abord on supprime les signatures existantes si l'ID existe
   if (data.id) {
     await db.signature.deleteMany({
@@ -683,8 +683,6 @@ export const upsertRencontre = async (data: Partial<Rencontre>) => {
       },
     },
   });
-
-   
 
   return res;
 };
@@ -919,4 +917,25 @@ export const getMyChat = async (userId: string) => {
   });
 
   return response;
+};
+
+export const upsertSignalement = async (data: Partial<Signalement>) => {
+  const validation = SignalementSchema.extend({ id: z.string() }).safeParse(
+    data
+  );
+
+  if (!validation.success) {
+    const errorDetails = validation.error.errors
+      .map((e) => `${e.path.join(".")}: ${e.message}`)
+      .join(", ");
+    throw new Error(`Données invalides: ${errorDetails}`);
+  }
+
+  const ValidData = validation.data;
+
+  return db.signalement.upsert({
+    where: { id: data.id },
+    update: ValidData,
+    create: ValidData,
+  });
 };
