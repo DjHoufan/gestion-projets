@@ -95,6 +95,48 @@ export const useGetAccompaniments = () => {
   });
 };
 
+export const useGetOperation = () => {
+  return useQuery({
+    queryKey: [QueryKeyString.operation],
+    queryFn: async () => {
+      const response = await client.api.accompaniment.operation.$get();
+
+      if (!response.ok) {
+        throw new Error(
+          "Échec de la récupération de la liste des accompagnementss"
+        );
+      }
+
+      const { data } = await response.json();
+
+      const updatedData = data.map((item) => ({
+        ...item,
+        st: item.status ? "Terminer" : "En cours",
+        users: item.users
+          ? {
+              ...item.users,
+              createdAt: new Date(item.users.createdAt),
+              updatedAt: new Date(item.users.updatedAt),
+              dob: new Date(item.users.dob),
+            }
+          : null,
+        purchases: item.purchases.map((p) => ({
+          ...p,
+          purchaseItems: p.purchaseItems.map((item) => ({
+            ...item,
+            date: new Date(item.date),
+          })),
+          createdAt: new Date(p.createdAt),
+          updatedAt: new Date(p.updatedAt),
+        })),
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt),
+      }));
+
+      return updatedData;
+    },
+  });
+};
 export const useGetOneAccompaniment = (id: string) => {
   return useQuery({
     queryKey: [QueryKeyString.accompaniments + id],

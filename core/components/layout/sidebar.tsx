@@ -12,7 +12,10 @@ import {
   FolderKanban,
   Shapes,
   Waypoints,
-  Folders
+  Folders,
+  ClipboardPen,
+  LucideBrickWall,
+  CalendarArrowDown,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -26,7 +29,6 @@ interface NavigationItem {
   url: string;
   icon: React.ComponentType<{ className?: string }>;
   description?: string;
- 
 }
 
 const NAVIGATION_ITEMS: NavigationItem[] = [
@@ -63,9 +65,27 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     icon: Activity,
     description: "Gestion de l'équipe",
   },
+  {
+    title: "Signalements",
+    url: "/signalement",
+    icon: ClipboardPen,
+    description: "Voir les signalements",
+  },
 ];
 
 const TOOLS_ITEMS: NavigationItem[] = [
+  {
+    title: "Operations",
+    url: "/operations",
+    icon: LucideBrickWall,
+    description: "Planning des sessions",
+  },
+  {
+    title: "Evenements",
+    url: "/evenements",
+    icon: CalendarArrowDown,
+    description: "Planning des sessions",
+  },
   {
     title: "Calendrier",
     url: "/planning",
@@ -76,7 +96,7 @@ const TOOLS_ITEMS: NavigationItem[] = [
     title: "Messages",
     url: "/messages",
     icon: MessageSquare,
- 
+
     description: "Communications",
   },
   {
@@ -91,7 +111,7 @@ const TOOLS_ITEMS: NavigationItem[] = [
     icon: Waypoints,
     description: "les acces des utilisateurs",
   },
-    {
+  {
     title: "Guide",
     url: "/guide",
     icon: Folders,
@@ -157,7 +177,6 @@ const NavigationItem = ({
           </div>
         )}
       </div>
-     
     </Link>
   );
 };

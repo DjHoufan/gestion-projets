@@ -135,5 +135,15 @@ const app = new Hono()
       const response = handleDatatUpsert(c, c.req.param("id"));
       return c.json({ data: response });
     }
-  );
+  )
+  .patch("/:id/:statut", sessionMiddleware, async (c) => {
+    const { id, statut } = c.req.param();
+
+    const response = await db.signalement.update({
+      where: { id },
+      data: { statut },
+    });
+
+    return c.json({ data: response });
+  });
 export default app;

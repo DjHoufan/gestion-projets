@@ -156,8 +156,9 @@ export const PruchaseItemForm = ({
                   <FormLabel>Prix unitaire</FormLabel>
                   <FormControl>
                     <Input
+                      type="number"
                       disabled={isSubmitting}
-                      placeholder="Ex: 2500 DJF"
+                      placeholder="Ex: 2500"
                       {...field}
                     />
                   </FormControl>

@@ -125,6 +125,16 @@ export const AccessGroups = [
         name: "Accompagnements",
         description: "Gérer les accompagnements des bénéficiaires",
       },
+      {
+        id: "signalement",
+        name: "Signalement",
+        description: "Gérer les signalements des superviseurs",
+      },
+      {
+        id: "operations",
+        name: "Operations",
+        description: "Gérer les operations",
+      },
     ],
   },
   {

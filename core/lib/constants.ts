@@ -33,7 +33,8 @@ export const QueryKeyString = {
   employes: "employes",
   akis:"akis",
   superviseur:"superviseur",
-  signelements:"signelements"
+  signelements:"signelements",
+  operation:"operation",
 };
 
 export const Days = [

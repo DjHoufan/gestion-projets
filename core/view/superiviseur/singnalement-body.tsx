@@ -18,14 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/core/components/ui/dialog";
-import {
-  Flag,
-  Eye,
-  Calendar,
-  User,
-  RefreshCw,
-  Trash,
-} from "lucide-react";
+import { Flag, Eye, Calendar, User, RefreshCw, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,8 +29,18 @@ import {
 } from "@/core/components/ui/dropdown-menu";
 import { DataTable } from "@/core/components/global/data-table";
 import { SignalementDetails } from "@/core/lib/types";
-import { useGetSignalement } from "@/core/hooks/use-superivision";
+import {
+  useGetSignalement,
+  useUpdateStatusSignalement,
+} from "@/core/hooks/use-superivision";
 import { Spinner } from "@/core/components/ui/spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/core/components/ui/select";
 
 const typeLabels: Record<string, string> = {
   observation: "Observation",
@@ -50,9 +53,12 @@ const typeLabels: Record<string, string> = {
 
 export default function SignalementsBody() {
   const { data: signalements, isPending } = useGetSignalement();
-
+  const { mutate: updateStatut, isPending: isLoading } =
+    useUpdateStatusSignalement();
   const [selectedSignalement, setSelectedSignalement] = useState<any>(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
 
   const getStatutBadgeColor = (statut: string) => {
     switch (statut) {
@@ -84,22 +90,15 @@ export default function SignalementsBody() {
     }
   };
 
-  const getPrioriteBadgeColor = (priorite: string) => {
-    switch (priorite) {
-      case "haute":
-        return "bg-red-50 text-red-700 border-red-200";
-      case "moyenne":
-        return "bg-orange-50 text-orange-700 border-orange-200";
-      case "basse":
-        return "bg-green-50 text-green-700 border-green-200";
-      default:
-        return "bg-gray-50 text-gray-700 border-gray-200";
-    }
-  };
-
   const handleViewDetails = (signalement: any) => {
     setSelectedSignalement(signalement);
     setDetailDialogOpen(true);
+  };
+
+  const handleChangeStatus = (signalement: any) => {
+    setSelectedSignalement(signalement);
+    setNewStatus(signalement.statut);
+    setStatusDialogOpen(true);
   };
 
   const columns = [
@@ -206,7 +205,7 @@ export default function SignalementsBody() {
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
-                  onClick={() => console.log("Changer statut", signalement)}
+                  onClick={() => handleChangeStatus(signalement)}
                   className="flex items-center gap-2 rounded-lg cursor-pointer"
                 >
                   <RefreshCw className="h-4 w-4" />
@@ -228,6 +227,22 @@ export default function SignalementsBody() {
       size: 120,
     },
   ];
+
+  const handleSaveStatus = () => {
+    updateStatut(
+      {
+        param: {
+          id: selectedSignalement?.id,
+          statut: newStatus,
+        },
+      },
+      {
+        onSuccess: () => {
+          setStatusDialogOpen(false);
+        },
+      }
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -330,7 +345,7 @@ export default function SignalementsBody() {
 
       {/* Dialog Détails */}
       <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="!max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold flex items-center gap-2">
               <Flag className="h-6 w-6 text-orange-600" />
@@ -434,6 +449,91 @@ export default function SignalementsBody() {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <RefreshCw className="h-5 w-5 text-orange-600" />
+              Changer le Statut
+            </DialogTitle>
+            <DialogDescription>
+              Modifier le statut du signalement{" "}
+              {selectedSignalement?.groupe.name}
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedSignalement && (
+            <div className="space-y-4">
+              {/* Informations du signalement */}
+
+              {/* Sélecteur de statut */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Nouveau statut
+                </label>
+                <Select
+                  disabled={isLoading}
+                  value={newStatus}
+                  onValueChange={setNewStatus}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Sélectionner un statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Urgent">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                        Urgent
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="En cours">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        En cours
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="Resolu">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                        Résolu
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Boutons d'action */}
+              <div className="flex items-center gap-3 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setStatusDialogOpen(false)}
+                  className="flex-1"
+                >
+                  Annuler
+                </Button>
+                <Button
+                  disabled={isLoading}
+                  onClick={handleSaveStatus}
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
+                >
+                  {isLoading ? (
+                    <>
+                      Enregistrement
+                      <Spinner variant="ellipsis" />
+                    </>
+                  ) : (
+                    <>
+                      Enregistrer
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>

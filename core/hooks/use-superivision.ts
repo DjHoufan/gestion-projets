@@ -313,3 +313,37 @@ export const useUpdateSignalement = () => {
     },
   });
 };
+
+type PatchResStatus = InferResponseType<
+  (typeof client.api.superviseur)[":id"][":statut"]["$patch"],
+  200
+>;
+type PatchReqStatus = InferRequestType<
+  (typeof client.api.superviseur)[":id"][":statut"]["$patch"]
+>;
+
+// === Mutation: Update  ===
+export const useUpdateStatusSignalement = () => {
+  const queryClient = useQueryClient();
+  const { close } = useModal();
+
+  return useMutation<PatchResStatus, Error, PatchReqStatus>({
+    mutationFn: async ({ param }) => {
+      const res = await client.api.superviseur[":id"][":statut"]["$patch"]({
+        param,
+      });
+
+      return await res.json();
+    },
+    onSuccess: () => {
+      toast.success({ message: "Le statut a été modifié avec succès" });
+      queryClient.invalidateQueries({ queryKey: [QueryKeyString.signelements] });
+      close();
+    },
+    onError: (err) => {
+      toast.error({
+        message: `Échec de la modification : ${err.message}`,
+      });
+    },
+  });
+};

@@ -23,7 +23,7 @@ import { Textarea } from "@/core/components/ui/textarea";
 import { AlertCircle, Check } from "lucide-react";
 import {
   useCreateSignalement,
-  useUpdateSignalement,
+ useUpdateStatusSignalement,
 } from "@/core/hooks/use-superivision";
 import { Spinner } from "@/core/components/ui/spinner";
 import { SignalementSchema, SignalementSchemaInput } from "@/core/lib/schemas";

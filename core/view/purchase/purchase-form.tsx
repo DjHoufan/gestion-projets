@@ -174,7 +174,7 @@ const ArticleForm = ({
                 <FormItem className="w-full">
                   <FormLabel>Prix unitaire</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: 2500 DJF" {...field} />
+                    <Input type="number" placeholder="Ex: 2500 " {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
