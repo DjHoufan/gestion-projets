@@ -103,12 +103,12 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
             <div className="flex items-start justify-between">
               <div>
                 <CardTitle className="text-3xl text-teal-800 mb-3">
-                  {event.titre}
+                  {event?.titre}
                 </CardTitle>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Calendar className="h-5 w-5 text-teal-600" />
                   <span className="font-medium">
-                    {new Date(event.date).toLocaleDateString("fr-FR", {
+                    {new Date(event?.date!).toLocaleDateString("fr-FR", {
                       weekday: "long",
                       year: "numeric",
                       month: "long",
