@@ -337,12 +337,48 @@ export const useUpdateStatusSignalement = () => {
     },
     onSuccess: () => {
       toast.success({ message: "Le statut a été modifié avec succès" });
-      queryClient.invalidateQueries({ queryKey: [QueryKeyString.signelements] });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.signelements],
+      });
       close();
     },
     onError: (err) => {
       toast.error({
         message: `Échec de la modification : ${err.message}`,
+      });
+    },
+  });
+};
+
+type DeleteResponse = InferResponseType<
+  (typeof client.api.superviseur)[":id"]["$delete"],
+  200
+>;
+type DeleteRequest = InferRequestType<
+  (typeof client.api.superviseur)[":id"]["$delete"]
+>;
+
+export const useDeletSingnalement = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<DeleteResponse, Error, DeleteRequest>({
+    mutationFn: async ({ param }) => {
+      const res = await client.api.superviseur[":id"]["$delete"]({ param });
+      if (!res.ok) {
+        throw new Error("Failed to delete");
+      }
+      return await res.json();
+    },
+
+    onSuccess: () => {
+      toast.success({ message: "Le signalement a été supprimé avec succès" });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeyString.signelements],
+      });
+    },
+    onError: (err) => {
+      toast.error({
+        message: `Erreur lors de la suppression : ${err.message}`,
       });
     },
   });

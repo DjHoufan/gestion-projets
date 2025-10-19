@@ -18,7 +18,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/core/components/ui/dialog";
-import { Flag, Eye, Calendar, User, RefreshCw, Trash } from "lucide-react";
+import {
+  Flag,
+  Eye,
+  Calendar,
+  User,
+  RefreshCw,
+  Trash,
+  MoreHorizontal,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +38,7 @@ import {
 import { DataTable } from "@/core/components/global/data-table";
 import { SignalementDetails } from "@/core/lib/types";
 import {
+  useDeletSingnalement,
   useGetSignalement,
   useUpdateStatusSignalement,
 } from "@/core/hooks/use-superivision";
@@ -41,6 +50,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/core/components/ui/select";
+import CustomModal from "@/core/components/wrappeds/custom-modal";
+import SignalementFormAd from "@/core/view/superiviseur/singnalement-form-ad";
+import { useModal } from "@/core/providers/modal-provider";
+import { DeleteConfirmation } from "@/core/components/global/delete-confirmation";
 
 const typeLabels: Record<string, string> = {
   observation: "Observation",
@@ -52,6 +65,7 @@ const typeLabels: Record<string, string> = {
 };
 
 export default function SignalementsBody() {
+  const { open } = useModal();
   const { data: signalements, isPending } = useGetSignalement();
   const { mutate: updateStatut, isPending: isLoading } =
     useUpdateStatusSignalement();
@@ -59,6 +73,9 @@ export default function SignalementsBody() {
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [newStatus, setNewStatus] = useState("");
+  const { mutate: useDelete, isPending: loading } = useDeletSingnalement();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [sign, setSign] = useState<SignalementDetails | null>(null);
 
   const getStatutBadgeColor = (statut: string) => {
     switch (statut) {
@@ -184,12 +201,12 @@ export default function SignalementsBody() {
         const signalement = row.original;
 
         return (
-          <div className="flex justify-end">
+          <div className="">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 gap-2">
-                  <Eye className="h-4 w-4" />
-                  Voir
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 rounded-xl">
@@ -213,7 +230,10 @@ export default function SignalementsBody() {
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
-                  onClick={() => console.log("Supprimer", signalement)}
+                  onClick={() => {
+                    setIsOpen(true);
+                    setSign(signalement);
+                  }}
                   className="flex items-center gap-2 rounded-lg cursor-pointer text-red-600"
                 >
                   <Trash className="h-4 w-4" />
@@ -244,300 +264,333 @@ export default function SignalementsBody() {
     );
   };
 
+  const onConfirmDelete = async () => {
+    useDelete(
+      { param: { id: sign?.id! } },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+          setSign(null);
+        },
+      }
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Titre de la page */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <Flag className="h-8 w-8 text-orange-600" />
-            Liste des Signalements
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Gérez et suivez tous les signalements des groupes d'accompagnement
-          </p>
+    <>
+      <DeleteConfirmation
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onConfirm={onConfirmDelete}
+        loading={loading}
+        title={`${sign?.type!}`}
+      />
+
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto p-6">
+          {/* Titre de la page */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <Flag className="h-8 w-8 text-orange-600" />
+              Liste des Signalements
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Gérez et suivez tous les signalements des groupes d'accompagnement
+            </p>
+          </div>
+
+          {/* Statistiques */}
+          <div className="grid grid-cols-4 gap-4 mb-6">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {signalements ? (
+                        signalements.length
+                      ) : (
+                        <Spinner variant="circle" className="text-primary" />
+                      )}
+                    </p>
+                  </div>
+                  <Flag className="h-8 w-8 text-gray-400" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Urgents</p>
+                    <p className="text-2xl font-bold text-red-600">
+                      {signalements ? (
+                        signalements.filter((s) => s.statut === "urgent").length
+                      ) : (
+                        <Spinner variant="circle" className="text-primary" />
+                      )}
+                    </p>
+                  </div>
+                  <Flag className="h-8 w-8 text-red-400" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">En cours</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {signalements ? (
+                        signalements.filter((s) => s.statut === "En cours")
+                          .length
+                      ) : (
+                        <Spinner variant="circle" className="text-primary" />
+                      )}
+                    </p>
+                  </div>
+                  <Flag className="h-8 w-8 text-blue-400" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Résolus</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {signalements ? (
+                        signalements.filter((s) => s.statut === "resolu").length
+                      ) : (
+                        <Spinner variant="circle" className="text-primary" />
+                      )}
+                    </p>
+                  </div>
+                  <Flag className="h-8 w-8 text-green-400" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <DataTable<SignalementDetails>
+            header={true}
+            data={signalements ? signalements : []}
+            columns={columns}
+            searchPlaceholder="Rechercher par nom ou date..."
+            searchField="name"
+            additionalSearchFields={["phone", "email", "status"]}
+            canAdd={true}
+            pageSize={10}
+            addButtonText="Enregistrez un signalement"
+            onAddButtonClick={() =>
+              open(
+                <CustomModal>
+                  <SignalementFormAd />
+                </CustomModal>
+              )
+            }
+            isPending={isPending}
+          />
         </div>
 
-        {/* Statistiques */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {signalements ? (
-                      signalements.length
-                    ) : (
-                      <Spinner variant="circle" className="text-primary" />
-                    )}
-                  </p>
-                </div>
-                <Flag className="h-8 w-8 text-gray-400" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Urgents</p>
-                  <p className="text-2xl font-bold text-red-600">
-                    {signalements ? (
-                      signalements.filter((s) => s.statut === "urgent").length
-                    ) : (
-                      <Spinner variant="circle" className="text-primary" />
-                    )}
-                  </p>
-                </div>
-                <Flag className="h-8 w-8 text-red-400" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">En cours</p>
-                  <p className="text-2xl font-bold text-blue-600">
-                    {signalements ? (
-                      signalements.filter((s) => s.statut === "En cours").length
-                    ) : (
-                      <Spinner variant="circle" className="text-primary" />
-                    )}
-                  </p>
-                </div>
-                <Flag className="h-8 w-8 text-blue-400" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Résolus</p>
-                  <p className="text-2xl font-bold text-green-600">
-                    {signalements ? (
-                      signalements.filter((s) => s.statut === "resolu").length
-                    ) : (
-                      <Spinner variant="circle" className="text-primary" />
-                    )}
-                  </p>
-                </div>
-                <Flag className="h-8 w-8 text-green-400" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Dialog Détails */}
+        <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
+          <DialogContent className="!max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+                <Flag className="h-6 w-6 text-orange-600" />
+                Détails du Signalement
+              </DialogTitle>
+              <DialogDescription>
+                Informations complètes sur le signalement{" "}
+                {selectedSignalement?.id}
+              </DialogDescription>
+            </DialogHeader>
 
-        <DataTable<SignalementDetails>
-          header={false}
-          data={signalements ? signalements : []}
-          columns={columns}
-          searchPlaceholder="Rechercher par nom ou date..."
-          searchField="name"
-          additionalSearchFields={["phone", "email", "status"]}
-          canAdd={false}
-          pageSize={10}
-          isPending={isPending}
-        />
-      </div>
-
-      {/* Dialog Détails */}
-      <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
-        <DialogContent className="!max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-              <Flag className="h-6 w-6 text-orange-600" />
-              Détails du Signalement
-            </DialogTitle>
-            <DialogDescription>
-              Informations complètes sur le signalement{" "}
-              {selectedSignalement?.id}
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedSignalement && (
-            <div className="space-y-6">
-              {/* En-tête */}
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">
-                    {selectedSignalement.groupeAccompagnement}
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    ID: {selectedSignalement.id}
-                  </p>
+            {selectedSignalement && (
+              <div className="space-y-6">
+                {/* En-tête */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      {selectedSignalement.groupeAccompagnement}
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      ID: {selectedSignalement.id}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Badge
+                      variant="outline"
+                      className={getTypeBadgeColor(selectedSignalement.type)}
+                    >
+                      {typeLabels[selectedSignalement.type]}
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className={getStatutBadgeColor(
+                        selectedSignalement.statut
+                      )}
+                    >
+                      {selectedSignalement.statut}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <Badge
-                    variant="outline"
-                    className={getTypeBadgeColor(selectedSignalement.type)}
-                  >
-                    {typeLabels[selectedSignalement.type]}
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className={getStatutBadgeColor(selectedSignalement.statut)}
-                  >
-                    {selectedSignalement.statut}
-                  </Badge>
-                </div>
-              </div>
 
-              {/* Description */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Description</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 leading-relaxed">
-                    {selectedSignalement.description}
-                  </p>
-                </CardContent>
-              </Card>
+                {/* Description */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Description</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 leading-relaxed">
+                      {selectedSignalement.description}
+                    </p>
+                  </CardContent>
+                </Card>
 
-              {/* Informations */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Informations</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-600 flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
-                        Date de création
-                      </p>
-                      <p className="font-medium mt-1">
-                        {new Date(
-                          selectedSignalement.dateCreation
-                        ).toLocaleString("fr-FR")}
-                      </p>
-                    </div>
-                    {selectedSignalement.dateResolution && (
+                {/* Informations */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Informations</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm text-gray-600 flex items-center gap-2">
                           <Calendar className="h-4 w-4" />
-                          Date de résolution
+                          Date de création
                         </p>
                         <p className="font-medium mt-1">
                           {new Date(
-                            selectedSignalement.dateResolution
+                            selectedSignalement.dateCreation
                           ).toLocaleString("fr-FR")}
                         </p>
                       </div>
+                      {selectedSignalement.dateResolution && (
+                        <div>
+                          <p className="text-sm text-gray-600 flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            Date de résolution
+                          </p>
+                          <p className="font-medium mt-1">
+                            {new Date(
+                              selectedSignalement.dateResolution
+                            ).toLocaleString("fr-FR")}
+                          </p>
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm text-gray-600 flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          Auteur
+                        </p>
+                        <p className="font-medium mt-1">
+                          {selectedSignalement.auteur}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          Accompagnateur
+                        </p>
+                        <p className="font-medium mt-1">
+                          {selectedSignalement.accompagnateur}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                <RefreshCw className="h-5 w-5 text-orange-600" />
+                Changer le Statut
+              </DialogTitle>
+              <DialogDescription>
+                Modifier le statut du signalement{" "}
+                {selectedSignalement?.groupe.name}
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedSignalement && (
+              <div className="space-y-4">
+                {/* Informations du signalement */}
+
+                {/* Sélecteur de statut */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Nouveau statut
+                  </label>
+                  <Select
+                    disabled={isLoading}
+                    value={newStatus}
+                    onValueChange={setNewStatus}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Sélectionner un statut" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Urgent">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                          Urgent
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="En cours">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                          En cours
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="Resolu">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                          Résolu
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Boutons d'action */}
+                <div className="flex items-center gap-3 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setStatusDialogOpen(false)}
+                    className="flex-1"
+                  >
+                    Annuler
+                  </Button>
+                  <Button
+                    disabled={isLoading}
+                    onClick={handleSaveStatus}
+                    className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
+                  >
+                    {isLoading ? (
+                      <>
+                        Enregistrement
+                        <Spinner variant="ellipsis" />
+                      </>
+                    ) : (
+                      <>
+                        Enregistrer
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                      </>
                     )}
-                    <div>
-                      <p className="text-sm text-gray-600 flex items-center gap-2">
-                        <User className="h-4 w-4" />
-                        Auteur
-                      </p>
-                      <p className="font-medium mt-1">
-                        {selectedSignalement.auteur}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 flex items-center gap-2">
-                        <User className="h-4 w-4" />
-                        Accompagnateur
-                      </p>
-                      <p className="font-medium mt-1">
-                        {selectedSignalement.accompagnateur}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <RefreshCw className="h-5 w-5 text-orange-600" />
-              Changer le Statut
-            </DialogTitle>
-            <DialogDescription>
-              Modifier le statut du signalement{" "}
-              {selectedSignalement?.groupe.name}
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedSignalement && (
-            <div className="space-y-4">
-              {/* Informations du signalement */}
-
-              {/* Sélecteur de statut */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Nouveau statut
-                </label>
-                <Select
-                  disabled={isLoading}
-                  value={newStatus}
-                  onValueChange={setNewStatus}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Sélectionner un statut" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Urgent">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                        Urgent
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="En cours">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                        En cours
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="Resolu">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                        Résolu
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                  </Button>
+                </div>
               </div>
-
-              {/* Boutons d'action */}
-              <div className="flex items-center gap-3 pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setStatusDialogOpen(false)}
-                  className="flex-1"
-                >
-                  Annuler
-                </Button>
-                <Button
-                  disabled={isLoading}
-                  onClick={handleSaveStatus}
-                  className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
-                >
-                  {isLoading ? (
-                    <>
-                      Enregistrement
-                      <Spinner variant="ellipsis" />
-                    </>
-                  ) : (
-                    <>
-                      Enregistrer
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
+            )}
+          </DialogContent>
+        </Dialog>
+      </div>
+    </>
   );
 }

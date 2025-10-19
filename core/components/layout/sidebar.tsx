@@ -81,7 +81,7 @@ const TOOLS_ITEMS: NavigationItem[] = [
     description: "Planning des sessions",
   },
   {
-    title: "Evenements",
+    title: "Évènements",
     url: "/evenements",
     icon: CalendarArrowDown,
     description: "Planning des sessions",

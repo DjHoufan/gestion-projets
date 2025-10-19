@@ -66,6 +66,8 @@ model Files {
   Users          Users[]
   accompaniments Accompaniment[] @relation("AccompanimentFile")
   media          Accompaniment[] @relation("AccompanimentMedia")
+  Events         Events?         @relation(fields: [eventsId], references: [id])
+  eventsId       String?         @db.Uuid
 }
 
 model Users {
@@ -473,4 +475,11 @@ model Signalement {
 
   groupeId String        @db.Uuid
   groupe   Accompaniment @relation(fields: [groupeId], references: [id])
+}
+
+model Events {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  titre String
+  date  DateTime
+  files Files[]
 }

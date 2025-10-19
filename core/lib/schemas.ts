@@ -824,3 +824,15 @@ export const SignalementSchema = z.object({
 });
 
 export type SignalementSchemaInput = z.input<typeof SignalementSchema>;
+
+export const EventsSchema = z.object({
+  titre: z.string().min(1, "Le titre est requis"),
+  date: z.coerce.date({
+    required_error: "La date  est requise.",
+    invalid_type_error: "La date  doit être une date valide.",
+  }),
+  files: z.array(DocumentSchema).optional(),
+});
+
+
+export type EventsSchemaInput = z.input<typeof EventsSchema>;

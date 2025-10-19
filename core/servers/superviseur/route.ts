@@ -145,5 +145,12 @@ const app = new Hono()
     });
 
     return c.json({ data: response });
+  })
+  .delete("/:id", sessionMiddleware, async (c) => {
+    const { id } = c.req.param();
+
+    const response = await db.signalement.delete({ where: { id: id } });
+
+    return c.json({ data: { id: response.id, name: response.description } });
   });
 export default app;

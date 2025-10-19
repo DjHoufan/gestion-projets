@@ -31,10 +31,11 @@ export const QueryKeyString = {
   Activities: "Activities",
   classes: "classes",
   employes: "employes",
-  akis:"akis",
-  superviseur:"superviseur",
-  signelements:"signelements",
-  operation:"operation",
+  akis: "akis",
+  superviseur: "superviseur",
+  signelements: "signelements",
+  operation: "operation",
+  events: "events",
 };
 
 export const Days = [

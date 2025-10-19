@@ -6,6 +6,7 @@ import {
   Classe,
   Conflit,
   Emargement,
+  Events,
   Files,
   Leave,
   Maps,
@@ -354,4 +355,8 @@ export interface RapportDetail {
 export type SignalementDetails = Signalement & {
   user: Users;
   groupe: Accompaniment;
+};
+
+export type EventDetails = Events & {
+  files: Files[];
 };

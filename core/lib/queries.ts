@@ -5,6 +5,7 @@ import {
   Classe,
   Conflit,
   Emargement,
+  Events,
   Leave,
   Maps,
   Member,
@@ -26,6 +27,7 @@ import {
   ClasseSchema,
   ConflitSchema,
   EmargementSchema,
+  EventsSchema,
   LeaveSchema,
   MapsSchema,
   MemberSchema,
@@ -920,6 +922,8 @@ export const getMyChat = async (userId: string) => {
 };
 
 export const upsertSignalement = async (data: Partial<Signalement>) => {
+  console.log({ data });
+
   const validation = SignalementSchema.extend({ id: z.string() }).safeParse(
     data
   );
@@ -933,9 +937,41 @@ export const upsertSignalement = async (data: Partial<Signalement>) => {
 
   const ValidData = validation.data;
 
-  return db.signalement.upsert({
+  return await db.signalement.upsert({
     where: { id: data.id },
     update: ValidData,
     create: ValidData,
   });
+};
+
+export const upsertEvents = async (data: Partial<Events>) => {
+  const validation = EventsSchema.safeParse(data);
+
+  if (!validation.success) {
+    const errorDetails = validation.error.errors
+      .map((e) => `${e.path.join(".")}: ${e.message}`)
+      .join(", ");
+    throw new Error(`Données invalides: ${errorDetails}`);
+  }
+  const { data: newdata } = validation;
+
+  const res = await db.events.upsert({
+    where: { id: data.id },
+    update: {
+      ...newdata,
+
+      files: {
+        set: newdata.files?.map((f) => ({ id: f.id })),
+      },
+    },
+    create: {
+      ...newdata,
+
+      files: {
+        connect: newdata.files?.map((f) => ({ id: f.id })),
+      },
+    },
+  });
+
+  return res;
 };

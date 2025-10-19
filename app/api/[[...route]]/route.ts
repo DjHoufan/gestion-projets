@@ -17,6 +17,7 @@ import leave from "@/core/servers/leave/route";
 import stats from "@/core/servers/stats/route";
 import classe from "@/core/servers/classe/route";
 import superviseur from "@/core/servers/superviseur/route"
+import events from "@/core/servers/events/route"
 
 
 const app = new Hono().basePath("/api");
@@ -37,6 +38,7 @@ const routes = app
   .route("/leave", leave)
   .route("/stats", stats)
   .route("/superviseur", superviseur)
+  .route("/events", events)
   .route("/classe", classe);
 
 export const GET = handle(routes);

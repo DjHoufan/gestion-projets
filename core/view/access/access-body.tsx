@@ -422,7 +422,7 @@ export const BodyAcces = ({ permission }: PermissionProps) => {
                             items={data!}
                             onChangeValue={(value) => {
                               const employeData = data?.find(
-                                (item) => item.id === value
+                                (item: { id: string; }) => item.id === value
                               );
                               if (!employeData) return;
                               const updatedData: Permission[] = AccesData.map(
