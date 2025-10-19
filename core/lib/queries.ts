@@ -922,7 +922,7 @@ export const getMyChat = async (userId: string) => {
 };
 
 export const upsertSignalement = async (data: Partial<Signalement>) => {
-  console.log({ data });
+ 
 
   const validation = SignalementSchema.extend({ id: z.string() }).safeParse(
     data

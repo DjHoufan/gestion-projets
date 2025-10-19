@@ -53,7 +53,7 @@ export const useGetEvents = () => {
 };
 
 export const useGetOnEvent = (id: string) => {
-  console.log({id});
+ 
   
   return useQuery({
     queryKey: [QueryKeyString.OneEvent],

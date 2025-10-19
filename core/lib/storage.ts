@@ -100,22 +100,21 @@ export const uploadImage = async (formData: FormData, folder: string) => {
 export const deleteFileDoc = async (id: string) => {
   try {
 
-    console.log({id});
+ 
     
     const docs = await db.files.delete({ where: { id } });
 
-    console.log({docs});
-    
+ 
 
     const { error } = await deleteFromStorage(docs.name);
 
-    console.log(error);
+ 
     
 
     return { success: true, error: false };
   } catch (error) {
 
-    console.log({error});
+ 
     
     return { success: false, error: true };
   }

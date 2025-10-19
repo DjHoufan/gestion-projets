@@ -46,10 +46,7 @@ const app = new Hono()
       },
     });
 
-    console.log({eventId});
-    
-
-    console.log({ data });
+ 
 
     return c.json({ data });
   })

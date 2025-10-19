@@ -36,8 +36,6 @@ import { Spinner } from "@/core/components/ui/spinner";
 
 export function EventDetail({ Id, permission }: IdType & PermissionProps) {
   const { data: event, isPending } = useGetOnEvent(Id);
- 
-  
 
   const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -46,37 +44,37 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Auto-play du carousel
-useEffect(() => {
-  // Vérifie que event et event.files existent
-  if (!event?.files || !isAutoPlaying) return;
+  useEffect(() => {
+    // Vérifie que event et event.files existent
+    if (!event?.files || !isAutoPlaying) return;
 
-  // Filtre les images
-  const images = event.files.filter((file: any) => file.type === "image");
-  if (images.length <= 1) return;
+    // Filtre les images
+    const images = event.files.filter((file: any) => file.type === "image");
+    if (images.length <= 1) return;
 
-  // Intervalle pour changer d'image toutes les 3 secondes
-  const interval = setInterval(() => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  }, 3000);
+    // Intervalle pour changer d'image toutes les 3 secondes
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
 
-  // Nettoyage à la destruction
-  return () => clearInterval(interval);
-}, [event, isAutoPlaying]);
+    // Nettoyage à la destruction
+    return () => clearInterval(interval);
+  }, [event, isAutoPlaying]);
 
+  const { images, powerpoints } = useMemo(() => {
+    if (!event?.files) return { images: [], powerpoints: [] };
 
-  if (!event) {
-    return (
-      <div className=" min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
-        <Spinner className="text-primary" variant="bars" size={80} />
-      </div>
+    const images = event.files.filter((file: any) => file.type === "image");
+
+    const powerpoints = event.files.filter(
+      (file: any) =>
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation" || // .pptx
+        file.type === "application/vnd.ms-powerpoint" // .ppt
     );
-  }
 
-  // Filtrer les images et les PowerPoints
-  const images = event.files.filter((file: any) => file.type === "image");
-  const powerpoints = event.files.filter(
-    (file: any) => file.type === "powerpoint"
-  );
+    return { images, powerpoints };
+  }, [event?.files]);
 
   // Navigation du carousel
   const nextImage = () => {
@@ -99,6 +97,14 @@ useEffect(() => {
     setSelectedPpt(file);
     setPptDialogOpen(true);
   };
+
+  if (!event) {
+    return (
+      <div className=" min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+        <Spinner className="text-primary" variant="bars" size={80} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
