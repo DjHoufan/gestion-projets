@@ -81,13 +81,8 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
     setIsAutoPlaying(false);
   };
 
-  if (isPending || !event) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
-        <Spinner className="text-primary" variant="bars" size={80} />
-      </div>
-    );
-  }
+
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
