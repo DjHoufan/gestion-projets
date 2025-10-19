@@ -41,15 +41,24 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
   const [selectedPpt, setSelectedPpt] = useState<any>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // 📸 Pré-calcul des fichiers filtrés
-  const { images, powerpoints } = useMemo(() => {
-    const files = event?.files ?? [];
-    return {
-      images: files.filter((f: any) => f.type === "image"),
-      powerpoints: files.filter((f: any) => f.type === "powerpoint"),
-    };
-  }, [event]);
+  const [images, setImages] = useState<any[]>([]);
+  const [powerpoints, setPowerpoints] = useState<any[]>([]);
 
+  useEffect(() => {
+    if (!event?.files) {
+      setImages([]);
+      setPowerpoints([]);
+      return;
+    }
+
+    const filteredImages = event.files.filter((f: any) => f.type === "image");
+    const filteredPpts = event.files.filter(
+      (f: any) => f.type === "powerpoint"
+    );
+
+    setImages(filteredImages);
+    setPowerpoints(filteredPpts);
+  }, [event]);
   // ⏯️ Auto-play du carousel
   useEffect(() => {
     if (!images.length || !isAutoPlaying) return;
@@ -84,7 +93,11 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* 🔙 Bouton retour */}
-        <Button variant="outline" onClick={() => router.back()} className="mb-6">
+        <Button
+          variant="outline"
+          onClick={() => router.back()}
+          className="mb-6"
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Retour aux événements
         </Button>
@@ -116,7 +129,8 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
                 </Badge>
                 <Badge className="bg-orange-100 text-orange-800">
                   <Presentation className="h-3 w-3 mr-1" />
-                  {powerpoints.length} présentation{powerpoints.length > 1 && "s"}
+                  {powerpoints.length} présentation
+                  {powerpoints.length > 1 && "s"}
                 </Badge>
               </div>
             </div>
@@ -132,14 +146,20 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
                   <ImageIcon className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Galerie Photos</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Galerie Photos
+                  </h2>
                   <p className="text-sm text-gray-600">
                     {currentImageIndex + 1} sur {images.length} images
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Button onClick={() => setIsAutoPlaying((p) => !p)} variant="outline" className="flex items-center gap-2">
+                <Button
+                  onClick={() => setIsAutoPlaying((p) => !p)}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
                   {isAutoPlaying ? (
                     <>
                       <Pause className="h-4 w-4" /> Pause
@@ -204,7 +224,11 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
                           }`}
                         >
                           <div className="relative rounded-xl overflow-hidden">
-                            <img src={image.url} alt={image.name} className="w-28 h-28 object-cover" />
+                            <img
+                              src={image.url}
+                              alt={image.name}
+                              className="w-28 h-28 object-cover"
+                            />
                             {index === currentImageIndex && (
                               <div className="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
                                 <div className="bg-blue-500 text-white rounded-full p-2">
@@ -251,12 +275,17 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {powerpoints.map((file: any) => (
-                  <Card key={file.id} className="hover:shadow-lg transition-all border-2 hover:border-orange-300">
+                  <Card
+                    key={file.id}
+                    className="hover:shadow-lg transition-all border-2 hover:border-orange-300"
+                  >
                     <CardContent className="p-6 flex flex-col items-center text-center">
                       <div className="bg-orange-100 p-4 rounded-full mb-4">
                         <Presentation className="h-12 w-12 text-orange-600" />
                       </div>
-                      <p className="font-medium text-gray-800 mb-2 line-clamp-2">{file.name}</p>
+                      <p className="font-medium text-gray-800 mb-2 line-clamp-2">
+                        {file.name}
+                      </p>
                       <div className="flex gap-2 mt-4 w-full">
                         <Button
                           onClick={() => {
@@ -289,8 +318,12 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
           <Card>
             <CardContent className="p-12 text-center">
               <ImageIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-400 mb-2">Aucun fichier disponible</h3>
-              <p className="text-gray-500">Cet événement ne contient pas encore de fichiers</p>
+              <h3 className="text-xl font-bold text-gray-400 mb-2">
+                Aucun fichier disponible
+              </h3>
+              <p className="text-gray-500">
+                Cet événement ne contient pas encore de fichiers
+              </p>
             </CardContent>
           </Card>
         )}
@@ -319,7 +352,9 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
           </DialogHeader>
           {selectedPpt && (
             <iframe
-              src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(selectedPpt.url)}`}
+              src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                selectedPpt.url
+              )}`}
               className="w-full h-[calc(90vh-100px)] rounded-lg border border-gray-200"
               frameBorder="0"
               title={selectedPpt.name}
