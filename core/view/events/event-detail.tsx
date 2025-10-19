@@ -1,10 +1,8 @@
 "use client";
-import React, { useMemo } from "react";
-import { IdType, PermissionProps } from "@/core/lib/types";
-import { definePermissions } from "@/core/lib/utils";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState, useEffect, useMemo } from "react";
+import { IdType, PermissionProps } from "@/core/lib/types";
+ 
 import {
   Card,
   CardContent,
@@ -31,76 +29,75 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/core/components/ui/dialog";
-import { useGetOnEvent } from "@/core/hooks/use-events";
 import { Spinner } from "@/core/components/ui/spinner";
+import { useGetOnEvent } from "@/core/hooks/use-events";
+import { useRouter } from "next/router";
+
+interface FileType {
+  id: string;
+  name: string;
+  url: string;
+  type: string;
+}
 
 export function EventDetail({ Id, permission }: IdType & PermissionProps) {
   const { data: event, isPending } = useGetOnEvent(Id);
-
   const router = useRouter();
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [pptDialogOpen, setPptDialogOpen] = useState(false);
-  const [selectedPpt, setSelectedPpt] = useState<any>(null);
+  const [selectedPpt, setSelectedPpt] = useState<FileType | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Auto-play du carousel
+  // 🌀 Carousel auto-play
   useEffect(() => {
-    // Vérifie que event et event.files existent
     if (!event?.files || !isAutoPlaying) return;
 
-    // Filtre les images
-    const images = event.files.filter((file: any) => file.type === "image");
+    const images = event.files.filter((file: FileType) => file.type === "image");
     if (images.length <= 1) return;
 
-    // Intervalle pour changer d'image toutes les 3 secondes
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
     }, 3000);
 
-    // Nettoyage à la destruction
     return () => clearInterval(interval);
-  }, [event, isAutoPlaying]);
+  }, [event?.files, isAutoPlaying]);
 
+  // 🧠 useMemo pour filtrer les fichiers une seule fois
   const { images, powerpoints } = useMemo(() => {
-    if (!event?.files) return { images: [], powerpoints: [] };
+    if (!event?.files) return { images: [] as FileType[], powerpoints: [] as FileType[] };
 
-    const images = event.files.filter((file: any) => file.type === "image");
-
+    const images = event.files.filter((file: FileType) => file.type === "image");
     const powerpoints = event.files.filter(
-      (file: any) =>
+      (file: FileType) =>
         file.type ===
-          "application/vnd.openxmlformats-officedocument.presentationml.presentation" || // .pptx
-        file.type === "application/vnd.ms-powerpoint" // .ppt
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
+        file.type === "application/vnd.ms-powerpoint"
     );
 
     return { images, powerpoints };
   }, [event?.files]);
 
-  // Navigation du carousel
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    setIsAutoPlaying(false); // Pause l'auto-play lors de la navigation manuelle
+    setIsAutoPlaying(false);
   };
 
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    setIsAutoPlaying(false); // Pause l'auto-play lors de la navigation manuelle
+    setIsAutoPlaying(false);
   };
 
-  // Toggle auto-play
-  const toggleAutoPlay = () => {
-    setIsAutoPlaying(!isAutoPlaying);
-  };
+  const toggleAutoPlay = () => setIsAutoPlaying((prev) => !prev);
 
-  // Ouvrir le PowerPoint dans un dialog
-  const handleViewPpt = (file: any) => {
+  const handleViewPpt = (file: FileType) => {
     setSelectedPpt(file);
     setPptDialogOpen(true);
   };
 
-  if (!event) {
+  if (isPending || !event) {
     return (
-      <div className=" min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
         <Spinner className="text-primary" variant="bars" size={80} />
       </div>
     );
@@ -109,17 +106,13 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Bouton retour */}
-        <Button
-          variant="outline"
-          onClick={() => router.back()}
-          className="mb-6"
-        >
+        {/* Retour */}
+        <Button variant="outline" onClick={() => router.back()} className="mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Retour aux événements
         </Button>
 
-        {/* En-tête de l'événement */}
+        {/* Titre + Badges */}
         <Card className="mb-6 border-2 border-teal-200 bg-gradient-to-br from-white to-teal-50">
           <CardHeader>
             <div className="flex items-start justify-between">
@@ -146,47 +139,38 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
                 </Badge>
                 <Badge className="bg-orange-100 text-orange-800">
                   <Presentation className="h-3 w-3 mr-1" />
-                  {powerpoints.length} présentation
-                  {powerpoints.length > 1 ? "s" : ""}
+                  {powerpoints.length} présentation{powerpoints.length > 1 ? "s" : ""}
                 </Badge>
               </div>
             </div>
           </CardHeader>
         </Card>
 
-        {/* Carousel des images - Design moderne */}
+        {/* 🖼️ Carousel des images */}
         {images.length > 0 && (
           <div className="mb-6">
-            {/* En-tête avec compteur */}
+            {/* Header carousel */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg">
                   <ImageIcon className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Galerie Photos
-                  </h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Galerie Photos</h2>
                   <p className="text-sm text-gray-600">
                     {currentImageIndex + 1} sur {images.length} images
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Button
-                  onClick={toggleAutoPlay}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
+                <Button onClick={toggleAutoPlay} variant="outline" className="flex items-center gap-2">
                   {isAutoPlaying ? (
                     <>
-                      <Pause className="h-4 w-4" />
-                      Pause
+                      <Pause className="h-4 w-4" /> Pause
                     </>
                   ) : (
                     <>
-                      <Play className="h-4 w-4" />
-                      Lecture
+                      <Play className="h-4 w-4" /> Lecture
                     </>
                   )}
                 </Button>
@@ -201,23 +185,19 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
               </div>
             </div>
 
-            {/* Carousel principal */}
+            {/* Image principale */}
             <Card className="p-0 overflow-hidden border-2 border-gray-200 shadow-xl">
               <CardContent className="p-0">
                 <div className="relative group">
-                  {/* Image principale avec effet */}
                   <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
                     <img
                       src={images[currentImageIndex].url}
                       alt={images[currentImageIndex].name}
                       className="w-full h-[600px] object-contain transition-all duration-500 group-hover:scale-105"
                     />
-
-                    {/* Overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  {/* Boutons de navigation stylisés */}
                   {images.length > 1 && (
                     <>
                       <button
@@ -236,11 +216,11 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
                   )}
                 </div>
 
-                {/* Barre de miniatures moderne */}
+                {/* Miniatures */}
                 {images.length > 1 && (
                   <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6">
                     <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
-                      {images.map((image: any, index: number) => (
+                      {images.map((image, index) => (
                         <div
                           key={image.id}
                           onClick={() => setCurrentImageIndex(index)}
@@ -251,11 +231,7 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
                           }`}
                         >
                           <div className="relative rounded-xl overflow-hidden">
-                            <img
-                              src={image.url}
-                              alt={image.name}
-                              className="w-28 h-28 object-cover"
-                            />
+                            <img src={image.url} alt={image.name} className="w-28 h-28 object-cover" />
                             {index === currentImageIndex && (
                               <div className="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
                                 <div className="bg-blue-500 text-white rounded-full p-2">
@@ -272,7 +248,7 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
               </CardContent>
             </Card>
 
-            {/* Indicateurs de points */}
+            {/* Points indicateurs */}
             {images.length > 1 && (
               <div className="flex items-center justify-center gap-2 mt-6">
                 {images.map((_, index) => (
@@ -291,7 +267,7 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
           </div>
         )}
 
-        {/* Liste des PowerPoints */}
+        {/* 🧾 Liste des PowerPoints */}
         {powerpoints.length > 0 && (
           <Card>
             <CardHeader>
@@ -302,7 +278,7 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {powerpoints.map((file: any) => (
+                {powerpoints.map((file) => (
                   <Card
                     key={file.id}
                     className="hover:shadow-lg transition-all border-2 hover:border-orange-300"
@@ -312,9 +288,7 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
                         <div className="bg-orange-100 p-4 rounded-full mb-4">
                           <Presentation className="h-12 w-12 text-orange-600" />
                         </div>
-                        <p className="font-medium text-gray-800 mb-2 line-clamp-2">
-                          {file.name}
-                        </p>
+                        <p className="font-medium text-gray-800 mb-2 line-clamp-2">{file.name}</p>
                         <div className="flex gap-2 mt-4 w-full">
                           <Button
                             onClick={() => handleViewPpt(file)}
@@ -340,23 +314,19 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
           </Card>
         )}
 
-        {/* Message si aucun fichier */}
+        {/* Aucun fichier */}
         {images.length === 0 && powerpoints.length === 0 && (
           <Card>
             <CardContent className="p-12 text-center">
               <ImageIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-400 mb-2">
-                Aucun fichier disponible
-              </h3>
-              <p className="text-gray-500">
-                Cet événement ne contient pas encore de fichiers
-              </p>
+              <h3 className="text-xl font-bold text-gray-400 mb-2">Aucun fichier disponible</h3>
+              <p className="text-gray-500">Cet événement ne contient pas encore de fichiers</p>
             </CardContent>
           </Card>
         )}
       </div>
 
-      {/* Dialog pour consulter le PowerPoint */}
+      {/* 📑 Dialog PPT */}
       <Dialog open={pptDialogOpen} onOpenChange={setPptDialogOpen}>
         <DialogContent className="!max-w-6xl h-[90vh]">
           <DialogHeader>
