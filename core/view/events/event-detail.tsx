@@ -73,10 +73,8 @@ useEffect(() => {
   }
 
   // Filtrer les images et les PowerPoints
-  const images = event.files.filter((file: any) => file.type === "image");
-  const powerpoints = event.files.filter(
-    (file: any) => file.type === "powerpoint"
-  );
+const images = event?.files?.filter((file: any) => file.type === "image") ?? [];
+const powerpoints = event?.files?.filter((file: any) => file.type === "powerpoint") ?? [];
 
   console.log({event});
   console.log({images});
