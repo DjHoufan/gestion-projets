@@ -1,10 +1,8 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { IdType, PermissionProps } from "@/core/lib/types";
 import { definePermissions } from "@/core/lib/utils";
-
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -35,85 +33,63 @@ import { useGetOnEvent } from "@/core/hooks/use-events";
 import { Spinner } from "@/core/components/ui/spinner";
 
 export function EventDetail({ Id, permission }: IdType & PermissionProps) {
-  const { data: event, isPending } = useGetOnEvent(Id);
- 
-  
-
   const router = useRouter();
+  const { data: event, isPending } = useGetOnEvent(Id);
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [pptDialogOpen, setPptDialogOpen] = useState(false);
   const [selectedPpt, setSelectedPpt] = useState<any>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Auto-play du carousel
-useEffect(() => {
-  // Vérifie que event et event.files existent
-  if (!event?.files || !isAutoPlaying) return;
+  // 📸 Pré-calcul des fichiers filtrés
+  const { images, powerpoints } = useMemo(() => {
+    const files = event?.files ?? [];
+    return {
+      images: files.filter((f: any) => f.type === "image"),
+      powerpoints: files.filter((f: any) => f.type === "powerpoint"),
+    };
+  }, [event]);
 
-  // Filtre les images
-  const images = event.files.filter((file: any) => file.type === "image");
-  if (images.length <= 1) return;
+  // ⏯️ Auto-play du carousel
+  useEffect(() => {
+    if (!images.length || !isAutoPlaying) return;
 
-  // Intervalle pour changer d'image toutes les 3 secondes
-  const interval = setInterval(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [images, isAutoPlaying]);
+
+  // Navigation carousel
+  const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  }, 3000);
+    setIsAutoPlaying(false);
+  };
 
-  // Nettoyage à la destruction
-  return () => clearInterval(interval);
-}, [event, isAutoPlaying]);
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    setIsAutoPlaying(false);
+  };
 
-
-  if (!event) {
+  if (isPending || !event) {
     return (
-      <div className=" min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
         <Spinner className="text-primary" variant="bars" size={80} />
       </div>
     );
   }
 
-  // Filtrer les images et les PowerPoints
-  const images = event.files.filter((file: any) => file.type === "image");
-  const powerpoints = event.files.filter(
-    (file: any) => file.type === "powerpoint"
-  );
-
-  // Navigation du carousel
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    setIsAutoPlaying(false); // Pause l'auto-play lors de la navigation manuelle
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    setIsAutoPlaying(false); // Pause l'auto-play lors de la navigation manuelle
-  };
-
-  // Toggle auto-play
-  const toggleAutoPlay = () => {
-    setIsAutoPlaying(!isAutoPlaying);
-  };
-
-  // Ouvrir le PowerPoint dans un dialog
-  const handleViewPpt = (file: any) => {
-    setSelectedPpt(file);
-    setPptDialogOpen(true);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Bouton retour */}
-        <Button
-          variant="outline"
-          onClick={() => router.back()}
-          className="mb-6"
-        >
+        {/* 🔙 Bouton retour */}
+        <Button variant="outline" onClick={() => router.back()} className="mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Retour aux événements
         </Button>
 
-        {/* En-tête de l'événement */}
+        {/* 📝 En-tête de l'événement */}
         <Card className="mb-6 border-2 border-teal-200 bg-gradient-to-br from-white to-teal-50">
           <CardHeader>
             <div className="flex items-start justify-between">
@@ -136,51 +112,41 @@ useEffect(() => {
               <div className="flex gap-2">
                 <Badge className="bg-blue-100 text-blue-800">
                   <ImageIcon className="h-3 w-3 mr-1" />
-                  {images.length} image{images.length > 1 ? "s" : ""}
+                  {images.length} image{images.length > 1 && "s"}
                 </Badge>
                 <Badge className="bg-orange-100 text-orange-800">
                   <Presentation className="h-3 w-3 mr-1" />
-                  {powerpoints.length} présentation
-                  {powerpoints.length > 1 ? "s" : ""}
+                  {powerpoints.length} présentation{powerpoints.length > 1 && "s"}
                 </Badge>
               </div>
             </div>
           </CardHeader>
         </Card>
 
-        {/* Carousel des images - Design moderne */}
+        {/* 🖼️ Carousel d'images */}
         {images.length > 0 && (
           <div className="mb-6">
-            {/* En-tête avec compteur */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg">
                   <ImageIcon className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Galerie Photos
-                  </h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Galerie Photos</h2>
                   <p className="text-sm text-gray-600">
                     {currentImageIndex + 1} sur {images.length} images
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Button
-                  onClick={toggleAutoPlay}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
+                <Button onClick={() => setIsAutoPlaying((p) => !p)} variant="outline" className="flex items-center gap-2">
                   {isAutoPlaying ? (
                     <>
-                      <Pause className="h-4 w-4" />
-                      Pause
+                      <Pause className="h-4 w-4" /> Pause
                     </>
                   ) : (
                     <>
-                      <Play className="h-4 w-4" />
-                      Lecture
+                      <Play className="h-4 w-4" /> Lecture
                     </>
                   )}
                 </Button>
@@ -195,34 +161,28 @@ useEffect(() => {
               </div>
             </div>
 
-            {/* Carousel principal */}
             <Card className="p-0 overflow-hidden border-2 border-gray-200 shadow-xl">
               <CardContent className="p-0">
                 <div className="relative group">
-                  {/* Image principale avec effet */}
-                  <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+                  <div className="relative bg-gray-900 overflow-hidden">
                     <img
                       src={images[currentImageIndex].url}
                       alt={images[currentImageIndex].name}
                       className="w-full h-[600px] object-contain transition-all duration-500 group-hover:scale-105"
                     />
-
-                    {/* Overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                   </div>
-
-                  {/* Boutons de navigation stylisés */}
                   {images.length > 1 && (
                     <>
                       <button
                         onClick={prevImage}
-                        className="absolute left-6 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 opacity-0 group-hover:opacity-100"
+                        className="absolute left-6 top-1/2 -translate-y-1/2 bg-blue-600 p-4 rounded-full shadow-2xl transition-all hover:scale-110 opacity-0 group-hover:opacity-100"
                       >
                         <ChevronLeft className="h-6 w-6 text-white" />
                       </button>
                       <button
                         onClick={nextImage}
-                        className="absolute right-6 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 opacity-0 group-hover:opacity-100"
+                        className="absolute right-6 top-1/2 -translate-y-1/2 bg-blue-600 p-4 rounded-full shadow-2xl transition-all hover:scale-110 opacity-0 group-hover:opacity-100"
                       >
                         <ChevronRight className="h-6 w-6 text-white" />
                       </button>
@@ -230,7 +190,6 @@ useEffect(() => {
                   )}
                 </div>
 
-                {/* Barre de miniatures moderne */}
                 {images.length > 1 && (
                   <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6">
                     <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
@@ -238,18 +197,14 @@ useEffect(() => {
                         <div
                           key={image.id}
                           onClick={() => setCurrentImageIndex(index)}
-                          className={`flex-shrink-0 cursor-pointer transition-all duration-300 transform ${
+                          className={`flex-shrink-0 cursor-pointer transition-all duration-300 ${
                             index === currentImageIndex
                               ? "scale-110 ring-4 ring-blue-500 shadow-xl"
                               : "hover:scale-105 ring-2 ring-gray-300 hover:ring-blue-300 opacity-70 hover:opacity-100"
                           }`}
                         >
                           <div className="relative rounded-xl overflow-hidden">
-                            <img
-                              src={image.url}
-                              alt={image.name}
-                              className="w-28 h-28 object-cover"
-                            />
+                            <img src={image.url} alt={image.name} className="w-28 h-28 object-cover" />
                             {index === currentImageIndex && (
                               <div className="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
                                 <div className="bg-blue-500 text-white rounded-full p-2">
@@ -266,7 +221,6 @@ useEffect(() => {
               </CardContent>
             </Card>
 
-            {/* Indicateurs de points */}
             {images.length > 1 && (
               <div className="flex items-center justify-center gap-2 mt-6">
                 {images.map((_, index) => (
@@ -285,7 +239,7 @@ useEffect(() => {
           </div>
         )}
 
-        {/* Liste des PowerPoints */}
+        {/* 📊 PowerPoints */}
         {powerpoints.length > 0 && (
           <Card>
             <CardHeader>
@@ -297,34 +251,30 @@ useEffect(() => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {powerpoints.map((file: any) => (
-                  <Card
-                    key={file.id}
-                    className="hover:shadow-lg transition-all border-2 hover:border-orange-300"
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex flex-col items-center text-center">
-                        <div className="bg-orange-100 p-4 rounded-full mb-4">
-                          <Presentation className="h-12 w-12 text-orange-600" />
-                        </div>
-                        <p className="font-medium text-gray-800 mb-2 line-clamp-2">
-                          {file.name}
-                        </p>
-                        <div className="flex gap-2 mt-4 w-full">
-                          <Button
-                            onClick={() => handleViewPpt(file)}
-                            className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
-                          >
-                            <Eye className="h-4 w-4 mr-2" />
-                            Consulter
-                          </Button>
-                          <a
-                            href={file.url}
-                            download
-                            className="inline-flex items-center justify-center px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all"
-                          >
-                            <Download className="h-4 w-4" />
-                          </a>
-                        </div>
+                  <Card key={file.id} className="hover:shadow-lg transition-all border-2 hover:border-orange-300">
+                    <CardContent className="p-6 flex flex-col items-center text-center">
+                      <div className="bg-orange-100 p-4 rounded-full mb-4">
+                        <Presentation className="h-12 w-12 text-orange-600" />
+                      </div>
+                      <p className="font-medium text-gray-800 mb-2 line-clamp-2">{file.name}</p>
+                      <div className="flex gap-2 mt-4 w-full">
+                        <Button
+                          onClick={() => {
+                            setSelectedPpt(file);
+                            setPptDialogOpen(true);
+                          }}
+                          className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          Consulter
+                        </Button>
+                        <a
+                          href={file.url}
+                          download
+                          className="inline-flex items-center justify-center px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all"
+                        >
+                          <Download className="h-4 w-4" />
+                        </a>
                       </div>
                     </CardContent>
                   </Card>
@@ -334,23 +284,19 @@ useEffect(() => {
           </Card>
         )}
 
-        {/* Message si aucun fichier */}
+        {/* 🪶 Aucun fichier */}
         {images.length === 0 && powerpoints.length === 0 && (
           <Card>
             <CardContent className="p-12 text-center">
               <ImageIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-400 mb-2">
-                Aucun fichier disponible
-              </h3>
-              <p className="text-gray-500">
-                Cet événement ne contient pas encore de fichiers
-              </p>
+              <h3 className="text-xl font-bold text-gray-400 mb-2">Aucun fichier disponible</h3>
+              <p className="text-gray-500">Cet événement ne contient pas encore de fichiers</p>
             </CardContent>
           </Card>
         )}
       </div>
 
-      {/* Dialog pour consulter le PowerPoint */}
+      {/* 🪟 Dialog PowerPoint */}
       <Dialog open={pptDialogOpen} onOpenChange={setPptDialogOpen}>
         <DialogContent className="!max-w-6xl h-[90vh]">
           <DialogHeader>
@@ -371,19 +317,14 @@ useEffect(() => {
               )}
             </DialogTitle>
           </DialogHeader>
-
-          <div className="flex-1 h-[calc(90vh-100px)]">
-            {selectedPpt && (
-              <iframe
-                src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
-                  selectedPpt.url
-                )}`}
-                className="w-full h-full rounded-lg border border-gray-200"
-                frameBorder="0"
-                title={selectedPpt.name}
-              />
-            )}
-          </div>
+          {selectedPpt && (
+            <iframe
+              src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(selectedPpt.url)}`}
+              className="w-full h-[calc(90vh-100px)] rounded-lg border border-gray-200"
+              frameBorder="0"
+              title={selectedPpt.name}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
