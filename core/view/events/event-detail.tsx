@@ -31,7 +31,8 @@ import {
 } from "@/core/components/ui/dialog";
 import { Spinner } from "@/core/components/ui/spinner";
 import { useGetOnEvent } from "@/core/hooks/use-events";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+ 
 
 interface FileType {
   id: string;
