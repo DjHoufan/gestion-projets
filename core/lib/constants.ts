@@ -36,6 +36,7 @@ export const QueryKeyString = {
   signelements: "signelements",
   operation: "operation",
   events: "events",
+  OneEvent: "OneEvent",
 };
 
 export const Days = [

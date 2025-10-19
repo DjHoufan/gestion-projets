@@ -31,10 +31,9 @@ type Props = {
   valuetab: Partial<Files>[];
   disabled: boolean;
   onChangeAction: (value: Files[]) => void;
-  multiple?: boolean; // Nouvelle prop pour contrôler l'upload multiple
+  multiple?: boolean;
 };
 
-// Fonction pour formater la taille des fichiers
 const formatFileSize = (bytes: number) => {
   if (bytes === 0) return "0 B";
   const k = 1024;
@@ -45,7 +44,6 @@ const formatFileSize = (bytes: number) => {
   );
 };
 
-// Fonction pour obtenir l'icône appropriée selon le type de fichier
 export const GetFileIcon = (type: string) => {
   if (type.includes("image"))
     return <FaRegFileImage className="w-10 h-10 text-blue-500" />;
@@ -60,6 +58,13 @@ export const GetFileIcon = (type: string) => {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
   )
     return <FaRegFileWord className="w-10 h-10 text-blue-700" />;
+  // PowerPoint => icône générique (modifiable si tu veux)
+  if (
+    type === "application/vnd.ms-powerpoint" ||
+    type ===
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+  )
+    return <FileIcon className="w-10 h-10 text-orange-600" />;
   return <FileIcon className="w-10 h-10 text-gray-500" />;
 };
 
@@ -67,7 +72,7 @@ export const UploadMultiFilesMinimal = ({
   valuetab,
   onChangeAction,
   disabled,
-  multiple = true, // Valeur par défaut true pour garder la compatibilité ascendante
+  multiple = true,
 }: Props) => {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [uploadedFiles, setUploadedFiles] =
@@ -76,11 +81,9 @@ export const UploadMultiFilesMinimal = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, startTransition] = useTransition();
 
-  // Gestion de l'upload via input file
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = event.target.files;
     if (newFiles) {
-      // Si multiple est false, on ne garde que le premier fichier
       const filesToAdd = multiple
         ? Array.from(newFiles)
         : [Array.from(newFiles)[0]];
@@ -93,14 +96,12 @@ export const UploadMultiFilesMinimal = ({
         size: file.size,
       }));
 
-      // Si multiple est false, on remplace les fichiers existants
       setFiles(
         multiple ? (prevFiles) => [...prevFiles, ...fileArray] : fileArray
       );
     }
   };
 
-  // Gestion du drag & drop
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -117,7 +118,6 @@ export const UploadMultiFilesMinimal = ({
     setDragActive(false);
     const newFiles = e.dataTransfer.files;
     if (newFiles) {
-      // Si multiple est false, on ne garde que le premier fichier
       const filesToAdd = multiple
         ? Array.from(newFiles)
         : [Array.from(newFiles)[0]];
@@ -130,14 +130,12 @@ export const UploadMultiFilesMinimal = ({
         size: file.size,
       }));
 
-      // Si multiple est false, on remplace les fichiers existants
       setFiles(
         multiple ? (prevFiles) => [...prevFiles, ...fileArray] : fileArray
       );
     }
   };
 
-  // Suppression d'un fichier local
   const handleDelete = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
@@ -151,11 +149,9 @@ export const UploadMultiFilesMinimal = ({
             prevFiles.filter((file) => file.id !== index)
           );
         } else if (data?.error) {
-          console.log("----->",data);
-
           toast.error({
             message:
-              "Une erreur est survenue lors de la suppression du document. akis",
+              "Une erreur est survenue lors de la suppression du document.",
           });
         }
       });
@@ -178,8 +174,14 @@ export const UploadMultiFilesMinimal = ({
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ) {
         formData.append("word", fileItem.file);
+      } else if (
+        fileItem.type === "application/vnd.ms-powerpoint" ||
+        fileItem.type ===
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      ) {
+        formData.append("powerpoint", fileItem.file);
       } else {
-        // Ce cas pourrait être ignoré ou traiter d'autres types
+        // autres types ignorés
       }
     }
 
@@ -209,14 +211,13 @@ export const UploadMultiFilesMinimal = ({
 
   return (
     <div
-      className={`w-full max-w-2xl   mx-auto ${
+      className={`w-full max-w-2xl mx-auto ${
         disabled && "opacity-50 pointer-events-none"
       }`}
     >
-      {/* Zone de drop */}
       <div
         className={`
-          border-2 border-dashed  rounded-lg p-5 max-w-xl  mx-auto text-center  transition-all duration-200 cursor-pointer
+          border-2 border-dashed rounded-lg p-5 max-w-xl mx-auto text-center transition-all duration-200 cursor-pointer
           ${
             dragActive
               ? "border-black bg-gray-50"
@@ -246,8 +247,8 @@ export const UploadMultiFilesMinimal = ({
           ref={fileInputRef}
           onChange={handleUpload}
           className="hidden"
-          multiple={multiple} // Utilisation de la prop multiple
-          accept="image/*,video/*,.pdf,.doc,.docx"
+          multiple={multiple}
+          accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx"
         />
       </div>
 
@@ -294,6 +295,7 @@ export const UploadMultiFilesMinimal = ({
                     </div>
                   </div>
                   <Button
+                    type="button"
                     variant="ghost"
                     size="sm"
                     onClick={() => handleDelete(index)}
@@ -310,49 +312,54 @@ export const UploadMultiFilesMinimal = ({
       )}
 
       {/* Fichiers uploadés */}
+      {/* Fichiers uploadés */}
       {uploadedFiles.length > 0 && (
         <div className="mt-8">
           <p className="text-sm text-gray-500 mb-4">
             {uploadedFiles.length} fichier(s) uploadé(s)
           </p>
-          <div className="space-y-1">
-            {uploadedFiles.map((file, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between py-3 px-3 hover:bg-gray-50 rounded group"
-              >
-                <div className="flex items-center space-x-3 min-w-0 flex-1">
-                  <div className="flex-shrink-0">
-                    {GetFileIcon(file.type || "")}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-gray-900 truncate">
-                      {file.name}
-                    </p>
-                    {file.size && (
-                      <p className="text-xs text-gray-400">
-                        {formatFileSize(file.size)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDeleteUploaded(file.id!)}
-                  disabled={uploading}
-                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-1 transition-opacity"
+          <ScrollArea className="h-32">
+            {" "}
+            {/* <-- ajout du ScrollArea ici */}
+            <div className="space-y-1">
+              {uploadedFiles.map((file, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between py-3 px-3 hover:bg-gray-50 rounded group"
                 >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
+                  <div className="flex items-center space-x-3 min-w-0 flex-1">
+                    <div className="flex-shrink-0">
+                      {GetFileIcon(file.type || "")}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm text-gray-900 truncate">
+                        {file.name}
+                      </p>
+                      {file.size && (
+                        <p className="text-xs text-gray-400">
+                          {formatFileSize(file.size)}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDeleteUploaded(file.id!)}
+                    disabled={uploading}
+                    className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-1 transition-opacity"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       )}
 
-      {/* État vide */}
       {uploadedFiles.length === 0 && files.length === 0 && (
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-400">Aucun fichier uploadé</p>

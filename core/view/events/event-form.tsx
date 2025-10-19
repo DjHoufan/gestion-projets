@@ -118,30 +118,32 @@ export const EventForm = ({ details }: FormProps<EventDetails>) => {
           )}
         />
 
-        <Button
-          disabled={isSubmitting}
-          type="button"
-          variant="outline"
-          onClick={() => {
-            form.reset();
-          }}
-        >
-          Annuler
-        </Button>
-        <Button
-          disabled={isSubmitting}
-          type="submit"
-          className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
-        >
-          {isSubmitting
-            ? details
-              ? "Modification"
-              : "Enregistrement"
-            : details
-            ? "Modifier"
-            : "       Créer événement"}
-          {isSubmitting && <Spinner variant="ellipsis" />}
-        </Button>
+        <div className="w-[250px] flex justify-between float-end ">
+          <Button
+            disabled={isSubmitting}
+            type="button"
+            variant="outline"
+            onClick={() => {
+              form.reset();
+            }}
+          >
+            Annuler
+          </Button>
+          <Button
+            disabled={isSubmitting}
+            type="submit"
+            className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
+          >
+            {isSubmitting
+              ? details
+                ? "Modification"
+                : "Enregistrement"
+              : details
+              ? "Modifier"
+              : "       Créer événement"}
+            {isSubmitting && <Spinner variant="ellipsis" />}
+          </Button>
+        </div>
       </form>
     </Form>
   );

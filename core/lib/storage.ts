@@ -7,6 +7,8 @@ import { db } from "@/core/lib/db";
 
 export const filesUpload = async (files: FormData) => {
   const supabase = await createActionServerCookies();
+
+  // Ajout de la prise en charge PowerPoint ici 👇
   const typeToFolderMap = new Map<string, string>([
     ["image/", "image"],
     ["video/", "video"],
@@ -16,10 +18,14 @@ export const filesUpload = async (files: FormData) => {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "word",
     ],
+    ["application/vnd.ms-powerpoint", "powerpoint"],
+    [
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "powerpoint",
+    ],
   ]);
 
   const uploadTasks = Array.from(files.entries()).map(async ([key, value]) => {
-    // Vérification du type
     if (!(value instanceof File)) {
       return null;
     }
@@ -34,7 +40,6 @@ export const filesUpload = async (files: FormData) => {
     }
 
     try {
-      // Téléchargement du fichier vers Supabase
       const { data, error } = await supabase.storage
         .from("docs")
         .upload(`${value.name}_${Date.now()}`, value);
@@ -58,16 +63,15 @@ export const filesUpload = async (files: FormData) => {
     }
   });
 
-  // Attendre que tous les fichiers soient traités
   const results = await Promise.all(uploadTasks);
 
-  // Vérifier les échecs
   if (results.some((result) => result?.error)) {
     return { success: false, error: true };
   }
 
   return { success: results, error: false };
 };
+
 
 export const uploadImage = async (formData: FormData, folder: string) => {
   const supabase = await createActionServerCookies();

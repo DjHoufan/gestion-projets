@@ -36,11 +36,7 @@ import { Spinner } from "@/core/components/ui/spinner";
 
 export function EventDetail({ Id, permission }: IdType & PermissionProps) {
   const { data: event, isPending } = useGetOnEvent(Id);
-  const { canAdd, canModify, canDelete, rapportView } = useMemo(() => {
-    return definePermissions(permission, "evenements");
-  }, [permission]);
-
-  console.log({event});
+ 
   
 
   const router = useRouter();
@@ -50,23 +46,28 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Auto-play du carousel
-  useEffect(() => {
-    if (!event || !isAutoPlaying) return;
+useEffect(() => {
+  // Vérifie que event et event.files existent
+  if (!event?.files || !isAutoPlaying) return;
 
-    const images = event.files.filter((file: any) => file.type === "image");
-    if (images.length <= 1) return;
+  // Filtre les images
+  const images = event.files.filter((file: any) => file.type === "image");
+  if (images.length <= 1) return;
 
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 3000); // Change d'image toutes les 3 secondes
+  // Intervalle pour changer d'image toutes les 3 secondes
+  const interval = setInterval(() => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  }, 3000);
 
-    return () => clearInterval(interval);
-  }, [event, isAutoPlaying]);
+  // Nettoyage à la destruction
+  return () => clearInterval(interval);
+}, [event, isAutoPlaying]);
+
 
   if (!event) {
     return (
       <div className=" min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
-        <Spinner className="text-pretty" size={80} />
+        <Spinner className="text-primary" variant="bars" size={80} />
       </div>
     );
   }
@@ -195,7 +196,7 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
             </div>
 
             {/* Carousel principal */}
-            <Card className="overflow-hidden border-2 border-gray-200 shadow-xl">
+            <Card className="p-0 overflow-hidden border-2 border-gray-200 shadow-xl">
               <CardContent className="p-0">
                 <div className="relative group">
                   {/* Image principale avec effet */}
@@ -351,7 +352,7 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
 
       {/* Dialog pour consulter le PowerPoint */}
       <Dialog open={pptDialogOpen} onOpenChange={setPptDialogOpen}>
-        <DialogContent className="max-w-6xl h-[90vh]">
+        <DialogContent className="!max-w-6xl h-[90vh]">
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">

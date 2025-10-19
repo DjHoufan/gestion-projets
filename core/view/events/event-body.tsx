@@ -187,9 +187,9 @@ export default function EventsBody() {
           {filteredEvents.map((event) => (
             <Card
               key={event.id}
-              className="hover:shadow-lg transition-all duration-300 border-2 hover:border-teal-300"
+              className="hover:shadow-lg transition-all duration-300 border-2 hover:border-teal-300 !p-0"
             >
-              <CardHeader className="bg-gradient-to-br from-teal-50 to-blue-50">
+              <CardHeader className="p-5 h-32 rounded-t-lg  bg-gradient-to-br from-teal-50 to-blue-50">
                 <CardTitle className="text-lg flex items-start justify-between">
                   <span className="flex-1">{event.titre}</span>
                 </CardTitle>
