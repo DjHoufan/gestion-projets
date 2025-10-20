@@ -42,9 +42,7 @@ export function EventDetail({ Id, permission }: IdType & PermissionProps) {
   const [selectedPpt, setSelectedPpt] = useState<any>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Normaliser la structure de `event`:
-  // - accepte l'objet direct { titre, date, files }
-  // - accepte les responses indexées { "0": {...}, "1": {...} }
+ 
   const event = useMemo(() => {
     if (!rawEvent) return null;
 

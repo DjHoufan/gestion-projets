@@ -36,7 +36,7 @@ const app = new Hono()
 
     const data = await db.events.findFirst({
       where: {
-        id: '38ade08d-3d42-4a36-8c2c-864007359c94',
+        id: eventId,
       },
       include: {
         files: true,
