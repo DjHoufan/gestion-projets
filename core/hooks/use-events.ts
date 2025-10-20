@@ -54,7 +54,7 @@ export const useGetEvents = () => {
 
 export const useGetOnEvent = (id: string) => {
   return useQuery({
-    queryKey: [QueryKeyString.OneEvent + id],
+    queryKey: [id],
     queryFn: async () => {
       const response = await client.api.events[":eventId"].$get({
         param: { eventId: id },

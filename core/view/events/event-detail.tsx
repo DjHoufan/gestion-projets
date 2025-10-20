@@ -34,7 +34,6 @@ import { useGetOnEvent } from "@/core/hooks/use-events";
 import { Spinner } from "@/core/components/ui/spinner";
 
 export function EventDetail({ Id }: IdType ) {
-  //details
   const { data: rawEvent, isPending } = useGetOnEvent(Id);
   const router = useRouter();
 
