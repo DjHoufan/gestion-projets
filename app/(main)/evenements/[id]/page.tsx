@@ -1,9 +1,10 @@
 import { IdProps } from "@/core/lib/types";
+import { EventDetail } from "@/core/view/events/event-detail";
 
 const Evenement = async ({ params }: IdProps) => {
   const { Id } = await params;
 
-  return <h2>Événement {Id} - </h2>;
+  return <EventDetail Id={Id}/>;
 };
 
 export default Evenement;

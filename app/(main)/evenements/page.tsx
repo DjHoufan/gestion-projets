@@ -1,6 +1,7 @@
- 
+import EventsBody from "@/core/view/events/event-body";
+
 const Evenements = () => {
-  return <h1>akis</h1>;
+  return <EventsBody />;
 };
 
 export default Evenements;
