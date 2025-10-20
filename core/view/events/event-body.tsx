@@ -40,7 +40,7 @@ export default function EventsBody() {
 
   const router = useRouter();
 
-  const { data: events, isPending } = useGetEvents();
+  const { data: events } = useGetEvents();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFile, setSelectedFile] = useState<any>(null);
@@ -69,10 +69,7 @@ export default function EventsBody() {
     setSelectedFile(file);
     setFileViewDialogOpen(true);
   };
-
-  const handleViewEvent = (event: any) => {
-    router.push(`/evenements/${event.id}`);
-  };
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
@@ -234,7 +231,7 @@ export default function EventsBody() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleViewEvent(event)}
+                      onClick={() =>   router.push(`/evenements/${event.id}`)}
                       className="flex-1"
                     >
                       <Eye className="h-4 w-4 mr-1" />
