@@ -46,8 +46,6 @@ const app = new Hono()
       },
     });
 
- 
-
     return c.json({ data });
   })
   .post("/", zValidator("json", EventsSchema), sessionMiddleware, async (c) => {
