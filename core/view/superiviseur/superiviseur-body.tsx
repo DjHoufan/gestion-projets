@@ -722,7 +722,7 @@ export function SuperiviseurBody({ id }: { id: string }) {
 
       {/* Dialog des achats */}
       <Dialog open={purchaseDialogOpen} onOpenChange={setPurchaseDialogOpen}>
-        <DialogContent className="max-w-6xl max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogContent className="!max-w-6xl max-h-[85vh] overflow-hidden flex flex-col">
           <DialogHeader className="pb-4 border-b">
             <DialogTitle className="flex items-center gap-3 text-xl">
               <div className="p-2 bg-yellow-100 rounded-lg">
@@ -923,7 +923,7 @@ export function SuperiviseurBody({ id }: { id: string }) {
         open={singlePurchaseDialogOpen}
         onOpenChange={setSinglePurchaseDialogOpen}
       >
-        <DialogContent className="max-w-4xl max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogContent className="!max-w-4xl max-h-[85vh] overflow-hidden flex flex-col">
           <DialogHeader className="pb-4 border-b">
             <DialogTitle className="flex items-center gap-3 text-xl">
               <div className="p-2 bg-yellow-100 rounded-lg">
@@ -1075,7 +1075,7 @@ export function SuperiviseurBody({ id }: { id: string }) {
 
       {/* Dialog pour afficher une image agrandie */}
       <Dialog open={imageDialogOpen} onOpenChange={setImageDialogOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="!max-w-4xl">
           <DialogHeader>
             <DialogTitle>Image de l'article</DialogTitle>
           </DialogHeader>
@@ -1101,7 +1101,7 @@ export function SuperiviseurBody({ id }: { id: string }) {
 
       {/* Dialog pour afficher les détails d'une rencontre */}
       <Dialog open={rencontreDialogOpen} onOpenChange={setRencontreDialogOpen}>
-        <DialogContent className="max-w-5xl max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogContent className="!max-w-5xl max-h-[85vh] overflow-hidden flex flex-col">
           <DialogHeader className="pb-4 border-b">
             <DialogTitle className="flex items-center gap-3 text-xl">
               <div className="p-2 bg-green-100 rounded-lg">
@@ -1279,11 +1279,7 @@ export function SuperiviseurBody({ id }: { id: string }) {
                                     alt={file.name}
                                     className="w-full h-48 object-cover rounded-lg border-2 border-gray-200 group-hover:border-indigo-400 transition-colors"
                                   />
-                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-lg transition-all flex items-center justify-center">
-                                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm font-medium">
-                                      🔍 Agrandir
-                                    </span>
-                                  </div>
+
                                   <p className="text-sm text-gray-600 mt-2 text-center">
                                     {file.name}
                                   </p>
@@ -1361,7 +1357,7 @@ export function SuperiviseurBody({ id }: { id: string }) {
 
       {/* Dialog pour afficher les détails d'un conflit */}
       <Dialog open={conflitDialogOpen} onOpenChange={setConflitDialogOpen}>
-        <DialogContent className="max-w-5xl max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogContent className="!max-w-5xl max-h-[85vh] overflow-hidden flex flex-col">
           <DialogHeader className="pb-4 border-b">
             <DialogTitle className="flex items-center gap-3 text-xl">
               <div className="p-2 bg-red-100 rounded-lg">
