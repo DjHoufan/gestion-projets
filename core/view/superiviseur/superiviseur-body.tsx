@@ -983,11 +983,7 @@ export function SuperiviseurBody({ id }: { id: string }) {
                                   className="max-w-full max-h-full object-contain"
                                 />
                               </div>
-                              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-xl transition-all flex items-center justify-center">
-                                <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm font-medium">
-                                  🔍 Agrandir
-                                </span>
-                              </div>
+                               
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
