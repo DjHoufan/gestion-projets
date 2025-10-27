@@ -267,7 +267,7 @@ export const MemberBody = ({ permission }: PermissionProps) => {
               <DropdownMenuContent align="end" className="w-48 rounded-xl">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => onCopy(data.id)}>
+                <DropdownMenuItem onClick={() => onCopy(member.id)}>
                   <Copy className="mr-2 h-4 w-4" /> Copy Id
                 </DropdownMenuItem>
                 <DropdownMenuItem
