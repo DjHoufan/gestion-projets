@@ -33,6 +33,7 @@ import {
   UserCheck,
   UserX,
   Table as Stable,
+  Copy,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
