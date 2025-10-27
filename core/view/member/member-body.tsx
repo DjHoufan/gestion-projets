@@ -53,9 +53,7 @@ import {
 import { DataAnalytics } from "@/core/view/member/member-show-stats";
 
 import { definePermissions } from "@/core/lib/utils";
-
-
-
+import { toast } from "@/core/components/global/custom-toast";
 
 export const MemberBody = ({ permission }: PermissionProps) => {
   const { canAdd, canModify, canDelete, canDetails } = useMemo(() => {
@@ -75,6 +73,13 @@ export const MemberBody = ({ permission }: PermissionProps) => {
         <MemberForm />
       </CustomModal>
     );
+  };
+
+  const onCopy = (id: string) => {
+    navigator.clipboard.writeText(id);
+    toast.success({
+      message: "L'identifiant est copié dans le presse-papiers.",
+    });
   };
 
   const columns = [
@@ -262,6 +267,9 @@ export const MemberBody = ({ permission }: PermissionProps) => {
               <DropdownMenuContent align="end" className="w-48 rounded-xl">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => onCopy(data.id)}>
+                  <Copy className="mr-2 h-4 w-4" /> Copy Id
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() =>
                     open(
@@ -363,8 +371,8 @@ export const MemberBody = ({ permission }: PermissionProps) => {
       }
     );
   };
- 
- //akis
+
+  //akis
 
   return (
     <>
