@@ -7,7 +7,6 @@ import { Label } from "@/core/components/ui/label";
 import { useResetPassword } from "@/core/hooks/use-auth";
 
 import { CheckCircle, Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
 
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
@@ -87,11 +86,10 @@ export default function ResetPasswordPage() {
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=40&width=40')] opacity-5"></div>
         <div className="relative z-10 flex flex-col justify-center items-center p-12 text-white">
           <div className="mb-8 relative h-24 w-24 bg-white p-5 rounded">
-            <Image
-              fill
+            <img
               src="https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/images//unblurimageai_1670699258598-removebg-preview-removebg-preview.png"
               alt="Logo"
-              className=" object-contain"
+              className="w-full h-full object-contain"
             />
           </div>
           <h2 className="text-4xl font-bold mb-6 text-center">
@@ -113,11 +111,10 @@ export default function ResetPasswordPage() {
             {/* Header mobile */}
             <div className="lg:hidden flex flex-col items-center mb-8">
               <div className="h-16 w-16 relative  mb-4">
-                <Image
-                  fill
+                <img
                   src="https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/images//unblurimageai_1670699258598-removebg-preview-removebg-preview.png"
                   alt="Logo"
-                  className=" object-contain"
+                  className="w-full h-full object-contain"
                 />
               </div>
             </div>

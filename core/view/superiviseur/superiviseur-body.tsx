@@ -108,6 +108,8 @@ export function SuperiviseurBody({ id }: { id: string }) {
     };
   }, [selectedAccompaniment]);
 
+  console.log({filteredAccompanists});
+  
   return (
     <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Panneau gauche moderne - Liste des accompagnateurs */}
@@ -129,6 +131,8 @@ export function SuperiviseurBody({ id }: { id: string }) {
             {filteredAccompanists.length > 1 ? "s" : ""}
           </p>
         </div>
+
+
 
         {/* Liste scrollable moderne */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-3">

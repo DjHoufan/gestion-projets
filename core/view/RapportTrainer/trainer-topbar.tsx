@@ -11,7 +11,6 @@ import {
 import { useLogout } from "@/core/hooks/use-auth";
 import { User } from "@supabase/supabase-js";
 import { Loader2, LogOut, Settings, User as UserIcon } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -23,11 +22,10 @@ export const TrainerToBar = ({ currentUser }: { currentUser: User }) => {
   return (
     <div className="flex justify-between items-center h-16  border-gray-100/50">
       <div className="relative w-20 h-20 mt-20">
-        <Image
+        <img
           src="https://mrsjolhfnqzmuekkhzde.supabase.co/storage/v1/object/public/images/1670699258598.jpeg"
           alt="HOUFAN Research & Transform"
-          fill
-          priority
+          className="w-full h-full object-cover"
         />
       </div>
 
@@ -40,11 +38,10 @@ export const TrainerToBar = ({ currentUser }: { currentUser: User }) => {
               className=" flex items-center gap-2"
             >
               <div className="relative w-8 h-8">
-                <Image
+                <img
                   src={currentUser.user_metadata.profile}
                   alt="Profile"
-                  fill
-                  className=" rounded-full ring-2 ring-blue-100"
+                  className="w-full h-full object-cover rounded-full ring-2 ring-blue-100"
                 />
               </div>
               <span className="hidden md:block text-sm font-medium">

@@ -20,7 +20,6 @@ import { useLogin } from "@/core/hooks/use-auth";
 import { useState } from "react";
 import { Spinner } from "@/core/components/ui/spinner";
 import { BookOpen, Shield, Users } from "lucide-react";
-import Image from "next/image";
 
 const Authentification = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -47,13 +46,10 @@ const Authentification = () => {
           <div className="text-center">
             <div className="flex justify-center mb-6">
               <div className="px-10 py-4  bg-gradient-to-r from-teal-500/20 to-teal-500/20  rounded-lg">
-                <Image
+                <img
                   src="/images/houfan-new-logo.png"
                   alt="HOUFAN Research & Transform"
-                  width={200}
-                  height={100}
                   className="h-20 w-auto"
-                  priority
                 />
               </div>
             </div>

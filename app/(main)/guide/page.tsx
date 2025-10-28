@@ -19,7 +19,6 @@ import {
   BarChart3,
   AlertTriangle,
 } from "lucide-react";
-import Image from "next/image";
 
 const Guide = () => {
   const tableOfContents = [
@@ -95,11 +94,9 @@ const Guide = () => {
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/dashboard-main.png"
                     alt="Tableau de bord principal HOUFAN"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -151,11 +148,9 @@ const Guide = () => {
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/projects-grid.png"
                     alt="Vue grille des projets avec statistiques"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -196,11 +191,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/new-project-modal.png"
                     alt="Formulaire de création de nouveau projet"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -229,11 +222,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/edit-project-modal.png"
                     alt="Formulaire de modification de projet"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -266,11 +257,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/project-details.png"
                     alt="Vue détaillée du projet Cohorte 2"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -311,11 +300,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/dashboard-recent.png"
                     alt="Tableau de bord avec projets récents et statistiques utilisateurs"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -368,11 +355,9 @@ const Guide = () => {
                   Activités hebdomadaires
                 </h3>
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/dashboard-activities.png"
                     alt="Graphique des activités hebdomadaires"
-                    width={800}
-                    height={300}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -422,11 +407,9 @@ const Guide = () => {
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/beneficiaries-list.png"
                     alt="Liste complète des bénéficiaires avec détails"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -466,11 +449,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/beneficiaries-with-metrics.png"
                     alt="Bénéficiaires avec métriques colorées du projet"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -511,11 +492,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/beneficiaries-data-view.png"
                     alt="Vue données des bénéficiaires avec filtres avancés"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -554,11 +533,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/member-details-form.png"
                     alt="Formulaire d&apos;ajout de nouveau bénéficiaire"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -597,11 +574,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/member-edit-form.png"
                     alt="Formulaire de modification d&apos;un bénéficiaire existant"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -640,11 +615,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/beneficiary-profile.png"
                     alt="Profil détaillé de Mahdia Kadir Houssein"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -686,11 +659,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/beneficiary-detailed-modal.png"
                     alt="Fiche détaillée complète de Mahdia Kadir Houssein"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -750,11 +721,9 @@ const Guide = () => {
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/classes-list.png"
                     alt="Liste des classes avec formateurs et projets"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -793,11 +762,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/class-details-form.png"
                     alt="Formulaire de création de nouvelle classe"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -833,11 +800,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/class-edit-form.png"
                     alt="Formulaire de modification de classe existante"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -868,11 +833,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/class-detailed-view.png"
                     alt="Vue détaillée de la classe test1 avec suivi des bénéficiaires"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -933,11 +896,9 @@ const Guide = () => {
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/accompaniment-management.png"
                     alt="Page de gestion des accompagnements avec statistiques"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -987,11 +948,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/new-accompaniment-form.png"
                     alt="Formulaire de création d&apos;un nouvel accompagnement"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -1040,11 +999,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/abandonment-form.png"
                     alt="Formulaire de modification d&apos;abandon"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -1092,11 +1049,9 @@ const Guide = () => {
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/team-management.png"
                     alt="Page de gestion des équipes avec onglets et liste des employés"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -1154,11 +1109,9 @@ const Guide = () => {
                 </h3>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/project-gps-details.png"
                     alt="Vue détaillée du projet test 1 avec carte GPS interactive"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -1223,11 +1176,9 @@ const Guide = () => {
                 </Badge>
 
                 <div className="bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg p-4 mb-4">
-                  <Image
+                  <img
                     src="/guide/report-management.png"
                     alt="Page de gestion des rapports avec types de rapports disponibles"
-                    width={800}
-                    height={400}
                     className="w-full rounded-lg"
                   />
                 </div>
@@ -1299,29 +1250,23 @@ const Guide = () => {
             <div className="mb-6">
               <h4 className="font-semibold mb-3">Suppression de données</h4>
               <div className="bg-white/10 rounded-lg p-4 mb-4">
-                <Image
+                <img
                   src="/guide/delete-confirmation.png"
                   alt="Confirmation de suppression de projet"
-                  width={600}
-                  height={300}
                   className="w-full rounded-lg"
                 />
               </div>
               <div className="bg-white/10 rounded-lg p-4 mb-4">
-                <Image
+                <img
                   src="/guide/delete-confirmation-class.png"
                   alt="Confirmation de suppression de classe"
-                  width={600}
-                  height={300}
                   className="w-full rounded-lg"
                 />
               </div>
               <div className="bg-white/10 rounded-lg p-4 mb-4">
-                <Image
+                <img
                   src="/guide/beneficiary-delete-confirmation.png"
                   alt="Confirmation de suppression de bénéficiaire Mahdia Kadir Houssein"
-                  width={600}
-                  height={300}
                   className="w-full rounded-lg"
                 />
               </div>

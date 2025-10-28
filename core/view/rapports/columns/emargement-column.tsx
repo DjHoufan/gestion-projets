@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Badge } from "@/core/components/ui/badge";
@@ -27,9 +26,8 @@ export const EmargementColumns = (
         <div className="flex items-center gap-3">
           <div className="h-10 w-16 relative">
             {row.original.PhotoCni ? (
-              <Image
-                fill
-                className="object-cover rounded border border-gray-200"
+              <img
+                className="w-full h-full object-cover rounded border border-gray-200"
                 src={row.original.PhotoCni}
                 alt="Photo CNI"
               />

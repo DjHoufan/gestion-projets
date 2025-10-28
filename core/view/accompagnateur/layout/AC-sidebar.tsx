@@ -14,7 +14,6 @@ import {
   X,
 } from "lucide-react";
 import { MdOutlineGroups2 } from "react-icons/md";
-import Image from "next/image";
 import { useCustomeTabs, useSelectAC } from "@/core/hooks/store";
 
 type MenuItem = {
@@ -129,12 +128,11 @@ export function ACSidebar({ toggleSidebarAction }: Props) {
           <div className="relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-teal-500/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
             <div className="relative p-3  bg-white  rounded-xl border border-slate-700/50 backdrop-blur-sm shadow-lg">
-              <Image
+              <img
                 src="/images/houfan-new-logo.png"
                 alt="HOUFAN Research & Transform"
-                width={200}
-                height={42}
-                priority
+                width="200"
+                height="42"
               />
             </div>
           </div>
