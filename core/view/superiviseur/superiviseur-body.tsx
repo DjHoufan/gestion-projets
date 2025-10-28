@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/core/components/ui/card";
 import { Input } from "@/core/components/ui/input";
@@ -295,7 +295,7 @@ export function SuperiviseurBody({ id }: { id: string }) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center  justify-center gap-4 mb-4">
                   <div className="flex-1">
                     <label className="text-sm font-semibold mb-3 flex items-center gap-2 text-gray-700">
                       <Building2 className="h-4 w-4 text-teal-600" />
@@ -342,6 +342,16 @@ export function SuperiviseurBody({ id }: { id: string }) {
                       </SelectContent>
                     </Select>
                   </div>
+                  <Button
+                    onClick={() =>
+                      router.push(
+                        `/accompagnementSup/${selectedAccompaniment.id}`
+                      )
+                    }
+                    className="self-end"
+                  >
+                    Voir les détails
+                  </Button>
                 </div>
               </div>
 
@@ -983,7 +993,6 @@ export function SuperiviseurBody({ id }: { id: string }) {
                                   className="max-w-full max-h-full object-contain"
                                 />
                               </div>
-                               
                             </div>
                           )}
                           <div className="flex-1 min-w-0">

@@ -77,7 +77,13 @@ export async function middleware(request: NextRequest) {
     // 🧭 Restriction stricte pour les superviseurs
     if (type === "superviseur" && !isApiPath) {
       const isAllowed = SupRoutes.includes(pathname);
-      if (!isAllowed) {
+
+      // Exception : autoriser /supervision/<uuid>
+      const isSupervisionDetail =
+        pathname.startsWith("/accompagnementSup/") &&
+        pathname.split("/").length === 3; // ex: /supervision/<uuid>
+
+      if (!isAllowed && !isSupervisionDetail) {
         return NextResponse.redirect(new URL("/supervision", nextUrl));
       }
     }
