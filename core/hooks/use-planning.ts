@@ -11,18 +11,23 @@ import { useMyData, usePlanningActions } from "@/core/hooks/store";
 // import { useplannings } from "@/core/hooks/store";
 
 // === Type Inference ===
-type PostResponse = InferResponseType<(typeof client.api.planning)["$post"]>;
+type PostResponse = InferResponseType<
+  (typeof client.api.planning)["$post"],
+  200 // ✅ Spécifier le status code pour avoir accès à data
+>;
 type PostRequest = InferRequestType<(typeof client.api.planning)["$post"]>;
 
 type PostResponseItem = InferResponseType<
-  (typeof client.api.planning.visit)["$post"]
+  (typeof client.api.planning.visit)["$post"],
+  200 // ✅ Spécifier le status code pour avoir accès à data
 >;
 type PostRequestItem = InferRequestType<
   (typeof client.api.planning.visit)["$post"]
 >;
 
 type PatchRes = InferResponseType<
-  (typeof client.api.planning.visit)[":visitId"]["$patch"]
+  (typeof client.api.planning.visit)[":visitId"]["$patch"],
+  200 // ✅ Spécifier le status code pour avoir accès à data
 >;
 type PatchReq = InferRequestType<
   (typeof client.api.planning.visit)[":visitId"]["$patch"]
