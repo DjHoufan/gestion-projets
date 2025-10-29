@@ -1,13 +1,19 @@
 "use client";
 
 import { useState, useTransition, useCallback, memo } from "react";
-import { CloudUpload, Trash, Camera, Loader2 } from "lucide-react";
+import { CloudUpload, Trash, Camera, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/core/components/ui/button";
 import { cn } from "@/core/lib/utils";
 import { UrlPath } from "@/core/lib/constants";
 
 import { uploadImage } from "@/core/lib/storage";
 import { toast } from "./custom-toast";
+import { 
+  compressImage, 
+  validateFileSize, 
+  validateFileType, 
+  formatFileSize 
+} from "@/core/lib/image-compression";
 
 type Props = {
   disabled?: boolean;
@@ -33,10 +39,52 @@ const ImageUploadComponent = ({
   const [isDragging, setIsDragging] = useState(false);
 
   // ✅ Optimisation des callbacks avec useCallback
-  const handleFileChange = useCallback((file: File) => {
-    setFile(file);
-    const url = URL.createObjectURL(file);
-    setPreview(url);
+  const handleFileChange = useCallback(async (selectedFile: File) => {
+    // Validation du type de fichier
+    if (!validateFileType(selectedFile)) {
+      toast.error({
+        message: "Format non supporté. Utilisez JPG, PNG ou WebP.",
+      });
+      return;
+    }
+
+    // Validation de la taille (max 10MB avant compression)
+    if (!validateFileSize(selectedFile, 10)) {
+      toast.error({
+        message: `Image trop volumineuse (${formatFileSize(selectedFile.size)}). Maximum 10MB.`,
+      });
+      return;
+    }
+
+    try {
+      // Compression automatique de l'image
+      toast.success({ message: "Compression de l'image en cours..." });
+      const compressedFile = await compressImage(selectedFile, {
+        maxSizeMB: 2, // Taille cible 2MB
+        maxWidthOrHeight: 1920, // Dimension max
+        quality: 0.8, // Qualité 80%
+      });
+
+      const originalSize = formatFileSize(selectedFile.size);
+      const compressedSize = formatFileSize(compressedFile.size);
+      const reduction = Math.round((1 - compressedFile.size / selectedFile.size) * 100);
+
+      toast.success({
+        message: `Image optimisée : ${originalSize} → ${compressedSize} (-${reduction}%)`,
+      });
+
+      setFile(compressedFile);
+      const url = URL.createObjectURL(compressedFile);
+      setPreview(url);
+
+      // Nettoyer l'ancienne URL si elle existe
+      return () => URL.revokeObjectURL(url);
+    } catch (error) {
+      toast.error({
+        message: "Erreur lors de la compression de l'image.",
+      });
+      console.error("Compression error:", error);
+    }
   }, []);
 
   const handleUpload = useCallback(() => {
@@ -204,7 +252,7 @@ const ImageUploadComponent = ({
             <>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp,image/jpg"
                 onChange={handleInputChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
@@ -220,7 +268,11 @@ const ImageUploadComponent = ({
                     ou glissez et déposez une image
                   </p>
                   <p className="text-xs text-slate-400 mt-2">
-                    PNG, JPG ou JPEG
+                    PNG, JPG ou WebP • Max 10MB
+                  </p>
+                  <p className="text-xs text-emerald-600 mt-1 flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    Compression automatique activée
                   </p>
                 </div>
               </div>

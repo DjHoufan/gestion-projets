@@ -81,6 +81,29 @@ export const uploadImage = async (formData: FormData, folder: string) => {
     return { success: null, error: { message: "Aucun fichier sélectionné" } };
   }
 
+  // ✅ Validation de la taille du fichier côté serveur (max 5MB)
+  const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+  if (file.size > maxSizeInBytes) {
+    const sizeInMB = (file.size / 1024 / 1024).toFixed(2);
+    return { 
+      success: null, 
+      error: { 
+        message: `Fichier trop volumineux (${sizeInMB}MB). Maximum autorisé : 5MB. Veuillez compresser l'image avant l'upload.` 
+      } 
+    };
+  }
+
+  // ✅ Validation du type de fichier
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  if (!allowedTypes.includes(file.type)) {
+    return { 
+      success: null, 
+      error: { 
+        message: `Type de fichier non autorisé (${file.type}). Formats acceptés : JPG, PNG, WebP.` 
+      } 
+    };
+  }
+
   // On garde l'extension originale du fichier
   const ext = file.name.split(".").pop();
   const fileName = `${Date.now()}_${Math.random()

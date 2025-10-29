@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -23,6 +24,7 @@ import {
 } from "lucide-react";
 import { DataTable } from "@/core/components/global/data-table";
 import { Accompaniment } from "@prisma/client";
+import { Spinner } from "@/core/components/ui/spinner";
 
 import { useCustomeTabs, useMyData, useSelectAC } from "@/core/hooks/store";
 
@@ -36,16 +38,14 @@ export interface AccompanimentListItem extends Accompaniment {
 
 export function AccompanimentsView() {
   const { data: user } = useMyData();
-
-  if (!user) {
-    return <div>Chargement...</div>;
-  }
-
   const { set: SetUrl } = useCustomeTabs();
   const { set } = useSelectAC();
 
-  const accompanimentsList: AccompanimentListItem[] = user.accompaniments.map(
-    (acc: any) => ({
+  // ✅ Mémorisation de la liste des accompagnements
+  const accompanimentsList: AccompanimentListItem[] = useMemo(() => {
+    if (!user?.accompaniments) return [];
+    
+    return user.accompaniments.map((acc: any) => ({
       ...acc,
       projectName: acc.project?.name || "Aucun projet assigné",
       projectStatus: acc.project?.status || false,
@@ -53,10 +53,33 @@ export function AccompanimentsView() {
       totalPurchases: acc.purchases?.length || 0,
       totalPurchaseAmount:
         acc.purchases?.reduce((sum: number, p: any) => sum + p.total, 0) || 0,
-    })
-  );
+    }));
+  }, [user?.accompaniments]);
 
-  const columns = [
+  // ✅ Mémorisation des statistiques
+  const statistics = useMemo(() => {
+    if (!user?.accompaniments) return { total: 0, uniqueProjects: 0, totalMembers: 0 };
+
+    const uniqueProjects = new Set(
+      user.accompaniments
+        .map((acc: any) => acc.project?.id)
+        .filter(Boolean)
+    ).size;
+
+    const totalMembers = user.accompaniments.reduce(
+      (total: number, acc: any) => total + acc.members.length,
+      0
+    );
+
+    return {
+      total: user.accompaniments.length,
+      uniqueProjects,
+      totalMembers,
+    };
+  }, [user?.accompaniments]);
+
+  // ✅ Mémorisation des colonnes pour éviter re-renders
+  const columns = useMemo(() => [
     {
       id: "accompaniment",
       header: "Accompagnement",
@@ -199,12 +222,23 @@ export function AccompanimentsView() {
       },
       size: 120,
     },
-  ];
+  ], [set, SetUrl]);
+
+  // Skeleton loader pendant le chargement
+  if (!user) {
+    return (
+      <section className="space-y-6 p-6">
+        <div className="flex justify-center items-center h-96">
+          <Spinner variant="bars" size={60} className="text-primary" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-6 p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Accompagnements</h2>
+      <h2 className="text-2xl font-bold text-gray-900">Accompagnements</h2>
       </div>
 
       {/* Global Statistics */}
@@ -218,7 +252,7 @@ export function AccompanimentsView() {
                   Total Accompagnements
                 </p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {user.accompaniments.length}
+                  {statistics.total}
                 </p>
               </div>
               <div className="p-3 bg-emerald-100 rounded-full">
@@ -235,13 +269,7 @@ export function AccompanimentsView() {
               <div>
                 <p className="text-sm font-medium text-gray-600 mb-1">Totale des cohortes auxquelles vous participez.</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {
-                    new Set(
-                      user.accompaniments
-                        .map((acc: any) => acc.project?.id)
-                        .filter(Boolean)
-                    ).size
-                  }
+                  {statistics.uniqueProjects}
                 </p>
               </div>
               <div className="p-3 bg-blue-100 rounded-full">
@@ -260,10 +288,7 @@ export function AccompanimentsView() {
                   Total Membres
                 </p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {user.accompaniments.reduce(
-                    (total: number, acc: any) => total + acc.members.length,
-                    0
-                  )}
+                  {statistics.totalMembers}
                 </p>
               </div>
               <div className="p-3 bg-purple-100 rounded-full">
@@ -275,7 +300,7 @@ export function AccompanimentsView() {
       </div>
 
       <DataTable<AccompanimentListItem>
-        data={accompanimentsList ? accompanimentsList : []}
+        data={accompanimentsList}
         columns={columns}
         searchPlaceholder="Rechercher par nom ou date..."
         searchField="name"

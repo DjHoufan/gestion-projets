@@ -31,7 +31,9 @@ type DeleteRequest = InferRequestType<
 // === Query: Get trainer ===
 export const useGetTrainers = () => {
   return useQuery({
-    queryKey: [QueryKeyString.trainers],
+    queryKey: [QueryKeyString.trainers, "all"],
+    staleTime: 3 * 60 * 1000, // 3 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.trainer.$get();
 
@@ -63,7 +65,9 @@ export const useGetTrainers = () => {
 // === Query: Get One trainer ===
 export const useGetOnTrainer = (id: string) => {
   return useQuery({
-    queryKey: [QueryKeyString.Oneaccompanist + id],
+    queryKey: [QueryKeyString.trainers, "one", id],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.trainer[":tId"].$get({
         param: { tId: id },
@@ -100,7 +104,9 @@ export const useGetOnTrainer = (id: string) => {
 
 export const useGetMyTrainer = (id: string) => {
   return useQuery({
-    queryKey: [QueryKeyString.trainers],
+    queryKey: [QueryKeyString.trainers, "my", id],
+    staleTime: 3 * 60 * 1000, // 3 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.trainer.my[":userId"].$get({
         param: { userId: id },
@@ -147,6 +153,7 @@ export const useCreateTrainer = () => {
         message: "Le rapport du formateur a été sauvegardé avec succès",
       });
       queryClient.invalidateQueries({ queryKey: [QueryKeyString.trainers] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeyString.trainers, "all"] });
       close();
     },
     onError: (err) => {
@@ -177,6 +184,7 @@ export const useUpdateTrainer = () => {
           "La modification du rapport du formateur a été effectuée avec succès.",
       });
       queryClient.invalidateQueries({ queryKey: [QueryKeyString.trainers] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeyString.trainers, "all"] });
       close();
     },
     onError: (err) => {
@@ -205,6 +213,7 @@ export const useDeletTrainer = () => {
         message: "Le rapport du formateur a été supprimé avec succès",
       });
       queryClient.invalidateQueries({ queryKey: [QueryKeyString.trainers] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeyString.trainers, "all"] });
     },
     onError: (err) => {
       toast.error({

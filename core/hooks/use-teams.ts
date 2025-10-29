@@ -65,6 +65,8 @@ type RequestTypeAccess = InferRequestType<
 export const useGetTeam = () => {
   return useQuery({
     queryKey: [QueryKeyString.team],
+    staleTime: 3 * 60 * 1000, // 3 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.team.$get();
 
@@ -94,6 +96,8 @@ export const useGetTeam = () => {
 export const useGetEmploye = () => {
   return useQuery({
     queryKey: [QueryKeyString.employes],
+    staleTime: 3 * 60 * 1000, // 3 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.team.employe.$get();
 
@@ -144,7 +148,9 @@ export const useUpdateAccessEmploye = () => {
 
 export const useGetUsersNotInChat = (id: string) => {
   return useQuery({
-    queryKey: [QueryKeyString.usersNotInChat],
+    queryKey: [QueryKeyString.usersNotInChat, id],
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 15 * 60 * 1000, // 15 minutes
     queryFn: async () => {
       const response = await client.api.team.users[":chatId"].$get({
         param: { chatId: id },
@@ -177,7 +183,9 @@ export const useGetUsersNotInChat = (id: string) => {
 
 export const useGetProfile = (id: string) => {
   return useQuery({
-    queryKey: [QueryKeyString.profile],
+    queryKey: [QueryKeyString.profile, id],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.team.profile[":teamId"].$get({
         param: { teamId: id },
@@ -211,7 +219,9 @@ export const useGetProfile = (id: string) => {
 export const useGetOnTeam = (id: string) => {
   const { setData } = useMyData();
   return useQuery({
-    queryKey: [QueryKeyString.Oneaccompanist + id],
+    queryKey: [QueryKeyString.Oneaccompanist, id],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.team[":teamId"].$get({
         param: { teamId: id },
@@ -399,7 +409,9 @@ export const useGetOnTeam = (id: string) => {
 // === Query: Get Trainers ===
 export const useGetTrainers = () => {
   return useQuery({
-    queryKey: [QueryKeyString.accompanist],
+    queryKey: [QueryKeyString.accompanist, "trainers"],
+    staleTime: 3 * 60 * 1000, // 3 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.team.trainer.$get();
 
@@ -425,7 +437,9 @@ export const useGetTrainers = () => {
 // === Query: Get accompanist ===
 export const useGetAccompanist = () => {
   return useQuery({
-    queryKey: [QueryKeyString.accompanist],
+    queryKey: [QueryKeyString.accompanist, "accompanist"],
+    staleTime: 3 * 60 * 1000, // 3 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.team.accompanist.$get();
 
@@ -541,7 +555,7 @@ export const useUpdateProfile = () => {
     },
     onSuccess: ({ data }) => {
       queryClient.setQueryData<any>(
-        ["accompanist", data.id],
+        [QueryKeyString.Oneaccompanist, data.id],
         (oldData: any) => {
           if (!oldData) return oldData;
 
@@ -591,7 +605,7 @@ export const useUpdateCvOrProfile = () => {
     },
     onSuccess: ({ data }) => {
       queryClient.setQueryData<any>(
-        ["accompanist", data.id],
+        [QueryKeyString.Oneaccompanist, data.id],
         (oldData: any) => {
           if (!oldData) return oldData;
 
@@ -608,7 +622,7 @@ export const useUpdateCvOrProfile = () => {
       );
 
       queryClient.setQueryData<any>(
-        [QueryKeyString.profile],
+        [QueryKeyString.profile, data.id],
         (oldData: any) => {
           if (!oldData) return oldData;
 

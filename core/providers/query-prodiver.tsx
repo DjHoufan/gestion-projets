@@ -14,26 +14,27 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // ✅ Optimisations de cache
-        staleTime: 5 * 60 * 1000, // 5 minutes (au lieu de 5 heures)
-        gcTime: 10 * 60 * 1000, // 10 minutes
+        // ✅ Optimisations de cache - Configuration cohérente avec les hooks
+        staleTime: 3 * 60 * 1000, // 3 minutes par défaut
+        gcTime: 30 * 60 * 1000, // 30 minutes (anciennement cacheTime)
         retry: (failureCount, error: any) => {
           // ✅ Retry intelligent
           if (error?.status === 404 || error?.status === 403) return false;
-          return failureCount < 3;
+          return failureCount < 2; // Réduit à 2 tentatives max
         },
         retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: 'always',
-        // ✅ Background refetch optimisé
+        refetchOnWindowFocus: false, // Évite refetch automatiques au focus
+        refetchOnReconnect: false, // Évite refetch automatiques à la reconnexion
+        // ✅ Background refetch désactivé pour réduire les requêtes
         refetchInterval: false,
         refetchIntervalInBackground: false,
       },
       mutations: {
         // ✅ Retry pour les mutations
         retry: (failureCount, error: any) => {
+          // Pas de retry sur erreurs client (4xx)
           if (error?.status >= 400 && error?.status < 500) return false;
-          return failureCount < 2;
+          return failureCount < 1; // 1 seule tentative max
         },
         retryDelay: 1000,
       },

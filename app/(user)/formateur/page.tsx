@@ -1,13 +1,19 @@
 import { getCurrentUser } from "@/core/hooks/use-current-user";
-import { GetUserCookies } from "@/core/hooks/use-get-user-cookies";
 import { TrainerBody } from "@/core/view/RapportTrainer/trainer-body";
- 
-const Formateur = async () => {
-  const user = await GetUserCookies();
 
+// Configuration du cache pour cette page
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
+const Formateur = async () => {
+  // Utiliser uniquement getCurrentUser qui contient toutes les infos nécessaires
   const currentUser = await getCurrentUser();
 
-  return <TrainerBody userId={user.id} currentUser={currentUser!} />;
+  if (!currentUser) {
+    throw new Error("User not authenticated");
+  }
+
+  return <TrainerBody userId={currentUser.id} currentUser={currentUser} />;
 };
 
 export default Formateur;
