@@ -49,6 +49,17 @@ const formatFileSize = (bytes: number) => {
   );
 };
 
+// ✅ Vérifier si le fichier est un document (pas une image)
+const isDocument = (type: string): boolean => {
+  return (
+    type === 'application/pdf' ||
+    type === 'application/msword' ||
+    type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    type === 'application/vnd.ms-powerpoint' ||
+    type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  );
+};
+
 // ✅ Compression d'images natives avec Canvas API
 const compressImage = async (
   file: File,
@@ -198,9 +209,21 @@ export const UploadMultiFilesMinimal = ({
           ? Array.from(newFiles)
           : [Array.from(newFiles)[0]];
 
+        // Séparer images et documents
+        const images: File[] = [];
+        const documents: File[] = [];
+        
+        filesToAdd.forEach(file => {
+          if (isDocument(file.type)) {
+            documents.push(file);
+          } else {
+            images.push(file);
+          }
+        });
+
         // ✅ Compresser les images avant de les ajouter
-        const processedFiles = await Promise.all(
-          filesToAdd.map(async (file) => {
+        const processedImages = await Promise.all(
+          images.map(async (file) => {
             // Compresser seulement les images si option activée
             const processedFile = compressImages && file.type.startsWith('image/')
               ? await compressImage(file, maxWidth, maxHeight, quality)
@@ -216,13 +239,67 @@ export const UploadMultiFilesMinimal = ({
           })
         );
 
-        setFiles(
-          multiple ? (prevFiles) => [...prevFiles, ...processedFiles] : processedFiles
-        );
+        // ✅ Ajouter les images à la liste (attente upload manuel)
+        if (processedImages.length > 0) {
+          setFiles(
+            multiple ? (prevFiles) => [...prevFiles, ...processedImages] : processedImages
+          );
+        }
+        
         setCompressing(false);
+
+        // ✅ Upload automatique des documents
+        if (documents.length > 0) {
+          const formData = new FormData();
+          
+          for (const doc of documents) {
+            if (doc.type === 'application/pdf') {
+              formData.append('pdf', doc);
+            } else if (
+              doc.type === 'application/msword' ||
+              doc.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ) {
+              formData.append('word', doc);
+            } else if (
+              doc.type === 'application/vnd.ms-powerpoint' ||
+              doc.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            ) {
+              formData.append('powerpoint', doc);
+            }
+          }
+
+          // Upload direct des documents
+          startTransition(async () => {
+            const data = await filesUpload(formData);
+            if (data?.success) {
+              const extractedFiles = Array.isArray(data.success)
+                ? data.success.map((item: any) => item.success)
+                : [];
+
+              // ✅ Mise à jour du state
+              const newFiles = [...uploadedFiles, ...extractedFiles];
+              setUploadedFiles(newFiles);
+              
+              // ✅ Notifier le parent de manière asynchrone (évite erreur React)
+              setTimeout(() => {
+                onChangeAction(newFiles as Files[]);
+              }, 0);
+
+              toast.success({
+                message: `${documents.length} document(s) uploadé(s) automatiquement.`,
+              });
+            } else if (data?.error) {
+              console.log(data?.error);
+              
+              toast.error({
+                message: "Erreur lors de l'upload automatique des documents.",
+              });
+            }
+          });
+        }
       }
     },
-    [multiple, compressImages, maxWidth, maxHeight, quality]
+    [multiple, compressImages, maxWidth, maxHeight, quality, onChangeAction]
   );
 
   // ✅ Mémoriser avec useCallback
@@ -249,9 +326,21 @@ export const UploadMultiFilesMinimal = ({
           ? Array.from(newFiles)
           : [Array.from(newFiles)[0]];
 
+        // Séparer images et documents
+        const images: File[] = [];
+        const documents: File[] = [];
+        
+        filesToAdd.forEach(file => {
+          if (isDocument(file.type)) {
+            documents.push(file);
+          } else {
+            images.push(file);
+          }
+        });
+
         // ✅ Compresser les images avant de les ajouter
-        const processedFiles = await Promise.all(
-          filesToAdd.map(async (file) => {
+        const processedImages = await Promise.all(
+          images.map(async (file) => {
             // Compresser seulement les images si option activée
             const processedFile = compressImages && file.type.startsWith('image/')
               ? await compressImage(file, maxWidth, maxHeight, quality)
@@ -267,13 +356,67 @@ export const UploadMultiFilesMinimal = ({
           })
         );
 
-        setFiles(
-          multiple ? (prevFiles) => [...prevFiles, ...processedFiles] : processedFiles
-        );
+        // ✅ Ajouter les images à la liste (attente upload manuel)
+        if (processedImages.length > 0) {
+          setFiles(
+            multiple ? (prevFiles) => [...prevFiles, ...processedImages] : processedImages
+          );
+        }
+        
         setCompressing(false);
+
+        // ✅ Upload automatique des documents
+        if (documents.length > 0) {
+          const formData = new FormData();
+          
+          for (const doc of documents) {
+            if (doc.type === 'application/pdf') {
+              formData.append('pdf', doc);
+            } else if (
+              doc.type === 'application/msword' ||
+              doc.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ) {
+              formData.append('word', doc);
+            } else if (
+              doc.type === 'application/vnd.ms-powerpoint' ||
+              doc.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            ) {
+              formData.append('powerpoint', doc);
+            }
+          }
+
+          // Upload direct des documents
+          startTransition(async () => {
+            const data = await filesUpload(formData);
+            if (data?.success) {
+              const extractedFiles = Array.isArray(data.success)
+                ? data.success.map((item: any) => item.success)
+                : [];
+
+              // ✅ Mise à jour du state
+              const newFiles = [...uploadedFiles, ...extractedFiles];
+              setUploadedFiles(newFiles);
+              
+              // ✅ Notifier le parent de manière asynchrone (évite erreur React)
+              setTimeout(() => {
+                onChangeAction(newFiles as Files[]);
+              }, 0);
+
+              toast.success({
+                message: `${documents.length} document(s) uploadé(s) automatiquement.`,
+              });
+            } else if (data?.error) {
+              console.log(data?.error);
+              
+              toast.error({
+                message: "Erreur lors de l'upload automatique des documents.",
+              });
+            }
+          });
+        }
       }
     },
-    [multiple, compressImages, maxWidth, maxHeight, quality]
+    [multiple, compressImages, maxWidth, maxHeight, quality, onChangeAction]
   );
 
   // ✅ Mémoriser avec useCallback + cleanup URL
@@ -293,10 +436,16 @@ export const UploadMultiFilesMinimal = ({
       const data = await deleteFileDoc(index);
       if (data?.success) {
         toast.success({ message: "Le document a été supprimé avec succès." });
+        
+        // ✅ Mise à jour du state
         setUploadedFiles((prevFiles) => {
           const newFiles = prevFiles.filter((file) => file.id !== index);
-          // ✅ Notifier le parent
-          onChangeAction(newFiles as Files[]);
+          
+          // ✅ Notifier le parent de manière asynchrone
+          setTimeout(() => {
+            onChangeAction(newFiles as Files[]);
+          }, 0);
+          
           return newFiles;
         });
       } else if (data?.error) {
@@ -341,12 +490,14 @@ export const UploadMultiFilesMinimal = ({
           ? data.success.map((item: any) => item.success)
           : [];
 
-        setUploadedFiles((prevFiles) => {
-          const allFiles = [...prevFiles, ...extractedFiles];
-          // ✅ Notifier le parent avec TOUS les fichiers
+        // ✅ Mise à jour du state
+        const allFiles = [...uploadedFiles, ...extractedFiles];
+        setUploadedFiles(allFiles);
+        
+        // ✅ Notifier le parent de manière asynchrone
+        setTimeout(() => {
           onChangeAction(allFiles as Files[]);
-          return allFiles;
-        });
+        }, 0);
 
         toast.success({
           message:
@@ -397,14 +548,19 @@ export const UploadMultiFilesMinimal = ({
           }`}
         />
         <p className="text-gray-600 mb-2">
-          {compressing ? "📦 Compression des images..." : dragActive ? "Déposez vos fichiers" : "Glissez vos fichiers ici"}
+          {uploading ? "📤 Upload des documents en cours..." : compressing ? "📦 Compression des images..." : dragActive ? "Déposez vos fichiers" : "Glissez vos fichiers ici"}
         </p>
         <p className="text-sm text-gray-400">
-          {compressing ? "Veuillez patienter" : `ou cliquez pour parcourir ${multiple ? "vos fichiers" : "un fichier"}`}
+          {uploading || compressing ? "Veuillez patienter" : `ou cliquez pour parcourir ${multiple ? "vos fichiers" : "un fichier"}`}
         </p>
-        {compressImages && (
+        {compressImages && !uploading && !compressing && (
           <p className="text-xs text-green-600 mt-2">
             ✅ Compression automatique activée (max {maxWidth}x{maxHeight})
+          </p>
+        )}
+        {!uploading && !compressing && (
+          <p className="text-xs text-blue-600 mt-1">
+            📄 Documents (PDF, Word, PowerPoint) uploadés automatiquement
           </p>
         )}
         <input
