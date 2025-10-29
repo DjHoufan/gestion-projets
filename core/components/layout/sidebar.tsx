@@ -22,6 +22,7 @@ import { usePathname } from "next/navigation";
 import { useState, useCallback, useMemo } from "react";
 import { cn } from "@/core/lib/utils";
 import { User } from "@supabase/supabase-js";
+import Logo from "@/core/components/global/logo";
 
 interface NavigationItem {
   title: string;
@@ -302,15 +303,7 @@ export const Sidebar = ({ user, isMobile, setIsMobileAction }: Props) => {
           <div className="relative p-6 flex items-center justify-center">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-teal-500/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
-              <div className="relative p-3 bg-white rounded-xl border border-slate-700/50 backdrop-blur-sm shadow-lg">
-                <img
-                  src="/images/houfan-new-logo.png"
-                  alt="HOUFAN Research & Transform"
-                  width="200"
-                  height="42"
-                  className="h-auto w-auto"
-                />
-              </div>
+              <Logo variant="light" size="md" />
             </div>
           </div>
         </header>

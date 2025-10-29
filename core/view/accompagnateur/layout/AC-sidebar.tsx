@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { MdOutlineGroups2 } from "react-icons/md";
 import { useCustomeTabs, useSelectAC } from "@/core/hooks/store";
+import Logo from "@/core/components/global/logo";
 
 type MenuItem = {
   title: string;
@@ -124,23 +125,9 @@ export function ACSidebar({ toggleSidebarAction }: Props) {
     <div className="md:w-[300px] h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900  transition-transform duration-300 ease-in-out   flex flex-col border-r-2 border-r-teal-500/20">
       <div className="relative border-b border-slate-700/50 bg-gradient-to-r from-teal-600/20 to-teal-600/20 backdrop-blur-sm">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 to-teal-500/10" />
-        <div className="relative p-6 flex items-center justify-between">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-teal-500/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
-            <div className="relative p-3  bg-white  rounded-xl border border-slate-700/50 backdrop-blur-sm shadow-lg">
-              <img
-                src="/images/houfan-new-logo.png"
-                alt="HOUFAN Research & Transform"
-                width="200"
-                height="42"
-              />
-            </div>
-          </div>
 
-          <X
-            className=" md:hidden text-primary "
-            onClick={toggleSidebarAction}
-          />
+        <div className="p-5">
+          <Logo variant="light" size="md" />
         </div>
       </div>
 
@@ -152,15 +139,17 @@ export function ACSidebar({ toggleSidebarAction }: Props) {
             <button
               key={item.title}
               onClick={() => {
-                set(item.url)
-                AC.set("")
+                set(item.url);
+                AC.set("");
               }}
               className={`
                 group relative w-full p-3 rounded-lg transition-all duration-200 border text-left text-slate-300
-                ${isActive
-                  ? ` bg-gradient-to-r from-slate-800/80 to-slate-700/80 border-${item.color.split("-")[1]
-                  }-500`
-                  : " border-transparent hover:bg-gradient-to-r hover:from-slate-800/80 hover:to-slate-700/80 hover:text-white hover:shadow-lg"
+                ${
+                  isActive
+                    ? ` bg-gradient-to-r from-slate-800/80 to-slate-700/80 border-${
+                        item.color.split("-")[1]
+                      }-500`
+                    : " border-transparent hover:bg-gradient-to-r hover:from-slate-800/80 hover:to-slate-700/80 hover:text-white hover:shadow-lg"
                 }
               `}
             >
@@ -168,10 +157,12 @@ export function ACSidebar({ toggleSidebarAction }: Props) {
                 {/* Minimalist Icon */}
                 <div
                   className={` w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200
-                    ${isActive
-                      ? item.color
-                      : `bg-gradient-to-r from-teal-600/20 to-teal-600/20 ${hoverColors[item.color]
-                      }  `
+                    ${
+                      isActive
+                        ? item.color
+                        : `bg-gradient-to-r from-teal-600/20 to-teal-600/20 ${
+                            hoverColors[item.color]
+                          }  `
                     }`}
                 >
                   {item.icon && <item.icon className={`h-4 w-4 text-white `} />}
