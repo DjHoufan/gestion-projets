@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Select,
   SelectContent,
@@ -28,23 +28,26 @@ export const SelectMyVisit = ({
   const { data, isPending } = useGetMyPlanning(userId);
   const [selectedTourId, setSelectedTourId] = useState(id);
 
-  
-
-  const allTours = (data ?? [])
-    .flatMap((planning) =>
-      planning.visit.map((visit) => ({
-        ...visit,
-        accompanimentId:
-          planning.accompaniments.length > 0
-            ? planning.accompaniments[0].id
-            : "Aucun accompagnement",
-        accompanimentName:
-          planning.accompaniments.length > 0
-            ? planning.accompaniments[0].name
-            : "Aucun accompagnement",
-      }))
-    )
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  // ✅ Mémorisation pour éviter recalcul à chaque render
+  const allTours = useMemo(() => {
+    if (!data) return [];
+    
+    return data
+      .flatMap((planning) =>
+        planning.visit.map((visit) => ({
+          ...visit,
+          accompanimentId:
+            planning.accompaniments.length > 0
+              ? planning.accompaniments[0].id
+              : "Aucun accompagnement",
+          accompanimentName:
+            planning.accompaniments.length > 0
+              ? planning.accompaniments[0].name
+              : "Aucun accompagnement",
+        }))
+      )
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }, [data]);
 
 const handleSelectChange = (value: string) => {
   setSelectedTourId(value);

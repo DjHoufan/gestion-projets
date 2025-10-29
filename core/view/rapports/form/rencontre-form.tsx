@@ -121,6 +121,9 @@ export function RencontreForm({
   const [currentStep, setCurrentStep] = useState(1);
 
   const { data: projets, isPending: ploading } = useGetAccompaniments();
+
+ 
+  
   const { data: users, isPending: loadingUsers } = useGetAccompanist();
   const { data: members, isPending: loadingMembers } = useGetMembers();
 
@@ -128,6 +131,9 @@ export function RencontreForm({
   const { mutate: update, isPending: uloading } = useUpdateRencontre();
 
   const loading = cloading || uloading;
+
+  console.log({details});
+  
 
   const form = useForm<RencontreSchemaInput>({
     resolver: zodResolver(RencontreSchema),

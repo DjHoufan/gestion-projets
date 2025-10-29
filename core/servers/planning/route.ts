@@ -37,8 +37,16 @@ const app = new Hono()
   .onError((err, c) => {
     return c.json({ error: err }, 400);
   })
-  .get("/", async (c) => {
+  // ✅ Route sécurisée avec middleware et filtre utilisateur
+  .get("/", sessionMiddleware, async (c) => {
+    // Récupérer l'utilisateur authentifié du contexte
+    const user = c.get("user");
+
+    // Filtrer les plannings par utilisateur connecté
     const data = await db.planning.findMany({
+      where: {
+        usersId: user.id, // ✅ FILTRE DE SÉCURITÉ : Seulement les plannings de cet utilisateur
+      },
       include: {
         visit: true,
         accompaniments: {
@@ -80,11 +88,15 @@ const app = new Hono()
 
     return c.json({ data });
   })
-  .get("/:plangId", async (c) => {
+  // ✅ Sécuriser la route GET par ID
+  .get("/:plangId", sessionMiddleware, async (c) => {
     const { plangId } = c.req.param();
-    const data = await db.planning.findUnique({
+    const user = c.get("user");
+
+    const data = await db.planning.findFirst({
       where: {
         id: plangId,
+        usersId: user.id, // ✅ Vérifier que le planning appartient à l'utilisateur
       },
       include: {
         visit: true,
@@ -96,6 +108,11 @@ const app = new Hono()
         },
       },
     });
+
+    if (!data) {
+      return c.json({ error: "Planning non trouvé ou accès refusé" }, 404);
+    }
+
     return c.json({ data });
   })
 
@@ -121,15 +138,32 @@ const app = new Hono()
       return c.json({ data: response });
     }
   )
+  // ✅ Sécuriser la route PATCH
   .patch(
     "/:plangId",
     zValidator("json", PlanningSchema),
     sessionMiddleware,
     async (c) => {
-      const response = handleDatatUpsert(c, c.req.param("plangId"));
+      const { plangId } = c.req.param();
+      const user = c.get("user");
+
+      // Vérifier que le planning appartient à l'utilisateur avant modification
+      const existingPlanning = await db.planning.findFirst({
+        where: {
+          id: plangId,
+          usersId: user.id, // ✅ FILTRE DE SÉCURITÉ
+        },
+      });
+
+      if (!existingPlanning) {
+        return c.json({ error: "Planning non trouvé ou accès refusé" }, 404);
+      }
+
+      const response = await handleDatatUpsert(c, plangId);
       return c.json({ data: response });
     }
   )
+  // ✅ Sécuriser la route PATCH status visit
   .patch(
     "/:plangId/status/visit",
     zValidator("json", StatusSchema),
@@ -137,6 +171,25 @@ const app = new Hono()
     async (c) => {
       const { status } = c.req.valid("json");
       const { plangId } = c.req.param();
+      const user = c.get("user");
+
+      // Vérifier que la visite appartient à un planning de l'utilisateur
+      const visit = await db.visits.findFirst({
+        where: {
+          id: plangId,
+        },
+        include: {
+          Planning: {
+            select: {
+              usersId: true,
+            },
+          },
+        },
+      });
+
+      if (!visit || visit.Planning.usersId !== user.id) {
+        return c.json({ error: "Visite non trouvée ou accès refusé" }, 404);
+      }
 
       const response = await db.visits.update({
         where: {
@@ -149,19 +202,35 @@ const app = new Hono()
       return c.json({ data: response });
     }
   )
+  // ✅ Sécuriser la route PATCH visit
   .patch(
     "visit/:visitId",
     zValidator("json", VisitsSchemaCreate),
-
     sessionMiddleware,
     async (c) => {
       const { visitId } = c.req.param();
+      const user = c.get("user");
+
+      // Vérifier que la visite appartient à un planning de l'utilisateur
+      const visit = await db.visits.findFirst({
+        where: {
+          id: visitId,
+        },
+        include: {
+          Planning: {
+            select: {
+              usersId: true,
+            },
+          },
+        },
+      });
+
+      if (!visit || visit.Planning.usersId !== user.id) {
+        return c.json({ error: "Visite non trouvée ou accès refusé" }, 404);
+      }
 
       const visitsData = c.req.valid("json");
       const dataItems = visitsData.map((visit) => getDataITems(visit));
-
-     
-      
 
       const response = await db.visits.update({
         where: {
@@ -181,10 +250,30 @@ const app = new Hono()
 
     return c.json({ data: response });
   })
+  // ✅ Sécuriser la route DELETE visit
   .delete("visit/:visitId", sessionMiddleware, async (c) => {
     const { visitId } = c.req.param();
+    const user = c.get("user");
 
     try {
+      // Vérifier que la visite appartient à un planning de l'utilisateur
+      const visit = await db.visits.findFirst({
+        where: {
+          id: visitId,
+        },
+        include: {
+          Planning: {
+            select: {
+              usersId: true,
+            },
+          },
+        },
+      });
+
+      if (!visit || visit.Planning.usersId !== user.id) {
+        return c.json({ error: "Visite non trouvée ou accès refusé" }, 404);
+      }
+
       const response = await db.visits.delete({
         where: { id: visitId },
       });
@@ -206,20 +295,29 @@ const app = new Hono()
       return c.json({ error: "Erreur interne du serveur" }, 500);
     }
   })
+  // ✅ Sécuriser la route DELETE
   .delete("/:plangId", sessionMiddleware, async (c) => {
     const { plangId } = c.req.param();
+    const user = c.get("user");
 
-    const response = await db.planning.findUnique({
-      where: { id: plangId },
+    // Vérifier que le planning existe ET appartient à l'utilisateur
+    const response = await db.planning.findFirst({
+      where: { 
+        id: plangId,
+        usersId: user.id, // ✅ FILTRE DE SÉCURITÉ
+      },
       select: {
         id: true,
       },
     });
-    if (!response) return c.json({ error: "Aucun achat n'a été trouvé" }, 404);
+    
+    if (!response) {
+      return c.json({ error: "Planning non trouvé ou accès refusé" }, 404);
+    }
 
     await db.planning.delete({ where: { id: plangId } });
 
-    return c.json({ data: { id: response.id, name: "achats" } });
+    return c.json({ data: { id: response.id, name: "planning" } });
   });
 
 export default app;

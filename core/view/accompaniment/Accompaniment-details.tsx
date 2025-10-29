@@ -41,7 +41,6 @@ import {
   Languages,
   UserX,
   UserCheck,
- 
 } from "lucide-react";
 import { IdType, PermissionProps } from "@/core/lib/types";
 import { useGetOneAccompaniment } from "@/core/hooks/use-accompaniment";
@@ -61,7 +60,7 @@ import { PurchaseView } from "@/core/view/purchase/purchase-view";
 import {
   useMaps,
   useMedia,
-  usePlanningStore,
+  usePlanningActions,
   usePurchases,
   useTabs,
 } from "@/core/hooks/store";
@@ -74,7 +73,6 @@ import MediaForm from "@/core/view/accompaniment/Media-form";
 import { MediaGallery } from "@/core/view/accompaniment/media-card";
 import RapportSection from "@/core/view/accompaniment/rapport-section";
 
-
 export const AccompanimentDetails = ({
   Id,
   permission,
@@ -85,21 +83,38 @@ export const AccompanimentDetails = ({
 
   const { open } = useModal();
   const purchases = usePurchases();
-  const plannings = usePlanningStore();
+  const { setPlanning, resetPlanning } = usePlanningActions(); // ✅ Optimisé - seulement actions nécessaires
   const maps = useMaps();
   const media = useMedia();
   const tabs = useTabs();
 
   const { data, isPending } = useGetOneAccompaniment(Id);
 
+  // ✅ Cleanup : Réinitialiser le planning au changement d'accompagnement
+  useEffect(() => {
+    return () => {
+      resetPlanning(); // Nettoyer au unmount ou changement d'ID
+    };
+  }, [Id, resetPlanning]);
+
+  // ✅ Mise à jour des stores locaux - gère correctement planning null
   useEffect(() => {
     if (!data) return;
 
-    if (data.purchases) purchases.setData(data.purchases);
-    if (data.media) media.setData(data.media);
-    if (data.planning) plannings.setPlanning(data.planning);
-    if (data.map) maps.setData(data.map);
-  }, [data]);
+    const { purchases: p, media: m, planning, map } = data;
+
+    p && purchases.setData(p);
+    m && media.setData(m);
+    
+    // ✅ Toujours mettre à jour le planning, même si null
+    if (planning) {
+      setPlanning(planning);
+    } else {
+      resetPlanning(); // Vider le store si pas de planning
+    }
+    
+    map && maps.setData(map);
+  }, [data, setPlanning, resetPlanning]);
 
   const { totalSum, remainingBudget } = useMemo(() => {
     const total =
@@ -112,7 +127,7 @@ export const AccompanimentDetails = ({
       totalSum: total,
       remainingBudget: remaining,
     };
-  }, [purchases.data, data?.budget]);
+  }, [purchases.data, data?.budget, data?.planning]);
 
   const handleMapClick = (lat: number, lng: number) => {
     const updatedMap = {

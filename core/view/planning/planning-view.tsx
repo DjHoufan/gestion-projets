@@ -36,7 +36,7 @@ import {
 import { useModal } from "@/core//providers/modal-provider";
 import CustomModal from "@/core//components/wrappeds/custom-modal";
 import { PlanningForm } from "@/core/view/planning/planning-form";
-import { usePlanningStore } from "@/core//hooks/store";
+import { usePlanningData } from "@/core//hooks/store";
 import {
   useDeleteVisits,
   useUpdateStatusVisit,
@@ -60,7 +60,7 @@ export default function PlanningCalendar({
 }: Props) {
   const { canAdd, canModify, canDelete } = permission;
   const { mutate: updateStatus, isPending: loading } = useUpdateStatusVisit();
-  const { planning } = usePlanningStore();
+  const planning = usePlanningData(); // ✅ Optimisé - seulement re-render si planning change
   const { open } = useModal();
   const [planningView, setPlanningView] = useState<"calendar" | "agenda">(
     "calendar"

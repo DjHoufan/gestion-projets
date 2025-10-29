@@ -21,7 +21,8 @@ export const sessionMiddleware = createMiddleware<AdditionalContext>(
       return c.json({ error: "Unauthorized" }, 401);
     }
 
-    // c.set("user", user!);
+    // ✅ Stocker l'utilisateur dans le contexte pour l'utiliser dans les routes
+    c.set("user", user as any);
 
     await next();
   }

@@ -7,7 +7,7 @@ import { QueryKeyString } from "@/core/lib/constants";
 import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "@/core/components/global/custom-toast";
-import { useMyData, usePlanningStore } from "@/core/hooks/store";
+import { useMyData, usePlanningActions } from "@/core/hooks/store";
 // import { useplannings } from "@/core/hooks/store";
 
 // === Type Inference ===
@@ -72,6 +72,8 @@ type VdeleteRequest = InferRequestType<
 export const useGetPlanning = () => {
   return useQuery({
     queryKey: [QueryKeyString.planning],
+    staleTime: 3 * 60 * 1000, // 3 minutes - réduit les appels répétés
+    gcTime: 30 * 60 * 1000, // 30 minutes - garde en cache
     queryFn: async () => {
       const response = await client.api.planning.$get();
 
@@ -123,7 +125,9 @@ export const useGetPlanning = () => {
 
 export const useGetMyPlanning = (id: string) => {
   return useQuery({
-    queryKey: [QueryKeyString.planning + id],
+    queryKey: [QueryKeyString.planning, "my", id],
+    staleTime: 3 * 60 * 1000, // 3 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.planning.my[":plangId"].$get({
         param: { plangId: id },
@@ -177,7 +181,9 @@ export const useGetMyPlanning = (id: string) => {
 
 export const useGetOnePlanning = (id: string) => {
   return useQuery({
-    queryKey: [QueryKeyString.planning + id],
+    queryKey: [QueryKeyString.planning, "one", id],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
     queryFn: async () => {
       const response = await client.api.planning[":plangId"].$get({
         param: { plangId: id },
@@ -225,7 +231,7 @@ export const useGetOnePlanning = (id: string) => {
 // === Mutation: Create planning ===
 export const useCreatePlanning = () => {
   const queryClient = useQueryClient();
-  const { setPlanning } = usePlanningStore();
+  const { setPlanning } = usePlanningActions(); // ✅ Optimisé
   const { data: user, updateFields } = useMyData();
   const { close } = useModal();
 
@@ -282,7 +288,7 @@ export const useCreatePlanning = () => {
         message: "Le planning a été enregistré avec succès",
       });
       queryClient.invalidateQueries({
-        queryKey: [QueryKeyString.planning, QueryKeyString.planning],
+        queryKey: [QueryKeyString.planning],
       });
       close();
     },
@@ -299,7 +305,7 @@ export const useCreatePlanning = () => {
 // === Mutation: Create visit ===
 export const useCreatevisit = () => {
   const queryClient = useQueryClient();
-  const { setPlanning } = usePlanningStore();
+  const { setPlanning } = usePlanningActions(); // ✅ Optimisé
   const { close } = useModal();
   const { data: user, updateFields } = useMyData();
 
@@ -378,7 +384,7 @@ export const useCreatevisit = () => {
         message: "Le planning a été enregistré avec succès",
       });
       queryClient.invalidateQueries({
-        queryKey: [QueryKeyString.planning, QueryKeyString.planning],
+        queryKey: [QueryKeyString.planning],
       });
     },
     onError: (err) => {
@@ -392,7 +398,7 @@ export const useCreatevisit = () => {
 // === Mutation: Create visit ===
 export const useUpdatevisit = () => {
   const queryClient = useQueryClient();
-  const { updateVisit } = usePlanningStore();
+  const { updateVisit } = usePlanningActions(); // ✅ Optimisé
   const { close } = useModal();
 
   return useMutation<PatchRes, Error, PatchReq>({
@@ -422,7 +428,7 @@ export const useUpdatevisit = () => {
         message: "Le planning a été enregistré avec succès",
       });
       queryClient.invalidateQueries({
-        queryKey: [QueryKeyString.planning, QueryKeyString.planning],
+        queryKey: [QueryKeyString.planning],
       });
     },
     onError: (err) => {
@@ -561,7 +567,7 @@ export const useDeletvisit = () => {
 export const useUpdateStatusVisit = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
-  const { updateVisit } = usePlanningStore();
+  const { updateVisit } = usePlanningActions(); // ✅ Optimisé
   const { data: user, updateFields } = useMyData();
 
   return useMutation<PatchResponseVisit, Error, PatchRequestVisit>({
@@ -643,7 +649,7 @@ export const useUpdateStatusVisit = () => {
 export const useDeleteOneVisit = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
-  const { updateVisit } = usePlanningStore();
+  const { updateVisit } = usePlanningActions(); // ✅ Optimisé
 
   return useMutation<PatchResponseVisit, Error, PatchRequestVisit>({
     mutationFn: async ({ json, param }) => {
@@ -691,7 +697,7 @@ export const useDeleteOneVisit = () => {
 export const useDeleteVisits = () => {
   const queryClient = useQueryClient();
   const { close } = useModal();
-  const { removeVisit } = usePlanningStore();
+  const { removeVisit } = usePlanningActions(); // ✅ Optimisé
 
   return useMutation<VdeleteResponse, Error, VdeleteRequest>({
     mutationFn: async ({ param }) => {

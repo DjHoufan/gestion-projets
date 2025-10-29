@@ -7,7 +7,7 @@ import { QueryKeyString } from "@/core/lib/constants";
 import { useModal } from "@/core/providers/modal-provider";
 
 import { toast } from "../components/global/custom-toast";
-import { useMedia } from "@/core/hooks/store";
+import { useMedia, usePlanningActions } from "@/core/hooks/store";
 
 // === Type Inference ===
 type PostResponse = InferResponseType<
@@ -280,6 +280,7 @@ export const useGetOneAccompaniment = (id: string) => {
           updatedAt: new Date(p.updatedAt),
         })),
       };
+
       return updatedData;
     },
   });

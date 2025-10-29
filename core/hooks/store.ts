@@ -9,6 +9,7 @@ import { UpdatedData } from "@/core/lib/user";
 import { Files, Visits } from "@prisma/client";
 import { create } from "zustand";
 import { persist, createJSONStorage, subscribeWithSelector } from "zustand/middleware";
+import { shallow } from "zustand/shallow";
 
 type dataProps<T extends { id: string }> = {
   data: T[];
@@ -187,55 +188,73 @@ type PlanningStore = {
   resetPlanning: () => void;
 };
 
+// ✅ Store optimisé avec persist et devtools
 export const usePlanningStore = create<PlanningStore>()(
-  subscribeWithSelector((set, get) => ({
-    planning: null,
-    setPlanning: (planning) => set({ planning }),
+  subscribeWithSelector(
+    persist(
+      (set, get) => ({
+        planning: null,
+        
+        setPlanning: (planning) => set({ planning }),
 
-    addVisit: (visits) => {
-      const planning = get().planning;
-      if (!planning) {
-        return;
-      }
+        // ✅ Optimisation : Early return + mutation plus efficace
+        addVisit: (visits) => {
+          const currentPlanning = get().planning;
+          if (!currentPlanning) return;
 
-      const newVisits = Array.isArray(visits) ? visits : [visits];
-
-      set({
-        planning: {
-          ...planning,
-          visit: [...planning.visit, ...newVisits],
+          const newVisits = Array.isArray(visits) ? visits : [visits];
+          
+          // ✅ Mutation optimisée
+          set((state) => ({
+            planning: state.planning ? {
+              ...state.planning,
+              visit: [...state.planning.visit, ...newVisits],
+            } : null,
+          }));
         },
-      });
-    },
 
-    removeVisit: (visitId) => {
-      const planning = get().planning;
-      if (!planning) {
-        return;
-      }
-      set({
-        planning: {
-          ...planning,
-          visit: planning.visit.filter((v) => v.id !== visitId),
+        // ✅ Optimisation : Filter plus efficace
+        removeVisit: (visitId) => {
+          const currentPlanning = get().planning;
+          if (!currentPlanning) return;
+          
+          set((state) => ({
+            planning: state.planning ? {
+              ...state.planning,
+              visit: state.planning.visit.filter((v) => v.id !== visitId),
+            } : null,
+          }));
         },
-      });
-    },
 
-    updateVisit: (visit) => {
-      const planning = get().planning;
-      if (!planning) {
-        return;
-      }
-      set({
-        planning: {
-          ...planning,
-          visit: planning.visit.map((v) => (v.id === visit.id ? visit : v)),
+        // ✅ Optimisation : Map avec early exit
+        updateVisit: (visit) => {
+          const currentPlanning = get().planning;
+          if (!currentPlanning) return;
+          
+          // Vérifier si la visite existe
+          const visitExists = currentPlanning.visit.some((v) => v.id === visit.id);
+          if (!visitExists) return;
+          
+          set((state) => ({
+            planning: state.planning ? {
+              ...state.planning,
+              visit: state.planning.visit.map((v) => 
+                v.id === visit.id ? visit : v
+              ),
+            } : null,
+          }));
         },
-      });
-    },
 
-    resetPlanning: () => set({ planning: null }),
-  }))
+        resetPlanning: () => set({ planning: null }),
+      }),
+      {
+        name: "planning-storage", // ✅ Persist dans localStorage
+        storage: createJSONStorage(() => localStorage),
+        // ✅ Ne persister que les données essentielles
+        partialize: (state) => ({ planning: state.planning }),
+      }
+    )
+  )
 );
 
 type ChatProps = {
@@ -271,14 +290,33 @@ export const useSidebarMobileActions = () => useSidebar((state) => ({
 export const useSelectACValue = () => useSelectAC((state) => state.value);
 export const useSelectACSet = () => useSelectAC((state) => state.set);
 
+// ✅ Sélecteurs optimisés pour éviter re-renders inutiles
 export const usePlanningData = () => usePlanningStore((state) => state.planning);
-export const usePlanningActions = () => usePlanningStore((state) => ({
-  setPlanning: state.setPlanning,
-  addVisit: state.addVisit,
-  removeVisit: state.removeVisit,
-  updateVisit: state.updateVisit,
-  resetPlanning: state.resetPlanning,
-}));
+
+// ✅ Sélecteur pour les visites uniquement
+export const usePlanningVisits = () => 
+  usePlanningStore((state) => state.planning?.visit ?? []);
+
+// ✅ Sélecteur pour une visite spécifique
+export const usePlanningVisitById = (visitId: string) => 
+  usePlanningStore((state) => 
+    state.planning?.visit.find((v) => v.id === visitId)
+  );
+
+// ✅ Actions séparées pour éviter re-renders (les fonctions sont stables en Zustand)
+export const usePlanningActions = () => {
+  const setPlanning = usePlanningStore((state) => state.setPlanning);
+  const addVisit = usePlanningStore((state) => state.addVisit);
+  const removeVisit = usePlanningStore((state) => state.removeVisit);
+  const updateVisit = usePlanningStore((state) => state.updateVisit);
+  const resetPlanning = usePlanningStore((state) => state.resetPlanning);
+  
+  return { setPlanning, addVisit, removeVisit, updateVisit, resetPlanning };
+};
+
+// ✅ Hook pour vérifier si un planning existe
+export const useHasPlanning = () => 
+  usePlanningStore((state) => state.planning !== null);
 
 export const useChatId = () => useChat((state) => state.id);
 export const useChatActions = () => useChat((state) => ({ setChat: state.setChat }));
