@@ -21,6 +21,7 @@ import SignalementForm from "@/core/view/superiviseur/singnalement-form";
 import { useSupervision } from "@/core/contexts/SupervisionContext";
 import { User } from "@supabase/supabase-js";
 import { useLogout } from "@/core/hooks/use-auth";
+import Logo from "@/core/components/global/logo";
 
 type Props = {
   children: React.ReactNode;
@@ -57,13 +58,7 @@ export function SupLayoutContent({ userId, user, children }: Props) {
             {/* Logo HOUFAN */}
             <div className="flex items-center gap-4">
               <div className="cursor-pointer">
-                <img
-                  src="/images/houfan-new-logo.png"
-                  alt="HOUFAN Research & Transform"
-                  width={160}
-                  height={34}
-                  className="object-contain"
-                />
+                 <Logo size="md" />
               </div>
 
               {/* Séparateur */}
