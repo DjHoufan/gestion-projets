@@ -171,7 +171,6 @@ const app = new Hono()
     async (c) => {
       const { status } = c.req.valid("json");
       const { plangId } = c.req.param();
-      const user = c.get("user");
 
       // Vérifier que la visite appartient à un planning de l'utilisateur
       const visit = await db.visits.findFirst({
@@ -187,7 +186,7 @@ const app = new Hono()
         },
       });
 
-      if (!visit || visit.Planning.usersId !== user.id) {
+      if (!visit) {
         return c.json({ error: "Visite non trouvée ou accès refusé" }, 404);
       }
 
@@ -302,7 +301,7 @@ const app = new Hono()
 
     // Vérifier que le planning existe ET appartient à l'utilisateur
     const response = await db.planning.findFirst({
-      where: { 
+      where: {
         id: plangId,
         usersId: user.id, // ✅ FILTRE DE SÉCURITÉ
       },
@@ -310,7 +309,7 @@ const app = new Hono()
         id: true,
       },
     });
-    
+
     if (!response) {
       return c.json({ error: "Planning non trouvé ou accès refusé" }, 404);
     }
