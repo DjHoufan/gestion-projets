@@ -294,7 +294,7 @@ export function definePermissions(
   //   canView: canView || isAdmin,
   // };
 
-  const isAdmin = ["admin", "accompanist", "trainer"].includes(rp.type);
+  const isAdmin = ["admin", "accompanist", "trainer","superviseur"].includes(rp.type);
 
  
   

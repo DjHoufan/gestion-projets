@@ -6,6 +6,9 @@ const Accompaniment = async ({ params }: IdProps) => {
   const { Id } = await params;
   const permission = await GetUserCookies();
 
+  console.log({permission});
+  
+
   
   return <AccompanimentDetails Id={Id} permission={permission}  />;
 };
