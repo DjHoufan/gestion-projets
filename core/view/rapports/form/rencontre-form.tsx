@@ -122,8 +122,6 @@ export function RencontreForm({
 
   const { data: projets, isPending: ploading } = useGetAccompaniments();
 
- 
-  
   const { data: users, isPending: loadingUsers } = useGetAccompanist();
   const { data: members, isPending: loadingMembers } = useGetMembers();
 
@@ -132,8 +130,7 @@ export function RencontreForm({
 
   const loading = cloading || uloading;
 
-  console.log({details});
-  
+  console.log({ details });
 
   const form = useForm<RencontreSchemaInput>({
     resolver: zodResolver(RencontreSchema),
@@ -773,6 +770,7 @@ export function RencontreForm({
                                           value={field.value}
                                           onChange={field.onChange}
                                           disabled={loading}
+                                          position="center"
                                         />
                                         <FormMessage />
                                       </FormItem>
