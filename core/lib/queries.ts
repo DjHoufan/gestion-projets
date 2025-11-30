@@ -521,6 +521,8 @@ export const upsertEmargement = async (data: Partial<Emargement>) => {
     });
   }
 
+  console.log({ res });
+
   return res;
 };
 
@@ -922,8 +924,6 @@ export const getMyChat = async (userId: string) => {
 };
 
 export const upsertSignalement = async (data: Partial<Signalement>) => {
- 
-
   const validation = SignalementSchema.extend({ id: z.string() }).safeParse(
     data
   );

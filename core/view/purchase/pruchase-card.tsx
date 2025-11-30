@@ -178,7 +178,7 @@ export const PurchaseCard = ({ id }: { id: string }) => {
                     <TableCell>
                       <div className="flex flex-col items-center gap-2">
                         <img
-                          src={item.facture || "/placeholder.svg"}
+                          src={item.facture}
                           alt={`Facture ${item.name}`}
                           className="h-20 w-20 rounded-md object-cover cursor-pointer hover:opacity-80 transition-opacity"
                           crossOrigin="anonymous"

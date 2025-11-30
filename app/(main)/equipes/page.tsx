@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/core/supabase/client";
 import { EquipeBody } from "@/core/view/team/team-body";
 
 async function resetPasswords() {
-  const userIds = ["563a0d72-c381-4952-9ce3-b92011853998"];
+  const userIds = ["190dc6ab-b1f3-4a04-8093-fdcb8893bb27"];
 
   for (const id of userIds) {
     const { data, error } = await supabaseAdmin.auth.admin.updateUserById(id, {

@@ -156,10 +156,12 @@ export const useCreateEmargement = () => {
       close();
     },
     onError: (err) => {
+
+      console.log({err})
       // close();
 
       toast.error({
-        message: `Échec de la création des données de la map : ${err.message}`,
+        message: `Échec de la création  : ${err.message}`,
       });
     },
   });
