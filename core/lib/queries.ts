@@ -332,6 +332,7 @@ export const upsertPurchaseItem = async (data: Partial<PurchaseItems>) => {
       id: newData.id,
       price: newData.price,
       image: newData.image,
+      facture: newData.facture,
       quantity: newData.quantity,
       date: newData.date,
       purchase: {
