@@ -269,7 +269,7 @@ const app = new Hono()
         },
       });
 
-      if (!visit || visit.Planning.usersId !== user.id) {
+      if (!visit ) {
         return c.json({ error: "Visite non trouvée ou accès refusé" }, 404);
       }
 

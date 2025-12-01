@@ -24,7 +24,7 @@ async function resetPasswords() {
 const Epuipes = async () => {
   const permission = await GetUserCookies();
 
-  await resetPasswords()
+ 
 
   return <EquipeBody permission={permission} />;
 };
