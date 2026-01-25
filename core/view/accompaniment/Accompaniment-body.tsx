@@ -70,7 +70,7 @@ const chartData = [
   { name: "C2", value: 19.57, label: "110/562", percentage: "19.57%", fill: "#34d399" },
   { name: "C3", value: 18.51, label: "104/562", percentage: "18.51%", fill: "#6ee7b7" },
   { name: "C4", value: 30.07, label: "169/562", percentage: "30.07%", fill: "#a7f3d0" },
-  { name: "C5", value: 0, label: "0/562", percentage: "0%", fill: "#d1fae5" },
+  { name: "C5", value: 7.65, label: "43/562", percentage: "7.65%", fill: "#d1fae5" },
 ];
 
 type AccompagnementProps = Accompaniments & {
@@ -420,10 +420,10 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   <CheckCircle2 className="h-5 w-5 text-blue-600" />
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="text-3xl font-bold text-blue-700">475</div>
+                  <div className="text-3xl font-bold text-blue-700">518</div>
                   <div className="pt-2 border-t border-blue-200">
                     <div className="text-4xl font-black text-blue-700">
-                     84,6 %
+                     92,2 %
                     </div>
                   </div>
                 </CardContent>

@@ -184,7 +184,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
   ];
 
   const stats = {
-    totalBeneficiaires: 1000,
+    totalBeneficiaires: 1001,
     abandons: 36,
     tauxAbandon: 3.6,
     dureeJours: 141,

@@ -69,7 +69,7 @@ const chartData = [
 const stats = [
   {
     title: "Total des Bénéficiaires",
-    value: "1,000",
+    value: "10001",
     icon: Users,
     description: "Personnes formées",
     colorBorder: "border-blue-200",
