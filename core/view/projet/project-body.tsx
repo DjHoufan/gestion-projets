@@ -193,7 +193,7 @@ export const ProjectBody = ({ permission }: PermissionProps) => {
     nombreFormateurs: 46,
     communeBalballa: 71,
     communeRasdika: 29,
-    totalAGR: 541,
+    totalAGR: 562,
     enAttenteAccompagnement: 775,
     tauxRetention: 96.4,
   };

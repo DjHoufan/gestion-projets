@@ -63,14 +63,14 @@ const chartData = [
   {
     name: "C1",
     value: 17.44,
-    label: "94/541",
+    label: "94/562",
     percentage: "17.44%",
     fill: "#10b981",
   },
-  { name: "C2", value: 0, label: "0/541", percentage: "0%", fill: "#34d399" },
-  { name: "C3", value: 0, label: "0/541", percentage: "0%", fill: "#6ee7b7" },
-  { name: "C4", value: 0, label: "0/541", percentage: "0%", fill: "#a7f3d0" },
-  { name: "C5", value: 0, label: "0/541", percentage: "0%", fill: "#d1fae5" },
+  { name: "C2", value: 0, label: "0/562", percentage: "0%", fill: "#34d399" },
+  { name: "C3", value: 0, label: "0/562", percentage: "0%", fill: "#6ee7b7" },
+  { name: "C4", value: 0, label: "0/562", percentage: "0%", fill: "#a7f3d0" },
+  { name: "C5", value: 0, label: "0/562", percentage: "0%", fill: "#d1fae5" },
 ];
 
 type AccompagnementProps = Accompaniments & {
@@ -391,7 +391,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   <Users className="h-5 w-5 text-purple-600" />
                 </CardHeader>
                 <CardContent className="flex justify-center items-center">
-                  <div className="text-6xl font-black text-purple-700">541</div>
+                  <div className="text-6xl font-black text-purple-700">562</div>
                 </CardContent>
               </Card>
 
@@ -403,10 +403,10 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   <TrendingUp className="h-5 w-5 text-orange-600" />
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="text-3xl font-bold text-orange-700">277</div>
+                  <div className="text-3xl font-bold text-orange-700">562</div>
                   <div className="pt-2 border-t border-orange-200">
                     <div className="text-4xl font-black text-orange-700">
-                      51.20%
+                     100%
                     </div>
                   </div>
                 </CardContent>
@@ -420,10 +420,10 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                   <CheckCircle2 className="h-5 w-5 text-blue-600" />
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="text-3xl font-bold text-blue-700">94</div>
+                  <div className="text-3xl font-bold text-blue-700">475</div>
                   <div className="pt-2 border-t border-blue-200">
                     <div className="text-4xl font-black text-blue-700">
-                      17.38%
+                     84,6 %
                     </div>
                   </div>
                 </CardContent>
@@ -510,7 +510,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                     Répartition par Cohorte
                   </CardTitle>
                   <CardDescription className="text-emerald-100">
-                    Pourcentage de suivi (sur 541)
+                    Pourcentage de suivi (sur 562)
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

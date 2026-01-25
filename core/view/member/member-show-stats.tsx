@@ -997,7 +997,7 @@ export const DataAnalytics = ({ typedData }: { typedData: mDetails[] }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total AGR</p>
-                <p className="text-3xl font-bold text-indigo-600">541</p>
+                <p className="text-3xl font-bold text-indigo-600">562</p>
               </div>
               <FolderOpen className="h-8 w-8 text-indigo-600" />
             </div>

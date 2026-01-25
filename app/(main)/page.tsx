@@ -69,7 +69,7 @@ const STATS_DATA: StatItem[] = [
   },
   {
     title: "AGR Créées",
-    value: "541",
+    value: "562",
     icon: TrendingUp,
     description: "Activités génératrices",
     colorBorder: "border-orange-200",
@@ -203,7 +203,7 @@ const Main = () => {
                     Jeunes filles
                   </p>
                   <div className="text-5xl font-black text-white drop-shadow-xl">
-                    1,000
+                    1001
                   </div>
                   <p className="text-xs text-white/70 font-medium">formées</p>
                 </div>
