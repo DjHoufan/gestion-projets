@@ -70,6 +70,7 @@ const chartData = [
   { name: "C2", value: 19.57, label: "110/562", percentage: "19.57%", fill: "#34d399" },
   { name: "C3", value: 18.51, label: "104/562", percentage: "18.51%", fill: "#6ee7b7" },
   { name: "C4", value: 30.07, label: "169/562", percentage: "30.07%", fill: "#a7f3d0" },
+  { name: "C5", value: 0, label: "0/562", percentage: "0%", fill: "#d1fae5" },
 ];
 
 type AccompagnementProps = Accompaniments & {
@@ -428,9 +429,9 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 </CardContent>
               </Card>
             </div>
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2">
               <Card
-                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow overflow-hidden md:col-span-1"
+                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
                 style={{
                   background:
                     "linear-gradient(180deg, #064e3b 0%, #065f46 45%, #047857 100%)",
@@ -498,7 +499,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 </CardContent>
               </Card>
               <Card
-                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow md:col-span-2"
+                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow"
                 style={{
                   background:
                     "linear-gradient(180deg, #064e3b 0%, #065f46 45%, #047857 100%)",
@@ -520,7 +521,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                         color: "hsl(160, 84%, 39%)",
                       },
                     }}
-                    className="h-[250px]"
+                    className="h-[100px] sm:h-[100px] md:h-[300px] lg:h-[350px]"
                   >
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartData}>
@@ -556,7 +557,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                       </BarChart>
                     </ResponsiveContainer>
                   </ChartContainer>
-                  <div className="mt-4 grid grid-cols-4 gap-2 text-center">
+                  <div className="mt-4 grid grid-cols-5 gap-2 text-center">
                     {chartData.map((item) => (
                       <div key={item.name} className="space-y-1">
                         <p className="text-xs font-medium text-emerald-100">
