@@ -428,9 +428,9 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 </CardContent>
               </Card>
             </div>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-3">
               <Card
-                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
+                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow overflow-hidden md:col-span-1"
                 style={{
                   background:
                     "linear-gradient(180deg, #064e3b 0%, #065f46 45%, #047857 100%)",
@@ -498,7 +498,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                 </CardContent>
               </Card>
               <Card
-                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow"
+                className="border-emerald-300/50 shadow-lg hover:shadow-xl transition-shadow md:col-span-2"
                 style={{
                   background:
                     "linear-gradient(180deg, #064e3b 0%, #065f46 45%, #047857 100%)",
