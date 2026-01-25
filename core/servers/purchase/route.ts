@@ -33,7 +33,7 @@ const getDataITems = (id: string, body: PurchaseItems) => ({
   ...body,
   id,
 });
-
+//aks
 const handleDataItemtUpsert = async (c: any, id: string) => {
   const data = getDataITems(id, c.req.valid("json"));
   return await upsertPurchaseItem(data);
