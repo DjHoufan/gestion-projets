@@ -62,15 +62,14 @@ import { Users, TrendingUp, CheckCircle2, UserCheck } from "lucide-react";
 const chartData = [
   {
     name: "C1",
-    value: 17.44,
-    label: "94/562",
-    percentage: "17.44%",
+    value: 16.37,
+    label: "92/562",
+    percentage: "16.37%",
     fill: "#10b981",
   },
-  { name: "C2", value: 0, label: "0/562", percentage: "0%", fill: "#34d399" },
-  { name: "C3", value: 0, label: "0/562", percentage: "0%", fill: "#6ee7b7" },
-  { name: "C4", value: 0, label: "0/562", percentage: "0%", fill: "#a7f3d0" },
-  { name: "C5", value: 0, label: "0/562", percentage: "0%", fill: "#d1fae5" },
+  { name: "C2", value: 19.57, label: "110/562", percentage: "19.57%", fill: "#34d399" },
+  { name: "C3", value: 18.51, label: "104/562", percentage: "18.51%", fill: "#6ee7b7" },
+  { name: "C4", value: 30.07, label: "169/562", percentage: "30.07%", fill: "#a7f3d0" },
 ];
 
 type AccompagnementProps = Accompaniments & {
@@ -557,7 +556,7 @@ export const AccompanimentBody: React.FC<PermissionProps> = ({
                       </BarChart>
                     </ResponsiveContainer>
                   </ChartContainer>
-                  <div className="mt-4 grid grid-cols-5 gap-2 text-center">
+                  <div className="mt-4 grid grid-cols-4 gap-2 text-center">
                     {chartData.map((item) => (
                       <div key={item.name} className="space-y-1">
                         <p className="text-xs font-medium text-emerald-100">
