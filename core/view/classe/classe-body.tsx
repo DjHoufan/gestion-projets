@@ -107,10 +107,10 @@ const stats = [
     colorDesc: "text-teal-600",
   },
   {
-    title: "Nombre de Mentors",
-    value: "5",
+    title: "Accompagnateurs",
+    value: "102",
     icon: UsersRound,
-    description: "Mentors dédiés",
+    description: "Nbre d'accompagnateurs deployés",
     colorBorder: "border-rose-200",
     colorBg: "bg-gradient-to-br from-rose-50 to-rose-100",
     colorTitle: "text-rose-900",
